@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "324705024319",
+    "firebase_url": "https://movietinderapp.firebaseio.com",
+    "project_id": "movietinderapp",
+    "storage_bucket": "movietinderapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:324705024319:android:8deb627a468f98beeb3b8a",
+        "android_client_info": {
+          "package_name": "com.movietinderapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "324705024319-3bbt472eejs0dpppfftj7s10c4p7mt5p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVTcJcfR6Eg4DunAsWwL4UdsJCRJb0aVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "324705024319-3bbt472eejs0dpppfftj7s10c4p7mt5p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
