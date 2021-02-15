@@ -127,8 +127,8 @@ const signInScreen = ({ navigation }) => {
                 {data.secureTextEntry ? (
                   <FontAwesomeIcon icon={faEyeSlash} size={22} />
                 ) : (
-                    <FontAwesomeIcon icon={faEye} size={22} />
-                  )}
+                  <FontAwesomeIcon icon={faEye} size={22} />
+                )}
               </TouchableOpacity>
             </View>
 
@@ -184,8 +184,6 @@ const styles = StyleSheet.create({
   screenView: {
     flex: 1,
     alignItems: "center",
-    borderWidth: 5,
-    borderColor: "red",
   },
   backgroundImage: {
     flex: 1,

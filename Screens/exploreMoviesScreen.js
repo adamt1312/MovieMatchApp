@@ -6,6 +6,8 @@ import InfoCard from "../Components/InfoCard";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Swiper from "react-native-deck-swiper";
+import * as json from "./test.json";
+import { Input, Block } from "galio-framework";
 
 const fetchFont = () => {
   return Font.loadAsync({
@@ -21,26 +23,30 @@ const exploreMoviesScreen = ({ navigation }) => {
 
   const [state, setState] = useState({
     s: "",
-    results: [],
+    results: json.results,
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchPopular = async () => {
-      setIsLoading(true);
-      const results = await (await axios(apiurlPopular)).data.results;
+  // TBD - fetch popular isn´t completed, needs to be finished
+  // TBD - error handling
 
-      setState({ s: "", results: results });
-      setIsLoading(false);
-    };
-    fetchPopular();
-  }, []);
+  // useEffect(() => {
+  //   const fetchPopular = () => {
+  //     setIsLoading(true);
+  //     axios(apiurlPopular).then(({ data }) => {
+  //       const results = data.results;
+  //       // console.log(results);
+  //       setState({ s: "", results: results });
+  //       setIsLoading(false);
+  //     });
+  //   };
+  //   fetchPopular();
+  // }, []);
 
   const search = () => {
     setIsLoading(true);
     axios(apiurlSearch + state.s).then(({ data }) => {
       const results = data.results;
-      console.log(results);
       setState({ s: "", results: results });
     });
     setIsLoading(false);
@@ -48,34 +54,52 @@ const exploreMoviesScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchbox}>
-        <FontAwesomeIcon icon={faSearch} size={25} />
-        <TextInput
-          style={{ fontSize: 22, marginLeft: 10 }}
-          onChangeText={(text) =>
-            setState((prevState) => {
-              return { ...prevState, s: text };
-            })
-          }
-          onSubmitEditing={search}
-          value={state.s}
-        />
-      </View>
-
+      <Input
+        placeholder="Input with Icon on right"
+        left
+        icon="search1"
+        family="antdesign"
+        iconSize={25}
+        iconColor="black"
+        rounded={true}
+        fontSize={25}
+        onChangeText={(text) =>
+          setState((prevState) => {
+            return { ...prevState, s: text };
+          })
+        }
+        onSubmitEditing={search}
+        value={state.s}
+        style={{
+          position: "relative",
+          zIndex: 100,
+          elevation: 10,
+          width: "85%",
+        }}
+      />
       {isLoading ? (
         <View style={styles.loadWrapper}>
           <ActivityIndicator size={100} color="white" />
         </View>
       ) : (
-        state.results.map((result) => (
-          <InfoCard
-            key={result.id}
-            imgUrl={"https://image.tmdb.org/t/p/w300" + result.poster_path}
-            vote_average={result.vote_average}
-            original_title={result.original_title}
-            overview={result.overview}
-          />
-        ))
+        <Swiper
+          cards={state.results}
+          renderCard={(card) => (
+            <InfoCard
+              imgUrl={"https://image.tmdb.org/t/p/w300" + card.poster_path}
+              vote_average={card.vote_average}
+              original_title={card.title}
+              overview={card.overview}
+            />
+          )}
+          horizontalSwipe={true}
+          backgroundColor={"transparent"}
+          cardVerticalMargin={0}
+          cardHorizontalMargin={0}
+          stackSize={5}
+          verticalSwipe={false}
+          cardIndex={0}
+        ></Swiper>
       )}
 
       {/* <View style={styles.bottomNavigatorContainer}>
@@ -105,6 +129,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     borderRadius: 15,
     margin: 5,
+    position: "absolute",
   },
   loadWrapper: {
     width: "100%",
