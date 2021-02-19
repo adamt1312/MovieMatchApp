@@ -1,21 +1,11 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TextInput,
-  ImageBackground,
-  TouchableHighlight,
-  SafeAreaView,
-  TouchableOpacity,
-  StatusBar,
-  Button,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import * as Font from "expo-font";
 import "react-native-gesture-handler";
 import BackgroundBlurred from "../Components/BackgroundBlurred";
 import ButtonComponent from "../Components/Screen components/ButtonComponent";
+import * as firebase from "firebase";
+import { loggingOut } from "../API/firebaseMethods";
 
 const fetchFont = () => {
   return Font.loadAsync({
@@ -23,26 +13,69 @@ const fetchFont = () => {
   });
 };
 
-const homeScreen = ({ navigation }) => {
+export default function homeScreen({ navigation }) {
+  let currentUserUID = firebase.auth().currentUser.uid;
+  const [nickname, setNickname] = useState("");
+
+  useEffect(() => {
+    async function getUserInfo() {
+      let doc = await firebase
+        .firestore()
+        .collection("users")
+        .doc(currentUserUID)
+        .get();
+
+      if (!doc.exists) {
+        Alert.alert("No user data found!");
+      } else {
+        let dataObj = doc.data();
+        setNickname(dataObj.nickname);
+      }
+    }
+    getUserInfo();
+  });
+
+  const handlePress = () => {
+    loggingOut();
+    navigation.replace("SignIn");
+  };
   return (
-    <SafeAreaView style={styles.screenView}>
+    <View style={styles.screenView}>
       <BackgroundBlurred />
-      {/* <StatusBar backgroundColor='#1d0014' barStyle='light-content' /> */}
-      <Text style={styles.appName}>MOVIE TINDER</Text>
-      <View style={styles.buttonContainer}>
-        <ButtonComponent />
+      <View
+        style={{
+          height: "50%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text style={{ fontSize: 30, color: "white" }}>
+          {"Hi " + nickname + " !"}
+        </Text>
       </View>
-    </SafeAreaView>
+
+      <TouchableOpacity
+        onPress={handlePress}
+        style={{
+          backgroundColor: "green",
+          height: 200,
+          width: 200,
+          justifyContent: "center",
+        }}
+      >
+        <Text style={{ color: "white", textAlign: "center", fontSize: 30 }}>
+          Log Out
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   screenView: {
     height: "100%",
     width: "100%",
     alignItems: "center",
-    borderWidth: 20,
-    borderColor: "red",
   },
   appName: {
     color: "white",
@@ -58,5 +91,3 @@ const styles = StyleSheet.create({
     top: "40%",
   },
 });
-
-export default homeScreen;

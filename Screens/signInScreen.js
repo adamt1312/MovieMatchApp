@@ -3,11 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TextInput,
   ImageBackground,
-  TouchableHighlight,
-  SafeAreaView,
   TouchableOpacity,
   StatusBar,
 } from "react-native";
@@ -20,12 +17,11 @@ import {
   faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import * as Font from "expo-font";
-import { AppLoading } from "expo";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Animatable from "react-native-animatable";
 import "react-native-gesture-handler";
-import signUpScreen from "./signUpScreen";
-import homeScreen from "./homeScreen";
+import { signIn } from "../API/firebaseMethods";
+import Checkmark from "../Components/Screen components/Checkmark";
 
 const fetchFont = () => {
   return Font.loadAsync({
@@ -33,55 +29,32 @@ const fetchFont = () => {
   });
 };
 
-const signInScreen = ({ navigation }) => {
+export default function signInScreen({ navigation }) {
   const [fontLoaded, setFontLoaded] = useState(false);
-  const [data, setData] = useState({
-    email: "",
-    password: "",
-    check_textInputChange: false,
-    secureTextEntry: true,
-  });
 
-  if (!fontLoaded) {
-    return (
-      <AppLoading
-        startAsync={fetchFont}
-        onError={() => console.log("error")}
-        onFinish={() => {
-          setFontLoaded(true);
-        }}
-      />
-    );
-  }
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [secureTextEntryPassword, setSecureTextEntryPassword] = useState(true);
 
-  const textInputChange = (val) => {
-    if (val.lenght != 0) {
-      setData({
-        ...data,
-        email: val,
-        check_textInputChange: false,
-      });
-    } else {
-      setData({
-        ...data,
-        email: val,
-        check_textInputChange: true,
-      });
+  const handlePress = () => {
+    if (!email) {
+      Alert.alert("Email field is required.");
     }
+
+    if (!password) {
+      Alert.alert("Password field is required.");
+    }
+    console.log(
+      "Going to sign in with email: " + email + " and password " + password
+    );
+    signIn(email, password);
+    setEmail("");
+    setPassword("");
   };
 
-  const handlePassowrdChange = (val) => {
-    setData({
-      ...data,
-      password: val,
-    });
-  };
-
-  const showHidePassword = () => {
-    setData({
-      ...data,
-      secureTextEntry: !data.secureTextEntry,
-    });
+  const validateEmail = (email) => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
   };
 
   return (
@@ -101,30 +74,28 @@ const signInScreen = ({ navigation }) => {
                 style={styles.textInputs}
                 placeholder="E-mail"
                 autoCapitalize="none"
-                onChangeText={(val) => textInputChange(val)}
+                value={email}
+                onChangeText={(email) => setEmail(email)}
               />
 
-              {data.check_textInputChange ? (
-                <Animatable.View animation="bounceIn">
-                  <FontAwesomeIcon
-                    icon={faCheckCircle}
-                    color={"green"}
-                    size={22}
-                  />
-                </Animatable.View>
-              ) : null}
+              {validateEmail(email) ? <Checkmark /> : null}
             </View>
             <View style={styles.inputLine}>
               <FontAwesomeIcon icon={faLock} />
               <TextInput
                 style={styles.textInputs}
                 placeholder="Password"
-                secureTextEntry={data.secureTextEntry ? true : false}
+                secureTextEntry={secureTextEntryPassword}
                 autoCapitalize="none"
-                onChangeText={(val) => handlePassowrdChange(val)}
+                value={password}
+                onChangeText={(password) => setPassword(password)}
               />
-              <TouchableOpacity onPress={showHidePassword}>
-                {data.secureTextEntry ? (
+              <TouchableOpacity
+                onPress={() =>
+                  setSecureTextEntryPassword(!secureTextEntryPassword)
+                }
+              >
+                {secureTextEntryPassword ? (
                   <FontAwesomeIcon icon={faEyeSlash} size={22} />
                 ) : (
                   <FontAwesomeIcon icon={faEye} size={22} />
@@ -133,13 +104,7 @@ const signInScreen = ({ navigation }) => {
             </View>
 
             <View style={styles.loginButtonsView}>
-              <TouchableOpacity
-                onPress={() => {
-                  data.email = "";
-                  data.password = "";
-                  navigation.navigate("rmc");
-                }}
-              >
+              <TouchableOpacity onPress={handlePress}>
                 <LinearGradient
                   colors={["#791845", "#870055"]}
                   style={styles.button}
@@ -169,7 +134,7 @@ const signInScreen = ({ navigation }) => {
                     })
                   }
                 >
-                  Switch to Sign Up
+                  Don't have an account
                 </Text>
               </TouchableOpacity>
             </View>
@@ -178,7 +143,7 @@ const signInScreen = ({ navigation }) => {
       </View>
     </ImageBackground>
   );
-};
+}
 
 const styles = StyleSheet.create({
   screenView: {
@@ -240,5 +205,3 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 });
-
-export default signInScreen;

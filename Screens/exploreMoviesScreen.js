@@ -23,25 +23,23 @@ const exploreMoviesScreen = ({ navigation }) => {
 
   const [state, setState] = useState({
     s: "",
-    results: json.results,
+    results: [],
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // TBD - fetch popular isn´t completed, needs to be finished
   // TBD - error handling
 
-  // useEffect(() => {
-  //   const fetchPopular = () => {
-  //     setIsLoading(true);
-  //     axios(apiurlPopular).then(({ data }) => {
-  //       const results = data.results;
-  //       // console.log(results);
-  //       setState({ s: "", results: results });
-  //       setIsLoading(false);
-  //     });
-  //   };
-  //   fetchPopular();
-  // }, []);
+  useEffect(() => {
+    try {
+      axios(apiurlPopular).then(({ data }) => {
+        setState({ ...data, results: data.results });
+        setIsLoading(false);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const search = () => {
     setIsLoading(true);
@@ -52,10 +50,21 @@ const exploreMoviesScreen = ({ navigation }) => {
     setIsLoading(false);
   };
 
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   try {
+  //     axios(apiurlSearch + state.s).then(({ data }) => {
+  //       setState({ ...data, results: data.results });
+  //       setIsLoading(false);
+  //     });
+  //   } catch (error) {
+  //     console.log(state.s + " not found in our movie DB!");
+  //   }
+  // }, [state.s]);
+
   return (
     <View style={styles.container}>
       <Input
-        placeholder="Input with Icon on right"
         left
         icon="search1"
         family="antdesign"
@@ -63,6 +72,7 @@ const exploreMoviesScreen = ({ navigation }) => {
         iconColor="black"
         rounded={true}
         fontSize={25}
+        color="black"
         onChangeText={(text) =>
           setState((prevState) => {
             return { ...prevState, s: text };
@@ -75,6 +85,8 @@ const exploreMoviesScreen = ({ navigation }) => {
           zIndex: 100,
           elevation: 10,
           width: "85%",
+          top: 20,
+          backgroundColor: "'rgba(255, 255, 255, 0.7)",
         }}
       />
       {isLoading ? (
