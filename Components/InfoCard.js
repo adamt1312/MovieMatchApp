@@ -6,15 +6,8 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from "react-native";
-import * as Font from "expo-font";
-import RatingBar from "./Screen components/RatingBar";
+import RatingBar from "./screen components/RatingBar";
 import { LinearGradient } from "expo-linear-gradient";
-
-const fetchFont = () => {
-  return Font.loadAsync({
-    ChaletNewYorkNineteenSeventy: require("../assets/fonts/ChaletNewYorkNineteenSeventy.ttf"),
-  });
-};
 
 export default InfoCard = (props) => {
   const { imgUrl, vote_average, original_title, overview } = props;

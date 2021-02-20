@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TextInput, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import * as Font from "expo-font";
 import axios from "axios";
-import InfoCard from "../Components/InfoCard";
+import InfoCard from "../components/InfoCard";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Swiper from "react-native-deck-swiper";
 import * as json from "./test.json";
-import { Input, Block } from "galio-framework";
+import { Input, Button } from "galio-framework";
 
 const fetchFont = () => {
   return Font.loadAsync({
@@ -169,6 +169,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 5,
     borderBottomColor: "#491475",
     position: "absolute",
+  },
+  button: {
+    width: "50%",
+    backgroundColor: "white",
   },
 });
 

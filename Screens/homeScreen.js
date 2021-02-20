@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import * as Font from "expo-font";
 import "react-native-gesture-handler";
-import BackgroundBlurred from "../Components/BackgroundBlurred";
-import ButtonComponent from "../Components/Screen components/ButtonComponent";
+import BackgroundBlurred from "../components/BackgroundBlurred";
 import * as firebase from "firebase";
 import { loggingOut } from "../API/firebaseMethods";
-
-const fetchFont = () => {
-  return Font.loadAsync({
-    ChaletNewYorkNineteenSeventy: require("../assets/fonts/ChaletNewYorkNineteenSeventy.ttf"),
-  });
-};
+import { Button } from "galio-framework";
 
 export default function homeScreen({ navigation }) {
   let currentUserUID = firebase.auth().currentUser.uid;
@@ -35,38 +28,55 @@ export default function homeScreen({ navigation }) {
     getUserInfo();
   });
 
-  const handlePress = () => {
+  const handleLogOut = () => {
     loggingOut();
     navigation.replace("SignIn");
   };
   return (
     <View style={styles.screenView}>
       <BackgroundBlurred />
-      <View
-        style={{
-          height: "50%",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text style={{ fontSize: 30, color: "white" }}>
-          {"Hi " + nickname + " !"}
+      <View style={styles.contentWrapper}>
+        <Text
+          style={{
+            fontSize: 30,
+            color: "white",
+            fontFamily: "VarelaRound_400Regular",
+          }}
+        >
+          {"Welcome back, " + nickname + " !"}
         </Text>
       </View>
-
-      <TouchableOpacity
-        onPress={handlePress}
-        style={{
-          backgroundColor: "green",
-          height: 200,
-          width: 200,
-          justifyContent: "center",
-        }}
-      >
-        <Text style={{ color: "white", textAlign: "center", fontSize: 30 }}>
-          Log Out
-        </Text>
-      </TouchableOpacity>
+      <View style={[styles.contentWrapper, { flex: 2 }]}>
+        <Button
+          onPress={() => {
+            navigation.replace("ExploreMoviesScreen");
+          }}
+          style={styles.button}
+        >
+          <Text
+            style={{
+              color: "black",
+              textAlign: "center",
+              fontSize: 20,
+              fontFamily: "Roboto_300Light",
+            }}
+          >
+            Explore movies
+          </Text>
+        </Button>
+        <Button onPress={handleLogOut} style={styles.button}>
+          <Text
+            style={{
+              color: "black",
+              textAlign: "center",
+              fontSize: 25,
+              fontFamily: "Roboto_300Light",
+            }}
+          >
+            Log Out
+          </Text>
+        </Button>
+      </View>
     </View>
   );
 }
@@ -89,5 +99,22 @@ const styles = StyleSheet.create({
   buttonContainer: {
     position: "absolute",
     top: "40%",
+  },
+  contentWrapper: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    // borderColor: "red",
+    // borderWidth: 5,
+  },
+  card: {
+    width: "80%",
+    height: "100%",
+    backgroundColor: "white",
+  },
+  button: {
+    width: "50%",
+    backgroundColor: "white",
   },
 });

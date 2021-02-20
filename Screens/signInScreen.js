@@ -7,34 +7,26 @@ import {
   ImageBackground,
   TouchableOpacity,
   StatusBar,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
-  faCheckCircle,
   faLock,
   faUser,
   faEyeSlash,
   faEye,
 } from "@fortawesome/free-solid-svg-icons";
-import * as Font from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import * as Animatable from "react-native-animatable";
 import "react-native-gesture-handler";
 import { signIn } from "../API/firebaseMethods";
-import Checkmark from "../Components/Screen components/Checkmark";
-
-const fetchFont = () => {
-  return Font.loadAsync({
-    ChaletNewYorkNineteenSeventy: require("../assets/fonts/ChaletNewYorkNineteenSeventy.ttf"),
-  });
-};
+import Checkmark from "../components/screen components/Checkmark";
 
 export default function signInScreen({ navigation }) {
-  const [fontLoaded, setFontLoaded] = useState(false);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [secureTextEntryPassword, setSecureTextEntryPassword] = useState(true);
+  let loading = false;
 
   const handlePress = () => {
     if (!email) {
@@ -53,91 +45,92 @@ export default function signInScreen({ navigation }) {
   };
 
   const validateEmail = (email) => {
-    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let re = email.replace(/\s/g, "");
+    re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   };
 
   return (
     <ImageBackground
-      source={require("../assets/login_bg2.png")}
+      source={require("../assets/images/login_bg2.png")}
       style={styles.backgroundImage}
       blurRadius={2}
     >
       <View style={styles.screenView}>
         <StatusBar backgroundColor="#1d0014" barStyle="light-content" />
         <View style={styles.logoInputContainer}>
-          <Text style={styles.appName}>MOVIE TINDER</Text>
-          <View style={styles.loginInputs}>
-            <View style={styles.inputLine}>
-              <FontAwesomeIcon icon={faUser} />
-              <TextInput
-                style={styles.textInputs}
-                placeholder="E-mail"
-                autoCapitalize="none"
-                value={email}
-                onChangeText={(email) => setEmail(email)}
-              />
+          <Text style={styles.appName}>MOVIE MATCH</Text>
+        </View>
+        <View style={styles.loginInputs}>
+          <View style={styles.inputLine}>
+            <FontAwesomeIcon icon={faUser} />
+            <TextInput
+              style={styles.textInputs}
+              placeholder="E-mail"
+              autoCapitalize="none"
+              value={email}
+              onChangeText={(email) => setEmail(email)}
+            />
 
-              {validateEmail(email) ? <Checkmark /> : null}
-            </View>
-            <View style={styles.inputLine}>
-              <FontAwesomeIcon icon={faLock} />
-              <TextInput
-                style={styles.textInputs}
-                placeholder="Password"
-                secureTextEntry={secureTextEntryPassword}
-                autoCapitalize="none"
-                value={password}
-                onChangeText={(password) => setPassword(password)}
-              />
-              <TouchableOpacity
-                onPress={() =>
-                  setSecureTextEntryPassword(!secureTextEntryPassword)
+            {validateEmail(email) ? <Checkmark /> : null}
+          </View>
+          <View style={styles.inputLine}>
+            <FontAwesomeIcon icon={faLock} />
+            <TextInput
+              style={styles.textInputs}
+              placeholder="Password"
+              secureTextEntry={secureTextEntryPassword}
+              autoCapitalize="none"
+              value={password}
+              onChangeText={(password) => setPassword(password)}
+            />
+            <TouchableOpacity
+              onPress={() =>
+                setSecureTextEntryPassword(!secureTextEntryPassword)
+              }
+            >
+              {secureTextEntryPassword ? (
+                <FontAwesomeIcon icon={faEyeSlash} size={22} />
+              ) : (
+                <FontAwesomeIcon icon={faEye} size={22} />
+              )}
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.loginButtonsView}>
+            <TouchableOpacity onPress={handlePress}>
+              <LinearGradient
+                colors={["#791845", "#870055"]}
+                style={styles.button}
+              >
+                <Text style={styles.loginButtonText}>Sign In</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate("SignUp")}
+              style={[
+                styles.button,
+                {
+                  borderColor: "#791845",
+                  borderWidth: 3,
+                  backgroundColor: "white",
+                  width: 180,
+                  height: 35,
+                },
+              ]}
+            >
+              <Text
+                style={
+                  (styles.loginButtonText,
+                  {
+                    color: "black",
+                  })
                 }
               >
-                {secureTextEntryPassword ? (
-                  <FontAwesomeIcon icon={faEyeSlash} size={22} />
-                ) : (
-                  <FontAwesomeIcon icon={faEye} size={22} />
-                )}
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.loginButtonsView}>
-              <TouchableOpacity onPress={handlePress}>
-                <LinearGradient
-                  colors={["#791845", "#870055"]}
-                  style={styles.button}
-                >
-                  <Text style={styles.loginButtonText}>Sign In</Text>
-                </LinearGradient>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => navigation.navigate("SignUp")}
-                style={[
-                  styles.button,
-                  {
-                    borderColor: "#791845",
-                    borderWidth: 3,
-                    backgroundColor: "white",
-                    width: 180,
-                    height: 35,
-                  },
-                ]}
-              >
-                <Text
-                  style={
-                    (styles.loginButtonText,
-                    {
-                      color: "black",
-                    })
-                  }
-                >
-                  Don't have an account
-                </Text>
-              </TouchableOpacity>
-            </View>
+                Don't have an account
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -156,14 +149,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   logoInputContainer: {
+    flex: 1,
     width: "100%",
-    height: "80%",
     justifyContent: "center",
     alignItems: "center",
   },
   appName: {
     color: "white",
-    fontFamily: "ChaletNewYorkNineteenSeventy",
+    fontFamily: "VarelaRound_400Regular",
     fontSize: 43,
     borderBottomWidth: 5,
     borderBottomColor: "#491475",
@@ -174,7 +167,9 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
   },
   loginInputs: {
+    flex: 3,
     marginTop: 15,
+    top: 100,
   },
   inputLine: {
     flexDirection: "row",
