@@ -19,6 +19,7 @@ import SignUpScreen from "./screens/SignUpScreen";
 import HomeScreen from "./screens/HomeScreen";
 import LoadingScreen from "./screens/LoadingScreen";
 import ExploreMoviesScreen from "./screens/ExploreMoviesScreen";
+import MovieDetailScreen from "./screens/MovieDetailScreen/MovieDetailScreen";
 import * as firebase from "firebase";
 import apiKeys from "./config/keys";
 
@@ -52,8 +53,8 @@ export default function App() {
     require("./assets/images/login_bg2.png"),
   ]);
 
-  console.log("Fonts loaded: " + fontsLoaded);
-  console.log("Assets loaded: " + assetsLoaded);
+  // console.log("Fonts loaded: " + fontsLoaded);
+  // console.log("Assets loaded: " + assetsLoaded);
 
   if (!fontsLoaded || !assetsLoaded) {
     return <ActivityIndicator size={100} color="gray" />;
@@ -86,13 +87,18 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="HomeScreen"
+          name="Home"
           component={HomeScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="ExploreMoviesScreen"
+          name="ExploreMovies"
           component={ExploreMoviesScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={"MovieDetail"}
+          component={MovieDetailScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

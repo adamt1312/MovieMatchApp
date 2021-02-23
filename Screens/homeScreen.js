@@ -49,7 +49,7 @@ export default function homeScreen({ navigation }) {
       <View style={[styles.contentWrapper, { flex: 2 }]}>
         <Button
           onPress={() => {
-            navigation.replace("ExploreMoviesScreen");
+            navigation.replace("ExploreMovies");
           }}
           style={styles.button}
         >

@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  TouchableWithoutFeedback,
+} from "react-native";
 import * as Font from "expo-font";
 import axios from "axios";
 import InfoCard from "../components/InfoCard";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Swiper from "react-native-deck-swiper";
-import * as json from "./test.json";
-import { Input, Button } from "galio-framework";
-
-const fetchFont = () => {
-  return Font.loadAsync({
-    ChaletNewYorkNineteenSeventy: require("../assets/fonts/ChaletNewYorkNineteenSeventy.ttf"),
-  });
-};
+import { Input } from "galio-framework";
+import styles from "./ExploreMovieScreenStyle";
 
 const exploreMoviesScreen = ({ navigation }) => {
   const apiurlSearch =
@@ -21,19 +18,22 @@ const exploreMoviesScreen = ({ navigation }) => {
   const apiurlPopular =
     "https://api.themoviedb.org/3/movie/popular?api_key=7bcd460b3cae3a42e99555ac0e04e8f1&language=en-US";
 
-  const [state, setState] = useState({
-    s: "",
+  const [data, setData] = useState({
+    search: "",
     results: [],
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  // TBD - fetch popular isn´t completed, needs to be finished
+  let currentMovieInfo;
   // TBD - error handling
 
   useEffect(() => {
     try {
       axios(apiurlPopular).then(({ data }) => {
-        setState({ ...data, results: data.results });
+        setData({
+          ...data,
+          results: data.results,
+        });
         setIsLoading(false);
       });
     } catch (error) {
@@ -43,24 +43,31 @@ const exploreMoviesScreen = ({ navigation }) => {
 
   const search = () => {
     setIsLoading(true);
-    axios(apiurlSearch + state.s).then(({ data }) => {
+    axios(apiurlSearch + data.search).then(({ data }) => {
       const results = data.results;
-      setState({ s: "", results: results });
+      setData({ search: "", results: results });
     });
     setIsLoading(false);
+  };
+
+  const tapHandler = (cardIndex) => {
+    console.log("tapHandler called");
+    navigation.navigate("MovieDetail", {
+      routes: data.results[cardIndex],
+    });
   };
 
   // useEffect(() => {
   //   setIsLoading(true);
   //   try {
-  //     axios(apiurlSearch + state.s).then(({ data }) => {
-  //       setState({ ...data, results: data.results });
+  //     axios(apiurlSearch + data.search).then(({ data }) => {
+  //       setData({ ...data, results: data.results });
   //       setIsLoading(false);
   //     });
   //   } catch (error) {
-  //     console.log(state.s + " not found in our movie DB!");
+  //     console.log(data.search + " not found in our movie DB!");
   //   }
-  // }, [state.s]);
+  // }, [data.search]);
 
   return (
     <View style={styles.container}>
@@ -74,12 +81,12 @@ const exploreMoviesScreen = ({ navigation }) => {
         fontSize={25}
         color="black"
         onChangeText={(text) =>
-          setState((prevState) => {
-            return { ...prevState, s: text };
+          setData((prevdata) => {
+            return { ...prevdata, search: text };
           })
         }
         onSubmitEditing={search}
-        value={state.s}
+        value={data.search}
         style={{
           position: "relative",
           zIndex: 100,
@@ -95,15 +102,20 @@ const exploreMoviesScreen = ({ navigation }) => {
         </View>
       ) : (
         <Swiper
-          cards={state.results}
-          renderCard={(card) => (
-            <InfoCard
-              imgUrl={"https://image.tmdb.org/t/p/w300" + card.poster_path}
-              vote_average={card.vote_average}
-              original_title={card.title}
-              overview={card.overview}
-            />
-          )}
+          cards={data.results}
+          renderCard={(card) => {
+            return (
+              <InfoCard
+                imgUrl={"https://image.tmdb.org/t/p/w300" + card.poster_path}
+                vote_average={card.vote_average}
+                original_title={card.title}
+                overview={card.overview}
+              />
+            );
+          }}
+          onTapCard={(cardIndex) => {
+            tapHandler(cardIndex);
+          }}
           horizontalSwipe={true}
           backgroundColor={"transparent"}
           cardVerticalMargin={0}
@@ -125,55 +137,5 @@ const exploreMoviesScreen = ({ navigation }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    height: "100%",
-    width: "100%",
-    backgroundColor: "black",
-    alignItems: "center",
-  },
-  searchbox: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 15,
-    width: "90%",
-    backgroundColor: "#FFF",
-    borderRadius: 15,
-    margin: 5,
-    position: "absolute",
-  },
-  loadWrapper: {
-    width: "100%",
-    height: "80%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  bottomNavigatorContainer: {
-    backgroundColor: "gray",
-    width: "100%",
-    height: 55,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  touchableContainer: {
-    width: "50%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-  },
-  navName: {
-    color: "white",
-    fontSize: 25,
-    borderBottomWidth: 5,
-    borderBottomColor: "#491475",
-    position: "absolute",
-  },
-  button: {
-    width: "50%",
-    backgroundColor: "white",
-  },
-});
 
 export default exploreMoviesScreen;

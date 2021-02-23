@@ -14,7 +14,7 @@ export default InfoCard = (props) => {
 
   return (
     <ImageBackground source={{ uri: imgUrl }} style={styles.backgroundImage}>
-      <TouchableOpacity style={styles.infoContainer}>
+      <View style={styles.infoContainer}>
         <LinearGradient
           colors={["transparent", "black"]}
           locations={[0.1, 0.95]}
@@ -32,7 +32,7 @@ export default InfoCard = (props) => {
             {overview.substring(0, 180) + "..."}
           </Text>
         </View>
-      </TouchableOpacity>
+      </View>
     </ImageBackground>
   );
 };

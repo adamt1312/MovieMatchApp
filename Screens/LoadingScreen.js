@@ -7,7 +7,7 @@ export default function LoadingScreen({ navigation }) {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log("Going to HomeScreen");
-        navigation.replace("HomeScreen");
+        navigation.replace("Home");
       } else {
         console.log("Going to SignInScreen");
         navigation.replace("SignIn");

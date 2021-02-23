@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   StatusBar,
+  Alert,
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
@@ -42,7 +43,7 @@ export default function signUpScreen({ navigation }) {
   const handlePress = () => {
     if (!nickname) {
       Alert.alert("Nickname is required");
-    } else if (validateEmail(email)) {
+    } else if (!validateEmail(email)) {
       Alert.alert("Email field is required.");
     } else if (!password) {
       Alert.alert("Password field is required.");
@@ -53,7 +54,7 @@ export default function signUpScreen({ navigation }) {
       Alert.alert("Password does not match!");
     } else {
       registration(email, password, nickname);
-      navigation.navigate("HomeScreen");
+      navigation.navigate("Loading");
       emptyState();
     }
   };
