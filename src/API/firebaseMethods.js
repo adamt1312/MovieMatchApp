@@ -6,7 +6,6 @@ export async function registration(email, password, nickname) {
   try {
     await firebase.auth().createUserWithEmailAndPassword(email, password);
     const currentUser = firebase.auth().currentUser;
-
     const db = firebase.firestore();
     db.collection("users").doc(currentUser.uid).set({
       email: currentUser.email,
@@ -20,6 +19,14 @@ export async function registration(email, password, nickname) {
 export async function signIn(email, password) {
   try {
     await firebase.auth().signInWithEmailAndPassword(email, password);
+    // const currentUser = firebase.auth().currentUser;
+    // const db = firebase.firestore();
+    // db.collection("users")
+    //   .doc(currentUser.uid)
+    //   .collection("library")
+    //   .doc("likedMovies")
+    //   .set({});
+    // console.log("does");
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }

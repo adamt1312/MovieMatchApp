@@ -14,12 +14,12 @@ import {
   VarelaRound_400Regular,
 } from "@expo-google-fonts/varela-round";
 import { Roboto_300Light } from "@expo-google-fonts/roboto";
-import SignInScreen from "./screens/SignInScreen";
-import SignUpScreen from "./screens/SignUpScreen";
-import HomeScreen from "./screens/HomeScreen";
-import LoadingScreen from "./screens/LoadingScreen";
-import ExploreMoviesScreen from "./screens/ExploreMoviesScreen";
-import MovieDetailScreen from "./screens/MovieDetailScreen/MovieDetailScreen";
+import SignInScreen from "./src/screens/SignInScreen";
+import SignUpScreen from "./src/screens/SignUpScreen";
+import HomeScreen from "./src/screens/HomeScreen";
+import LoadingScreen from "./src/screens/LoadingScreen";
+import ExploreMoviesScreen from "./src/screens/ExploreMoviesScreen";
+import MovieDetailScreen from "./src/screens/MovieDetailScreen/MovieDetailScreen";
 import * as firebase from "firebase";
 import apiKeys from "./config/keys";
 
@@ -49,8 +49,8 @@ export default function App() {
   });
 
   const [assetsLoaded] = useAssets([
-    require("./assets/images/login_bg.png"),
-    require("./assets/images/login_bg2.png"),
+    require("./src/assets/images/login_bg.png"),
+    require("./src/assets/images/login_bg2.png"),
   ]);
 
   // console.log("Fonts loaded: " + fontsLoaded);

@@ -5,7 +5,6 @@ import {
   View,
   TextInput,
   ImageBackground,
-  SafeAreaView,
   TouchableOpacity,
   StatusBar,
   Alert,
@@ -23,8 +22,6 @@ import { registration } from "../API/firebaseMethods";
 import Checkmark from "../components/screen components/Checkmark";
 
 export default function signUpScreen({ navigation }) {
-  const [fontLoaded, setFontLoaded] = useState(false);
-
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

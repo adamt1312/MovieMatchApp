@@ -12,11 +12,17 @@ import Swiper from "react-native-deck-swiper";
 import { Input } from "galio-framework";
 import styles from "./ExploreMovieScreenStyle";
 
+const API_KEY = "7bcd460b3cae3a42e99555ac0e04e8f1";
+
 const exploreMoviesScreen = ({ navigation }) => {
   const apiurlSearch =
-    "https://api.themoviedb.org/3/search/movie?api_key=7bcd460b3cae3a42e99555ac0e04e8f1&language=en-US&query=";
+    "https://api.themoviedb.org/3/search/movie?api_key=" +
+    API_KEY +
+    "&language=en-US&query=";
   const apiurlPopular =
-    "https://api.themoviedb.org/3/movie/popular?api_key=7bcd460b3cae3a42e99555ac0e04e8f1&language=en-US";
+    "https://api.themoviedb.org/3/movie/popular?api_key=" +
+    API_KEY +
+    "&language=en-US";
 
   const [data, setData] = useState({
     search: "",
