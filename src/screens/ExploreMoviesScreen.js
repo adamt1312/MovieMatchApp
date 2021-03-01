@@ -11,6 +11,9 @@ import InfoCard from "../components/InfoCard";
 import Swiper from "react-native-deck-swiper";
 import { Input } from "galio-framework";
 import styles from "./ExploreMovieScreenStyle";
+import { dbLibraryToDisliked } from "../API/firebaseMethods";
+import { dbLibraryToLiked } from "../API/firebaseMethods";
+import * as firebase from "firebase";
 
 const API_KEY = "7bcd460b3cae3a42e99555ac0e04e8f1";
 
@@ -121,6 +124,12 @@ const exploreMoviesScreen = ({ navigation }) => {
           }}
           onTapCard={(cardIndex) => {
             tapHandler(cardIndex);
+          }}
+          onSwipedRight={(cardIndex) => {
+            dbLibraryToLiked(data.results[cardIndex]);
+          }}
+          onSwipedLeft={(cardIndex) => {
+            dbLibraryToDisliked(data.results[cardIndex]);
           }}
           horizontalSwipe={true}
           backgroundColor={"transparent"}
