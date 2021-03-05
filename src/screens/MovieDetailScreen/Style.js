@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     top: 340,
-    height: 1300,
+    height: 1000,
     width: "100%",
     justifyContent: "flex-start",
     alignContent: "center",
@@ -36,12 +36,12 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto_300Light",
   },
   titleContainer: {
-    flex: 1,
+    height: "auto",
     width: "90%",
     // borderColor: "green",
     // borderWidth: 4,
-    alignContent: "center",
-    justifyContent: "center",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
   categoryContainer: {
     flexDirection: "row",
@@ -55,6 +55,15 @@ const styles = StyleSheet.create({
     marginTop: 5,
     // borderColor: "red",
     // borderWidth: 4,
+  },
+  buttonsWrapper: {
+    position: "absolute",
+    zIndex: 100,
+    bottom: 30,
+    width: "100%",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    flexDirection: "row",
   },
 });
 

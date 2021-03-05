@@ -6,7 +6,7 @@ import * as firebase from "firebase";
 import { loggingOut } from "../API/firebaseMethods";
 import { Button } from "galio-framework";
 
-export default function homeScreen({ navigation }) {
+const homeScreen = ({ navigation }) => {
   let currentUserUID = firebase.auth().currentUser.uid;
   const [nickname, setNickname] = useState("");
 
@@ -35,6 +35,7 @@ export default function homeScreen({ navigation }) {
   return (
     <View style={styles.screenView}>
       <BackgroundBlurred />
+
       <View style={styles.contentWrapper}>
         <Text
           style={{
@@ -79,7 +80,7 @@ export default function homeScreen({ navigation }) {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   screenView: {
@@ -118,3 +119,5 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
 });
+
+export default homeScreen;

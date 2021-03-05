@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  ActivityIndior,
-  ImageBackground,
-} from "react-native";
+import { StyleSheet, View, Text, ImageBackground } from "react-native";
 import * as Font from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-
 import axios from "axios";
 import InfoCard from "../../components/InfoCard";
 import Category from "../../components/screen components/Category";
 import { Button } from "galio-framework";
 import { ScrollView } from "react-native-gesture-handler";
 import styles from "./Style";
+import HeartButton from "../../components/screen components/HeartButton";
+import CrossButtton from "../../components/screen components/CrossButton";
 
 const MovieDetailScreen = ({ route, navigation }) => {
   const data = route.params.routes;
@@ -24,6 +19,11 @@ const MovieDetailScreen = ({ route, navigation }) => {
       source={{ uri: "https://image.tmdb.org/t/p/w300" + data.poster_path }}
       style={styles.backgroundImage}
     >
+      <View style={styles.buttonsWrapper}>
+        <CrossButtton />
+        <HeartButton />
+      </View>
+
       <ScrollView style={styles.scrollV}>
         <View style={styles.infoContainer}>
           <View style={[styles.titleContainer, { margin: 15 }]}>
