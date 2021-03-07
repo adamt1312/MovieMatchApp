@@ -50,7 +50,8 @@ const homeScreen = ({ navigation }) => {
       <View style={[styles.contentWrapper, { flex: 2 }]}>
         <Button
           onPress={() => {
-            navigation.replace("ExploreMovies");
+            // navigation.replace("ExploreMovies");
+            navigation.replace("BottomTabNavigator");
           }}
           style={styles.button}
         >
