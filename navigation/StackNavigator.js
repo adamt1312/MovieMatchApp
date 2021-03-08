@@ -9,6 +9,8 @@ import HomeScreen from "../src/screens/HomeScreen";
 import LoadingScreen from "../src/screens/LoadingScreen";
 import MovieDetailScreen from "../src/screens/MovieDetailScreen/MovieDetailScreen";
 import BottomTabNavigator from "./TabNavigator";
+import DrawerNavigator from "./DrawerNavigator";
+import OtherProfileScreen from "../src/screens/OtherProfileScreen";
 
 const Stack = createStackNavigator();
 const config2 = {
@@ -49,9 +51,14 @@ const MainStackNavigator = () => {
         component={SignUpScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Home"
         component={HomeScreen}
+        options={{ headerShown: false }}
+      /> */}
+      <Stack.Screen
+        name="Home"
+        component={DrawerNavigator}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -62,6 +69,11 @@ const MainStackNavigator = () => {
       <Stack.Screen
         name={"MovieDetail"}
         component={MovieDetailScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"OtherProfile"}
+        component={OtherProfileScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

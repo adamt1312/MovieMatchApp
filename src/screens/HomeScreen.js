@@ -26,7 +26,7 @@ const homeScreen = ({ navigation }) => {
       }
     }
     getUserInfo();
-  });
+  }, []);
 
   const handleLogOut = () => {
     loggingOut();

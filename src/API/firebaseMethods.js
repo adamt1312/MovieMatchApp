@@ -85,3 +85,27 @@ export async function dbLibraryToDisliked(movieObject) {
     Alert.alert("There is something wrong!", err.message);
   }
 }
+
+export async function fetchAllUsers() {
+  try {
+    const db = firebase.firestore();
+    let users = [];
+    const snapshot = await db.collection("users").get(); // should be limited to first n users, e.g. limit(100)
+    snapshot.forEach((doc) => {
+      users.push({ nickname: doc.data().nickname, id: doc.id });
+    });
+    return users;
+  } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
+export async function fetchUser(uid) {
+  try {
+    const db = firebase.firestore();
+    const user = await db.collection("users").doc(uid).get();
+    return user.data().nickname;
+  } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}

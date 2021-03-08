@@ -2,7 +2,6 @@ import React from "react";
 import { ActivityIndicator, LogBox } from "react-native";
 LogBox.ignoreLogs(["Setting a timer"]);
 import { NavigationContainer } from "@react-navigation/native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useAssets } from "expo-asset";
 import {
   useFonts,

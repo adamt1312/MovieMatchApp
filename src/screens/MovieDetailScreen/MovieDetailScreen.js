@@ -12,7 +12,7 @@ import HeartButton from "../../components/screen components/HeartButton";
 import CrossButtton from "../../components/screen components/CrossButton";
 
 const MovieDetailScreen = ({ route, navigation }) => {
-  const data = route.params.routes;
+  const data = route.params.data;
 
   return (
     <ImageBackground

@@ -16,7 +16,7 @@ const Category = (props) => {
 
   return (
     <TouchableHighlight style={styles.wrapper}>
-      <Text>{getGenreName(movieGenreID)}</Text>
+      <Text style={styles.text}>{getGenreName(movieGenreID)}</Text>
     </TouchableHighlight>
   );
 };
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   wrapper: {
     borderColor: "black",
     borderWidth: 3,
-    backgroundColor: "gray",
+    backgroundColor: "rgba(255,255,255,0.95)",
     flex: 1,
     height: 30,
     borderRadius: 20,
@@ -34,8 +34,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   text: {
-    fontFamily: "Roboto_300Light",
-    color: "white",
+    fontFamily: "Roboto",
+    color: "black",
   },
 });
 

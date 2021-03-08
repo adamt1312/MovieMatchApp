@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  ActivityIndicator,
-  TouchableWithoutFeedback,
-} from "react-native";
-import * as Font from "expo-font";
+import { View, ActivityIndicator } from "react-native";
 import axios from "axios";
 import InfoCard from "../components/InfoCard";
 import Swiper from "react-native-deck-swiper";
@@ -13,7 +7,6 @@ import { Input } from "galio-framework";
 import styles from "./ExploreMovieScreenStyle";
 import { dbLibraryToDisliked } from "../API/firebaseMethods";
 import { dbLibraryToLiked } from "../API/firebaseMethods";
-import * as firebase from "firebase";
 
 const API_KEY = "7bcd460b3cae3a42e99555ac0e04e8f1";
 
@@ -62,7 +55,7 @@ const exploreMoviesScreen = ({ navigation }) => {
   const tapHandler = (cardIndex) => {
     console.log("tapHandler called");
     navigation.navigate("MovieDetail", {
-      routes: data.results[cardIndex],
+      data: data.results[cardIndex],
     });
   };
 
