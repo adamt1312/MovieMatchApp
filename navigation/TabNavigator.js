@@ -14,6 +14,7 @@ const BottomTabNavigator = () => {
     <Tab.Navigator
       tabBarOptions={{
         activeTintColor: activeTintColor,
+        style: { height: 55 },
       }}
     >
       <Tab.Screen
@@ -24,6 +25,7 @@ const BottomTabNavigator = () => {
             <Text
               style={{
                 fontSize: 15,
+                marginBottom: 3,
                 color: focused ? activeTintColor : "black",
               }}
             >
@@ -43,6 +45,7 @@ const BottomTabNavigator = () => {
             <Text
               style={{
                 fontSize: 14,
+                marginBottom: 3,
                 color: focused ? activeTintColor : "black",
               }}
             >

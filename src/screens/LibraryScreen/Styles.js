@@ -18,13 +18,30 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   movieTitle: {
-    color: "white",
+    color: "black",
+    position: "absolute",
+    zIndex: 100,
     marginLeft: 20,
+    fontSize: 20,
+    fontFamily: "VarelaRound_400Regular",
+    textShadowColor: "rgba(0, 0, 0, 0.75)",
+    textShadowOffset: { width: 3, height: 1 },
+    textShadowRadius: 20,
   },
   backgroundImage: {
     flex: 1,
     resizeMode: "cover",
     justifyContent: "center",
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+  },
+  linearGradient: {
+    position: "absolute",
+    zIndex: 1,
+    borderRadius: 20,
+    width: "100%",
+    height: "100%",
   },
 });
 

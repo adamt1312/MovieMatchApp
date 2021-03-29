@@ -1,36 +1,54 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, ActivityIndicator } from "react-native";
-import { fetchAllUsers } from "../../API/firebaseMethods";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  Modal,
+  Pressable,
+  Button,
+  Alert,
+  TouchableWithoutFeedback,
+} from "react-native";
 import UserButton from "../../components/screen components/UserButton";
 import { Input } from "galio-framework";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
+import { isUserPaired, setPendingRequest } from "../../API/firebaseMethods";
+import { Entypo } from "@expo/vector-icons";
 
 const FindMatchScreen = (props) => {
-  const [usersInfo, setUsersInfo] = useState("NOTWORKING");
-  const [isLoading, setIsLoading] = useState(true);
+  const [searchUser, setSearchUser] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPaired, setisPaired] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const { navigation } = props;
+  // const { navigation } = props;
 
-  // const users = [
-  //   { nickname: "User1", id: "7Olg8IKxN5QCgV2DVAGsd5TMYQw2" },
-  //   { nickname: "User2", id: "IFTO5SUsO4dKvBe02oGvNSy9JDZ2" },
-  //   { nickname: "User3", id: "3" },
-  //   { nickname: "User4", id: "4" },
-  //   { nickname: "User5", id: "5" },
-  //   { nickname: "User6", id: "6" },
-  //   { nickname: "User7", id: "7" },
-  // ];
+  // useEffect(() => {
+  //   try {
+  //     fetchAllUsers().then((data) => {
+  //       setUsersInfo(data);
+  //       setIsLoading(false);
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, []);
 
-  useEffect(() => {
+  const pairHandler = (nickname) => {
     try {
-      fetchAllUsers().then((data) => {
-        setUsersInfo(data);
-        setIsLoading(false);
+      isUserPaired(nickname).then((isPaired) => {
+        setisPaired(isPaired);
+        if (!isPaired) {
+          setModalVisible(true);
+        } else if (isPaired) {
+          setModalVisible(true);
+        }
       });
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  };
 
   return (
     <View style={styles.loadWrapper}>
@@ -41,6 +59,81 @@ const FindMatchScreen = (props) => {
         </View>
       ) : (
         <View style={styles.container}>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <TouchableWithoutFeedback
+              style={styles.container}
+              activeOpacity={1}
+              onPressOut={() => {
+                setModalVisible(false);
+              }}
+            >
+              <View style={styles.centeredView}>
+                <TouchableWithoutFeedback>
+                  <View style={styles.modalView}>
+                    {isPaired ? (
+                      <View>
+                        <Text style={styles.modalText}>
+                          Sorry, but
+                          <Text
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {" "}
+                            {searchUser}{" "}
+                          </Text>
+                          <Text>is actually, paired with someone else, </Text>
+                          <Entypo name="emoji-sad" size={20} color="black" />
+                          <Text> try it later.</Text>
+                        </Text>
+                        <Pressable
+                          style={[styles.button, styles.buttonClose]}
+                          onPress={() => setModalVisible(!modalVisible)}
+                        >
+                          <Text style={styles.textStyle}>Cancel</Text>
+                        </Pressable>
+                      </View>
+                    ) : (
+                      <View>
+                        <Text style={styles.modalText}>
+                          Good news,
+                          <Text
+                            style={{
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {" "}
+                            {searchUser}{" "}
+                          </Text>
+                          is available, let`s send him a notice that you want to
+                          watch with him{" "}
+                          <Entypo name="emoji-happy" size={20} color="black" />
+                        </Text>
+                        <Pressable
+                          style={[styles.button, styles.buttonClose]}
+                          onPress={() => {
+                            setModalVisible(!modalVisible);
+                            setPendingRequest(searchUser);
+                          }}
+                        >
+                          <Text style={styles.textStyle}>
+                            Send request to pair
+                          </Text>
+                        </Pressable>
+                      </View>
+                    )}
+                  </View>
+                </TouchableWithoutFeedback>
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
           <Text
             style={{
               color: "white",
@@ -50,17 +143,6 @@ const FindMatchScreen = (props) => {
           >
             Let`s find a match!
           </Text>
-          {/* <Text
-            style={{
-              color: "white",
-              fontSize: 20,
-              textAlign: "center",
-              fontFamily: "VarelaRound_400Regular",
-            }}
-          >
-            TBD: List some users,add search bar at the top, enable to find
-            specific user with his nickname.
-          </Text> */}
 
           <Input
             rounded
@@ -70,21 +152,16 @@ const FindMatchScreen = (props) => {
             iconSize={25}
             iconColor="black"
             rounded={true}
-            fontSize={21}
+            fontSize={20}
             color="black"
             placeholder="Enter a friend's nickname..."
             placeholderTextColor="black"
             style={{ marginTop: 30, width: "90%" }}
+            onChangeText={(text) => setSearchUser(text)}
+            onSubmitEditing={() => {
+              pairHandler(searchUser);
+            }}
           />
-
-          {/* {usersInfo.map((user) => (
-            <UserButton
-              nickname={user.nickname}
-              id={user.id}
-              key={user.id}
-              navigation={navigation}
-            />
-          ))} */}
         </View>
       )}
     </View>
@@ -104,6 +181,47 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     // backgroundColor: "black",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontFamily: "VarelaRound_400Regular",
+    alignSelf: "center",
+    justifyContent: "center",
   },
 });
 

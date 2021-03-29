@@ -34,6 +34,7 @@ const signUpScreen = ({ navigation }) => {
     setNickname("");
     setEmail("");
     setPassword("");
+    setConfirmPassword("");
     setSecureTextEntryPassword(true);
     setSecureTextEntryPassConf(true);
   };

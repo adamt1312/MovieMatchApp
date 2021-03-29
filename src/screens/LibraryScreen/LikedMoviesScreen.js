@@ -11,6 +11,7 @@ import styles from "./Styles";
 import { fetchUserLikedMovies } from "../../API/firebaseMethods";
 import { Button } from "galio-framework";
 import { AntDesign } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
 const LikedMoviesScreen = ({ navigation }) => {
   const [data, setData] = useState();
@@ -47,7 +48,7 @@ const LikedMoviesScreen = ({ navigation }) => {
         renderItem={({ item, index, separators }) => (
           <TouchableHighlight
             key={item.id.toString()}
-            // FIXME: Printing some error with keyExtractor regarding expecting string=, but gets number instead
+            // FIXME: Printing some error with keyExtractor regarding expecting string, but gets number instead
             keyExtractor={(item) => item.id.toString()}
             onPress={() => tapHandler(data[index])}
             onShowUnderlay={separators.highlight}
@@ -61,6 +62,13 @@ const LikedMoviesScreen = ({ navigation }) => {
                 }}
                 style={styles.backgroundImage}
               >
+                <LinearGradient
+                  colors={["transparent", "white"]}
+                  locations={[0.1, 0.4]}
+                  start={{ x: 1, y: 0 }}
+                  end={{ x: -1, y: 0 }}
+                  style={styles.linearGradient}
+                />
                 <Text style={styles.movieTitle}>{item.title}</Text>
               </ImageBackground>
             </View>

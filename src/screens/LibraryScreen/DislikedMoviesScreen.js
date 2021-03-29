@@ -10,6 +10,7 @@ import BackgroundBlurred from "../../components/BackgroundBlurred";
 import styles from "./Styles";
 import { fetchUserDislikedMovies } from "../../API/firebaseMethods";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
 // TODO: Modify to matched movies not disliked
 
@@ -62,6 +63,13 @@ const DislikedMoviesScreen = ({ navigation }) => {
                 }}
                 style={styles.backgroundImage}
               >
+                <LinearGradient
+                  colors={["transparent", "white"]}
+                  locations={[0.1, 0.4]}
+                  start={{ x: 1, y: 0 }}
+                  end={{ x: -1, y: 0 }}
+                  style={styles.linearGradient}
+                />
                 <Text style={styles.movieTitle}>{item.title}</Text>
               </ImageBackground>
             </View>
