@@ -1,5 +1,11 @@
 import React from "react";
-import { ActivityIndicator, LogBox } from "react-native";
+import {
+  ActivityIndicator,
+  LogBox,
+  StatusBar,
+  View,
+  StyleSheet,
+} from "react-native";
 LogBox.ignoreLogs(["Setting a timer"]);
 import { NavigationContainer } from "@react-navigation/native";
 import { useAssets } from "expo-asset";
@@ -11,6 +17,7 @@ import { Roboto_300Light } from "@expo-google-fonts/roboto";
 import * as firebase from "firebase";
 import apiKeys from "./config/keys";
 import { MainStackNavigator } from "./navigation/StackNavigator";
+import LoadingScreen from "./src/screens/LoadingScreen/LoadingScreen";
 
 export default function App() {
   if (!firebase.apps.length) {
@@ -33,8 +40,16 @@ export default function App() {
   }
 
   return (
+    // <View style={{ flex: 1, backgroundColor: "red" }}></View>
     <NavigationContainer>
       <MainStackNavigator />
+      <StatusBar
+        // animated={false}
+        hidden={true}
+        translucent={true}
+        currentHeight={200}
+        // backgroundColor={"red"}
+      />
     </NavigationContainer>
   );
 }

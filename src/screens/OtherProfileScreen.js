@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet } from "react-native";
-import { styles } from "./MyProfileScreen";
+import { styles } from "./MyProfileScreen/MyProfileScreen";
 import { fetchUser } from "../API/firebaseMethods";
 import { FontAwesome } from "@expo/vector-icons";
 

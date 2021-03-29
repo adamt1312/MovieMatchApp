@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, ImageBackground } from "react-native";
+import React from "react";
+import {
+  View,
+  Text,
+  ImageBackground,
+  TouchableWithoutFeedback,
+} from "react-native";
 import * as Font from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
-import axios from "axios";
 import InfoCard from "../../components/InfoCard";
 import Category from "../../components/screen components/Category";
 import { Button } from "galio-framework";
 import { ScrollView } from "react-native-gesture-handler";
-import styles from "./Style";
+import styles from "./Styles";
 import HeartButton from "../../components/screen components/HeartButton";
 import CrossButtton from "../../components/screen components/CrossButton";
 
@@ -20,6 +24,7 @@ const MovieDetailScreen = ({ route, navigation }) => {
       style={styles.backgroundImage}
     >
       <View style={styles.buttonsWrapper}>
+        {/* TODO:Connect buttons + add its functionality*/}
         <CrossButtton />
         <HeartButton />
       </View>

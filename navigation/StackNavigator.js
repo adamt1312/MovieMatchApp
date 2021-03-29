@@ -3,14 +3,16 @@ import {
   CardStyleInterpolators,
   createStackNavigator,
 } from "@react-navigation/stack";
-import SignInScreen from "../src/screens/SignInScreen";
-import SignUpScreen from "../src/screens/SignUpScreen";
-import HomeScreen from "../src/screens/HomeScreen";
-import LoadingScreen from "../src/screens/LoadingScreen";
+import { StatusBar } from "react-native";
+import SignInScreen from "../src/screens/SignInScreen/SignInScreen";
+import SignUpScreen from "../src/screens/SignUpScreen/SignUpScreen";
+import HomeScreen from "../src/screens/HomeScreen/HomeScreen";
+import LoadingScreen from "../src/screens/LoadingScreen/LoadingScreen";
 import MovieDetailScreen from "../src/screens/MovieDetailScreen/MovieDetailScreen";
 import BottomTabNavigator from "./TabNavigator";
 import DrawerNavigator from "./DrawerNavigator";
-import OtherProfileScreen from "../src/screens/OtherProfileScreen";
+import LikedMoviesScreen from "../src/screens/LibraryScreen/LikedMoviesScreen";
+import BottomTabNavigator2 from "./TabNavigator2";
 
 const Stack = createStackNavigator();
 const config2 = {
@@ -51,11 +53,6 @@ const MainStackNavigator = () => {
         component={SignUpScreen}
         options={{ headerShown: false }}
       />
-      {/* <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      /> */}
       <Stack.Screen
         name="Home"
         component={DrawerNavigator}
@@ -72,8 +69,13 @@ const MainStackNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name={"OtherProfile"}
-        component={OtherProfileScreen}
+        name={"Library"}
+        component={LikedMoviesScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"BottomTabNavigator2"}
+        component={BottomTabNavigator2}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

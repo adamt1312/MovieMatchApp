@@ -54,15 +54,12 @@ export async function dbCreateLibrary() {
 
 export async function dbLibraryToLiked(movieObject) {
   try {
-    console.log(movieObject.id);
     const currentUser = firebase.auth().currentUser;
     const db = firebase.firestore();
     db.collection("users")
       .doc(currentUser.uid)
-      .collection("library")
-      .doc("likedMovies")
-      .collection(movieObject.id.toString())
-      .doc("info")
+      .collection("likedMovies")
+      .doc(movieObject.id.toString())
       .set(movieObject);
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
@@ -71,15 +68,12 @@ export async function dbLibraryToLiked(movieObject) {
 
 export async function dbLibraryToDisliked(movieObject) {
   try {
-    console.log(movieObject.id);
     const currentUser = firebase.auth().currentUser;
     const db = firebase.firestore();
     db.collection("users")
       .doc(currentUser.uid)
-      .collection("library")
-      .doc("dislikedMovies")
-      .collection(movieObject.id.toString())
-      .doc("info")
+      .collection("dislikedMovies")
+      .doc(movieObject.id.toString())
       .set(movieObject);
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
@@ -105,6 +99,36 @@ export async function fetchUser(uid) {
     const db = firebase.firestore();
     const user = await db.collection("users").doc(uid).get();
     return user.data().nickname;
+  } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
+export async function fetchUserLikedMovies() {
+  try {
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+    const movies = await db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("likedMovies")
+      .get();
+    return movies.docs.map((doc) => doc.data());
+  } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
+export async function fetchUserDislikedMovies() {
+  try {
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+    const movies = await db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("dislikedMovies")
+      .get();
+    return movies.docs.map((doc) => doc.data());
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }

@@ -26,16 +26,18 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderWidth: 3,
     backgroundColor: "rgba(255,255,255,0.95)",
-    flex: 1,
-    height: 30,
+    // flex: 1,
+    height: 47,
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
+    flexBasis: 90,
   },
   text: {
     fontFamily: "Roboto",
     color: "black",
+    textAlign: "center",
   },
 });
 

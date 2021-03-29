@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   },
   ratingBar: {
     position: "absolute",
-    bottom: 190,
+    bottom: 222,
     justifyContent: "center",
     zIndex: 100,
   },
@@ -72,9 +72,8 @@ const styles = StyleSheet.create({
   movieInfo: {
     height: "23%",
     width: "95%",
-    // backgroundColor: 'gray',
     position: "absolute",
-    bottom: 20,
+    bottom: 60,
     borderRadius: 5,
     flexDirection: "column",
     alignItems: "center",
@@ -82,8 +81,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    // borderColor: 'red',
-    // borderWidth: 3,
     width: "90%",
     flex: 2,
     textAlignVertical: "center",
@@ -92,8 +89,6 @@ const styles = StyleSheet.create({
     color: "white",
   },
   overview: {
-    // borderColor: 'green',
-    // borderWidth: 3,
     width: "90%",
     flex: 4,
     textAlignVertical: "center",

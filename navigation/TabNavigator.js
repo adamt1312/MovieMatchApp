@@ -2,8 +2,8 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
-import ExploreMoviesScreen from "../src/screens/ExploreMoviesScreen";
-import FindMatchScreen from "../src/screens/FindMatchScreen";
+import ExploreMoviesScreen from "../src/screens/ExploreMoviesScreen/ExploreMoviesScreen";
+import FindMatchScreen from "../src/screens/FindMatchScreen/FindMatchScreen";
 import { Text } from "react-native";
 
 const Tab = createBottomTabNavigator();
