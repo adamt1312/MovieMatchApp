@@ -13,36 +13,59 @@ import {
 import UserButton from "../../components/screen components/UserButton";
 import { Input } from "galio-framework";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
-import { isUserPaired, setPendingRequest } from "../../API/firebaseMethods";
+import {
+  isUserPaired,
+  setSentRequest,
+  isExistingUser,
+  getSentRequest,
+} from "../../API/firebaseMethods";
 import { Entypo } from "@expo/vector-icons";
+import PulseM from "../../components/screen components/PulseM";
+import * as firebase from "firebase";
+import "firebase/firestore";
 
 const FindMatchScreen = (props) => {
   const [searchUser, setSearchUser] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isPaired, setisPaired] = useState(null);
+  const [isAvailable, setIsAvailable] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
-  // const { navigation } = props;
+  const db = firebase.firestore();
+  const doc = db.collection("users").doc(firebase.auth().currentUser.uid);
 
-  // useEffect(() => {
-  //   try {
-  //     fetchAllUsers().then((data) => {
-  //       setUsersInfo(data);
-  //       setIsLoading(false);
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, []);
+  doc.onSnapshot((doc) => {
+    const sr = doc.data().sentRequest;
+    if (sr) {
+      setShowSearch(false);
+    } else {
+      setShowSearch(true);
+    }
+  });
+
+  useEffect(() => {
+    doc.onSnapshot((doc) => {
+      const sr = doc.data().sentRequest;
+      if (sr) {
+        setShowSearch(false);
+      } else {
+        setShowSearch(true);
+      }
+    });
+  }, []);
 
   const pairHandler = (nickname) => {
     try {
-      isUserPaired(nickname).then((isPaired) => {
-        setisPaired(isPaired);
-        if (!isPaired) {
-          setModalVisible(true);
-        } else if (isPaired) {
-          setModalVisible(true);
+      isExistingUser(nickname).then((data) => {
+        // user doesn`t exist
+        if (!data) {
+          Alert.alert("User with this nickname doesn`t exist.");
+          setSearchUser("");
+        } else {
+          isUserPaired(nickname).then((isAvailable) => {
+            setIsAvailable(isAvailable);
+            setModalVisible(true);
+          });
         }
       });
     } catch (error) {
@@ -77,7 +100,7 @@ const FindMatchScreen = (props) => {
               <View style={styles.centeredView}>
                 <TouchableWithoutFeedback>
                   <View style={styles.modalView}>
-                    {isPaired ? (
+                    {isAvailable ? (
                       <View>
                         <Text style={styles.modalText}>
                           Sorry, but
@@ -120,7 +143,7 @@ const FindMatchScreen = (props) => {
                           style={[styles.button, styles.buttonClose]}
                           onPress={() => {
                             setModalVisible(!modalVisible);
-                            setPendingRequest(searchUser);
+                            setSentRequest(searchUser);
                           }}
                         >
                           <Text style={styles.textStyle}>
@@ -134,34 +157,46 @@ const FindMatchScreen = (props) => {
               </View>
             </TouchableWithoutFeedback>
           </Modal>
-          <Text
-            style={{
-              color: "white",
-              fontSize: 35,
-              fontFamily: "VarelaRound_400Regular",
-            }}
-          >
-            Let`s find a match!
-          </Text>
+          {showSearch ? (
+            <View
+              style={{
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: 35,
+                  fontFamily: "VarelaRound_400Regular",
+                }}
+              >
+                Let`s find a match!
+              </Text>
 
-          <Input
-            rounded
-            left
-            icon="search1"
-            family="antdesign"
-            iconSize={25}
-            iconColor="black"
-            rounded={true}
-            fontSize={20}
-            color="black"
-            placeholder="Enter a friend's nickname..."
-            placeholderTextColor="black"
-            style={{ marginTop: 30, width: "90%" }}
-            onChangeText={(text) => setSearchUser(text)}
-            onSubmitEditing={() => {
-              pairHandler(searchUser);
-            }}
-          />
+              <Input
+                rounded
+                left
+                icon="search1"
+                family="antdesign"
+                iconSize={25}
+                iconColor="black"
+                rounded={true}
+                fontSize={20}
+                color="black"
+                placeholder="Enter a friend's nickname..."
+                placeholderTextColor="black"
+                style={{ marginTop: 30, width: "90%" }}
+                onChangeText={(text) => setSearchUser(text)}
+                onSubmitEditing={() => {
+                  pairHandler(searchUser);
+                }}
+              />
+            </View>
+          ) : (
+            <PulseM />
+          )}
         </View>
       )}
     </View>

@@ -17,6 +17,7 @@ import { color } from "react-native-reanimated";
 import { loggingOut } from "../src/API/firebaseMethods";
 import LikedMoviesScreen from "../src/screens/LibraryScreen/LikedMoviesScreen";
 import BottomTabNavigator2 from "./TabNavigator2";
+import RequestScreen from "../src/screens/RequestsScreen/RequestsScreen";
 
 function CustomDrawerContent(props) {
   return (
@@ -109,6 +110,30 @@ const DrawerNavigator = () => {
             ) : (
               <Text style={[styles.screenTitle, { color: "black" }]}>
                 My Profile
+              </Text>
+            ),
+        }}
+      />
+      <Drawer.Screen
+        name="Requests"
+        component={RequestScreen}
+        options={{
+          drawerIcon: (config) => (
+            <FontAwesome5 name="users" size={31} color="black" />
+          ),
+          drawerLabel: (config) =>
+            config.focused ? (
+              <Text
+                style={[
+                  styles.screenTitle,
+                  { color: activeTintColor, fontWeight: "bold" },
+                ]}
+              >
+                Requests
+              </Text>
+            ) : (
+              <Text style={[styles.screenTitle, { color: "black" }]}>
+                Requests
               </Text>
             ),
         }}

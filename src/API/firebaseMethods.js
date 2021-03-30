@@ -2,6 +2,8 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 import { Alert } from "react-native";
 
+// const db = firebase.firestore();
+
 export async function registration(email, password, nickname) {
   try {
     await firebase.auth().createUserWithEmailAndPassword(email, password);
@@ -13,6 +15,7 @@ export async function registration(email, password, nickname) {
       isPaired: null,
       sentRequest: null,
     });
+    currentUser.updateProfile({ displayName: nickname });
     dbCreateLibrary();
     // TODO: just uncomment
     // currentUser.sendEmailVerification();
@@ -138,6 +141,24 @@ export async function fetchUserDislikedMovies() {
   }
 }
 
+export async function isExistingUser(nickname) {
+  try {
+    const db = firebase.firestore();
+    const user = await db
+      .collection("users")
+      .where("nickname", "==", nickname)
+      .get();
+    if (user.empty) {
+      console.log("User doesn`t exist.");
+      return false;
+    } else {
+      return user;
+    }
+  } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
 export async function isUserPaired(nickname) {
   try {
     const db = firebase.firestore();
@@ -154,8 +175,8 @@ export async function isUserPaired(nickname) {
       .where("nickname", "==", nickname)
       .get();
     if (user.empty) {
-      console.log("No matching documents.");
-      return;
+      console.log("User doesn`t exist.");
+      return -1;
     }
     let b;
     user.forEach((doc) => {
@@ -167,16 +188,59 @@ export async function isUserPaired(nickname) {
   }
 }
 
-export async function setPendingRequest(nickname) {
+export async function setSentRequest(nickname) {
   try {
     const db = firebase.firestore();
     const currentUser = firebase.auth().currentUser;
-    const movies = await db
+    const targetUser = await db
+      .collection("users")
+      .where("nickname", "==", nickname)
+      .get();
+    const docId = targetUser.docs.map((doc) => doc.id);
+    const currentName = await fetchUser(currentUser.uid);
+
+    db.collection("users")
+      .doc(docId[0])
+      .collection("pendingRequests")
+      .doc(currentUser.uid)
+      .set({
+        nickname: currentName,
+        uid: currentUser.uid,
+      });
+
+    const query2 = await db
       .collection("users")
       .doc(currentUser.uid)
-      .update({ sentRequest: nickname });
+      .update({ sentRequest: docId[0] });
     return 1;
   } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
+export async function getSentRequest() {
+  try {
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+    const query = await db.collection("users").doc(currentUser.uid).get();
+    const data = query.data();
+    return data.sentRequest;
+  } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
+export async function fetchUserPendingRequests() {
+  try {
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+    const querySnapshot = await db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("pendingRequests")
+      .get();
+    return querySnapshot.docs.map((doc) => doc.data());
+  } catch (error) {
     Alert.alert("There is something wrong!", err.message);
   }
 }

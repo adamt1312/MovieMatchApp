@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
   topWrapper: {
     width: "100%",
-    backgroundColor: "lightgray",
+    // backgroundColor: "lightgray",
     zIndex: 100,
     top: 0,
     flexDirection: "row",

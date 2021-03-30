@@ -47,11 +47,21 @@ const signUpScreen = ({ navigation }) => {
     } else if (!password) {
       Alert.alert("Password field is required.");
     } else if (!confirmPassword) {
-      setPassword("");
+      // setPassword("");
       Alert.alert("Confirm password field is required.");
     } else if (password !== confirmPassword) {
       Alert.alert("Password does not match!");
     } else {
+      // TODO: Validate unique nickname, create function in firebaseMethods
+      // if (validateNickname()) {
+      //   registration(email, password, nickname);
+      //   navigation.navigate("Loading");
+      //   emptyState();
+      // } else {
+      //   Alert.alert("Choose another nickname,this is already taken.");
+      //   setNickname("");
+      // }
+
       registration(email, password, nickname);
       navigation.navigate("Loading");
       emptyState();
@@ -72,7 +82,7 @@ const signUpScreen = ({ navigation }) => {
       <View style={styles.screenView}>
         <StatusBar backgroundColor="#1d0014" barStyle="light-content" />
         <View style={styles.logoInputContainer}>
-          <Text style={styles.appName}>MOVIE MATCH</Text>
+          <Text style={styles.appName}>MOVIE TINDER</Text>
         </View>
         <View style={styles.loginInputs}>
           <View style={styles.inputLine}>

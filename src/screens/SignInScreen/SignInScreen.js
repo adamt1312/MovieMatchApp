@@ -60,7 +60,7 @@ const signInScreen = ({ navigation }) => {
       <View style={styles.screenView}>
         <StatusBar backgroundColor="#1d0014" barStyle="light-content" />
         <View style={styles.logoInputContainer}>
-          <Text style={styles.appName}>MOVIE MATCH</Text>
+          <Text style={styles.appName}>MOVIE TINDER</Text>
         </View>
         <View style={styles.loginInputs}>
           <View style={styles.inputLine}>
