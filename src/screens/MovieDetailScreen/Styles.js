@@ -7,13 +7,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     resizeMode: "cover",
   },
-  testConatiner: {
-    textAlign: "center",
-  },
   scrollV: {
     position: "absolute",
     width: "100%",
     height: "100%",
+    fontFamily: "VarelaRound_400Regular",
   },
   infoContainer: {
     top: 340,
@@ -23,6 +21,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.92);",
+    fontFamily: "VarelaRound_400Regular",
   },
   linearGradient: {
     position: "absolute",
@@ -33,7 +32,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 30,
     marginLeft: 10,
-    fontFamily: "Roboto_300Light",
+    fontFamily: "VarelaRound_400Regular",
   },
   titleContainer: {
     height: "auto",
@@ -49,8 +48,10 @@ const styles = StyleSheet.create({
     // borderColor: "red",
     // borderWidth: 4,
     marginTop: 5,
+    paddingHorizontal: 10,
     flexWrap: "wrap",
-    justifyContent: "center",
+    justifyContent: "flex-start",
+    fontFamily: "VarelaRound_400Regular",
   },
   overviewContainer: {
     flex: 9,

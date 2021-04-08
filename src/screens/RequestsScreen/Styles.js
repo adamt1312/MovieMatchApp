@@ -15,6 +15,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  loadWrapper: {
+    width: "100%",
+    height: "80%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    fontFamily: "VarelaRound_400Regular",
+    color: "white",
+    textAlign: "center",
+    fontSize: 25,
+    marginVertical: 20,
+  },
 });
 
 export default styles;

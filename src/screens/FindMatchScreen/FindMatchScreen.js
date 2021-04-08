@@ -2,69 +2,103 @@ import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
-  StyleSheet,
   ActivityIndicator,
   Modal,
   Pressable,
-  Button,
   Alert,
   TouchableWithoutFeedback,
 } from "react-native";
-import UserButton from "../../components/screen components/UserButton";
 import { Input } from "galio-framework";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
 import {
   isUserPaired,
   setSentRequest,
   isExistingUser,
-  getSentRequest,
 } from "../../API/firebaseMethods";
 import { Entypo } from "@expo/vector-icons";
 import PulseM from "../../components/screen components/PulseM";
 import * as firebase from "firebase";
 import "firebase/firestore";
+import styles from "./Styles";
+import DenyRequestModal from "../../components/screen components/modals/DenyRequestModal";
+import InfoModal from "../../components/screen components/modals/InfoModal";
 
 const FindMatchScreen = (props) => {
-  const [searchUser, setSearchUser] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isAvailable, setIsAvailable] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
+  const [data, setData] = useState({
+    searchUser: "",
+    isLoading: false,
+    isAvailable: false,
+    modalVisible: false,
+    showSearch: true,
+    denyRequest: false,
+    reloadModal: true,
+  });
 
   const db = firebase.firestore();
   const doc = db.collection("users").doc(firebase.auth().currentUser.uid);
 
-  doc.onSnapshot((doc) => {
-    const sr = doc.data().sentRequest;
-    if (sr) {
-      setShowSearch(false);
-    } else {
-      setShowSearch(true);
-    }
-  });
-
   useEffect(() => {
     doc.onSnapshot((doc) => {
-      const sr = doc.data().sentRequest;
-      if (sr) {
-        setShowSearch(false);
-      } else {
-        setShowSearch(true);
+      const sentRequest = doc.data().sentRequest;
+      // user already sent request, showing waiting screen
+      if (sentRequest) {
+        setData((prevState) => ({
+          ...prevState,
+          showSearch: false,
+        }));
+        console.log("Sent request: " + sentRequest);
+        console.log("Deny request: " + data.denyRequest);
+      }
+      // user deny request show modal once
+      // else if (sentRequest == false) {
+      //   setData((prevState) => ({
+      //     ...prevState,
+      //     denyRequest: true,
+      //   }));
+      // }
+      // user doesn`t sent request, show search
+      else if (!sentRequest) {
+        setData((prevState) => ({
+          ...prevState,
+          showSearch: true,
+        }));
       }
     });
   }, []);
 
-  const pairHandler = (nickname) => {
+  const checkAvailability = (nickname) => {
     try {
-      isExistingUser(nickname).then((data) => {
+      console.log("Pair handler user with nickname: " + nickname);
+      isExistingUser(nickname).then((response) => {
         // user doesn`t exist
-        if (!data) {
+        if (!response) {
           Alert.alert("User with this nickname doesn`t exist.");
-          setSearchUser("");
+          setData((prevState) => ({
+            ...prevState,
+            searchUser: "",
+          }));
         } else {
-          isUserPaired(nickname).then((isAvailable) => {
-            setIsAvailable(isAvailable);
-            setModalVisible(true);
+          isUserPaired(nickname).then((isPaired) => {
+            // checking isAvailable status, then set modal text
+            if (isPaired) {
+              setData((prevState) => ({
+                ...prevState,
+                isAvailable: false,
+              }));
+              console.log("isAvailable false");
+            } else {
+              setData((prevState) => ({
+                ...prevState,
+                isAvailable: true,
+              }));
+            }
+            console.log("isPaired return: " + isPaired);
+            // showingModal
+            openModal();
+            setData((prevState) => ({
+              ...prevState,
+              reloadModal: !data.reloadModal,
+            }));
           });
         }
       });
@@ -73,91 +107,38 @@ const FindMatchScreen = (props) => {
     }
   };
 
+  const openModal = () => {
+    setData((prevState) => ({
+      ...prevState,
+      modalVisible: true,
+    }));
+  };
+
   return (
     <View style={styles.loadWrapper}>
       <BackgroundBlurred />
-      {isLoading ? (
+      {data.isLoading ? (
         <View style={styles.loadWrapper}>
           <ActivityIndicator size={100} color="white" />
         </View>
       ) : (
         <View style={styles.container}>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              setModalVisible(!modalVisible);
-            }}
-          >
-            <TouchableWithoutFeedback
-              style={styles.container}
-              activeOpacity={1}
-              onPressOut={() => {
-                setModalVisible(false);
-              }}
-            >
-              <View style={styles.centeredView}>
-                <TouchableWithoutFeedback>
-                  <View style={styles.modalView}>
-                    {isAvailable ? (
-                      <View>
-                        <Text style={styles.modalText}>
-                          Sorry, but
-                          <Text
-                            style={{
-                              fontWeight: "bold",
-                            }}
-                          >
-                            {" "}
-                            {searchUser}{" "}
-                          </Text>
-                          <Text>is actually, paired with someone else, </Text>
-                          <Entypo name="emoji-sad" size={20} color="black" />
-                          <Text> try it later.</Text>
-                        </Text>
-                        <Pressable
-                          style={[styles.button, styles.buttonClose]}
-                          onPress={() => setModalVisible(!modalVisible)}
-                        >
-                          <Text style={styles.textStyle}>Cancel</Text>
-                        </Pressable>
-                      </View>
-                    ) : (
-                      <View>
-                        <Text style={styles.modalText}>
-                          Good news,
-                          <Text
-                            style={{
-                              fontWeight: "bold",
-                            }}
-                          >
-                            {" "}
-                            {searchUser}{" "}
-                          </Text>
-                          is available, let`s send him a notice that you want to
-                          watch with him{" "}
-                          <Entypo name="emoji-happy" size={20} color="black" />
-                        </Text>
-                        <Pressable
-                          style={[styles.button, styles.buttonClose]}
-                          onPress={() => {
-                            setModalVisible(!modalVisible);
-                            setSentRequest(searchUser);
-                          }}
-                        >
-                          <Text style={styles.textStyle}>
-                            Send request to pair
-                          </Text>
-                        </Pressable>
-                      </View>
-                    )}
-                  </View>
-                </TouchableWithoutFeedback>
-              </View>
-            </TouchableWithoutFeedback>
-          </Modal>
-          {showSearch ? (
+          {data.isAvailable ? (
+            <InfoModal
+              isAvailable={true}
+              nickname={data.searchUser}
+              visible={data.modalVisible}
+              reload={data.reloadModal}
+            />
+          ) : (
+            <InfoModal
+              isAvailable={false}
+              nickname={data.searchUser}
+              visible={data.modalVisible}
+              reload={data.reloadModal}
+            />
+          )}
+          {data.showSearch ? (
             <View
               style={{
                 width: "100%",
@@ -188,76 +169,28 @@ const FindMatchScreen = (props) => {
                 placeholder="Enter a friend's nickname..."
                 placeholderTextColor="black"
                 style={{ marginTop: 30, width: "90%" }}
-                onChangeText={(text) => setSearchUser(text)}
+                onChangeText={(text) =>
+                  setData((prevState) => ({
+                    ...prevState,
+                    searchUser: text,
+                  }))
+                }
                 onSubmitEditing={() => {
-                  pairHandler(searchUser);
+                  checkAvailability(data.searchUser);
                 }}
+                // value={data.searchUser}
               />
             </View>
           ) : (
-            <PulseM />
+            <View style={{ justifyContent: "center" }}>
+              {data.denyRequest ? <DenyRequestModal nickname={"Name"} /> : null}
+              <PulseM />
+            </View>
           )}
         </View>
       )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    // backgroundColor: "black",
-  },
-  loadWrapper: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    // backgroundColor: "black",
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-    fontFamily: "VarelaRound_400Regular",
-    alignSelf: "center",
-    justifyContent: "center",
-  },
-});
 
 export default FindMatchScreen;

@@ -8,8 +8,23 @@ import {
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-const RequestComponent = (params) => {
-  const { name, uid } = params;
+const RequestComponent = (props) => {
+  const { name, uid } = props;
+
+  // TODO: 1. set pendingRequest accept status to true
+  //       2. set isPaired to uid,
+  //       3. set sentRequest to null
+  //       3. hide waiting message in FindMatchScreen...
+  const acceptUserHandler = () => {
+    console.log("Accept user " + name);
+  };
+
+  // TODO: 1. set pendingRequest accept status to false
+  //       2. show deny message modal in FindMatchScreen...
+  //       2. set sentRequest to null
+  const denyUserHandler = () => {
+    console.log("Deny user " + name);
+  };
 
   return (
     <View style={styles.wrap}>
@@ -19,7 +34,7 @@ const RequestComponent = (params) => {
       <View style={styles.iconsWrapper}>
         <TouchableOpacity
           onPress={() => {
-            console.log("pressed check");
+            acceptUserHandler();
           }}
         >
           <FontAwesome5
@@ -32,7 +47,7 @@ const RequestComponent = (params) => {
 
         <TouchableOpacity
           onPress={() => {
-            console.log("pressed cancel");
+            denyUserHandler();
           }}
         >
           <FontAwesome5

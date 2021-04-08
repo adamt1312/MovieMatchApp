@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View, ActivityIndicator } from "react-native";
 import styles from "./Styles";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
 import { fetchUserPendingRequests } from "../../API/firebaseMethods";
 import RequestComponent from "../../components/screen components/RequestComponent";
+import { isLoading } from "expo-font";
 
 const RequestScreen = ({ params }) => {
   const [data, setData] = useState(null);
-  // FIXME: Throwing error unexpectedly evaluating data[0], sometimes...
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     try {
       fetchUserPendingRequests().then((data) => {
         setData(data);
-        console.log(data[0].nickname);
+        setIsLoading(false);
       });
     } catch (error) {
       console.log(error);
@@ -22,11 +24,18 @@ const RequestScreen = ({ params }) => {
   return (
     <View style={styles.container}>
       <BackgroundBlurred />
-      <ScrollView style={styles.scroll}>
-        <View style={styles.buttonsView}>
-          <RequestComponent name={data[0].nickname} uid={data[0].uid} />
+      {isLoading ? (
+        <View style={styles.loadWrapper}>
+          <ActivityIndicator size={100} color="white" />
         </View>
-      </ScrollView>
+      ) : (
+        <ScrollView style={styles.scroll}>
+          <Text style={styles.title}>Pairing requests</Text>
+          <View style={styles.buttonsView}>
+            <RequestComponent name={data[0].nickname} uid={data[0].uid} />
+          </View>
+        </ScrollView>
+      )}
     </View>
   );
 };

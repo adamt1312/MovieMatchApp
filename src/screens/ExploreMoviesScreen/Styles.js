@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     zIndex: 100,
     elevation: 10,
     width: "120%",
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
     marginLeft: 10,
   },
   topWrapper: {

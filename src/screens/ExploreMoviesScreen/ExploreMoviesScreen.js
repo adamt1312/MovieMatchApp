@@ -22,7 +22,7 @@ const exploreMoviesScreen = ({ navigation }) => {
     "&language=en-US";
 
   const [data, setData] = useState({
-    search: "",
+    search: "Search your own...",
     results: [],
   });
   const [isLoading, setIsLoading] = useState(true);
@@ -72,6 +72,7 @@ const exploreMoviesScreen = ({ navigation }) => {
           rounded={true}
           fontSize={20}
           color="black"
+          placeholder="Search your own.."
           onChangeText={(text) =>
             setData((prevdata) => {
               return { ...prevdata, search: text };
