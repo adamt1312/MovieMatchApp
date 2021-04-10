@@ -1,29 +1,31 @@
 import React from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableHighlight,
-  TouchableOpacity,
-} from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import {
+  deleteUserRequest,
+  setSentRequestFalseOrNull,
+} from "../../API/firebaseMethods";
 
 const RequestComponent = (props) => {
   const { name, uid } = props;
 
-  // TODO: 1. set pendingRequest accept status to true
+  // TODO: 1. delete pendingRequest ✓
   //       2. set isPaired to uid,
   //       3. set sentRequest to null
   //       3. hide waiting message in FindMatchScreen...
   const acceptUserHandler = () => {
-    console.log("Accept user " + name);
+    deleteUserRequest(uid);
   };
 
-  // TODO: 1. set pendingRequest accept status to false
+  // TODO: 1. delete pendingRequest ✓
+  //       2. set sentRequest to false
   //       2. show deny message modal in FindMatchScreen...
-  //       2. set sentRequest to null
+  //
   const denyUserHandler = () => {
-    console.log("Deny user " + name);
+    deleteUserRequest(uid);
+    // setSentRequestFalseOrNull(uid, false).then((response) => {
+    //   console.log("trying to handle deny, delete user " + uid);
+    // });
   };
 
   return (

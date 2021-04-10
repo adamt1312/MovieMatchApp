@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Text, View, Modal, Pressable } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import styles from "../../../screens/FindMatchScreen/Styles";
+import * as firebase from "firebase";
+import "firebase/firestore";
+import { setSentRequestFalseOrNull } from "../../../API/firebaseMethods";
 
 const DenyRequestModal = (props) => {
   const [modalVisible, setModalVisible] = useState(true);
@@ -34,7 +37,14 @@ const DenyRequestModal = (props) => {
             </Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
+              onPress={() => {
+                setSentRequestFalseOrNull(
+                  firebase.auth().currentUser.uid,
+                  null
+                );
+                props.showSearch();
+                setModalVisible(!modalVisible);
+              }}
             >
               <Text style={styles.textStyle}>Got it</Text>
             </Pressable>

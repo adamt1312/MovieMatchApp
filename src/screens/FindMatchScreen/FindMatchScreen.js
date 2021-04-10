@@ -1,21 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-  Text,
-  View,
-  ActivityIndicator,
-  Modal,
-  Pressable,
-  Alert,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { Text, View, ActivityIndicator, Alert } from "react-native";
 import { Input } from "galio-framework";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
-import {
-  isUserPaired,
-  setSentRequest,
-  isExistingUser,
-} from "../../API/firebaseMethods";
-import { Entypo } from "@expo/vector-icons";
+import { isUserPaired, isExistingUser } from "../../API/firebaseMethods";
 import PulseM from "../../components/screen components/PulseM";
 import * as firebase from "firebase";
 import "firebase/firestore";
@@ -26,8 +13,9 @@ import InfoModal from "../../components/screen components/modals/InfoModal";
 const FindMatchScreen = (props) => {
   const [data, setData] = useState({
     searchUser: "",
+    isPaired: false,
     isLoading: false,
-    isAvailable: false,
+    isAvailableModalText: false,
     modalVisible: false,
     showSearch: true,
     denyRequest: false,
@@ -39,29 +27,39 @@ const FindMatchScreen = (props) => {
 
   useEffect(() => {
     doc.onSnapshot((doc) => {
-      const sentRequest = doc.data().sentRequest;
-      // user already sent request, showing waiting screen
-      if (sentRequest) {
+      if (doc.data().isPaired) {
         setData((prevState) => ({
           ...prevState,
+          denyRequest: false,
           showSearch: false,
+          isPaired: true,
         }));
-        console.log("Sent request: " + sentRequest);
-        console.log("Deny request: " + data.denyRequest);
-      }
-      // user deny request show modal once
-      // else if (sentRequest == false) {
-      //   setData((prevState) => ({
-      //     ...prevState,
-      //     denyRequest: true,
-      //   }));
-      // }
-      // user doesn`t sent request, show search
-      else if (!sentRequest) {
-        setData((prevState) => ({
-          ...prevState,
-          showSearch: true,
-        }));
+      } else {
+        const sentRequest = doc.data().sentRequest;
+        console.log("sentRequest is: " + sentRequest);
+        console.log(data);
+        // user already sent request, showing waiting screen
+        if (sentRequest) {
+          setData((prevState) => ({
+            ...prevState,
+            showSearch: false,
+          }));
+        }
+        // user request is denied, show denyModal
+        else if (sentRequest == false) {
+          setData((prevState) => ({
+            ...prevState,
+            showSearch: false,
+            denyRequest: true,
+          }));
+        }
+        // user doesn`t sent request, show search
+        else if (!sentRequest) {
+          setData((prevState) => ({
+            ...prevState,
+            showSearch: true,
+          }));
+        }
       }
     });
   }, []);
@@ -72,7 +70,7 @@ const FindMatchScreen = (props) => {
       isExistingUser(nickname).then((response) => {
         // user doesn`t exist
         if (!response) {
-          Alert.alert("User with this nickname doesn`t exist.");
+          Alert.alert("User with this nickname doesn't exist.");
           setData((prevState) => ({
             ...prevState,
             searchUser: "",
@@ -85,14 +83,12 @@ const FindMatchScreen = (props) => {
                 ...prevState,
                 isAvailable: false,
               }));
-              console.log("isAvailable false");
             } else {
               setData((prevState) => ({
                 ...prevState,
                 isAvailable: true,
               }));
             }
-            console.log("isPaired return: " + isPaired);
             // showingModal
             openModal();
             setData((prevState) => ({
@@ -139,22 +135,8 @@ const FindMatchScreen = (props) => {
             />
           )}
           {data.showSearch ? (
-            <View
-              style={{
-                width: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  fontSize: 35,
-                  fontFamily: "VarelaRound_400Regular",
-                }}
-              >
-                Let`s find a match!
-              </Text>
+            <View style={styles.searchWrapper}>
+              <Text style={styles.title}>Let`s find a match!</Text>
 
               <Input
                 rounded
@@ -164,7 +146,7 @@ const FindMatchScreen = (props) => {
                 iconSize={25}
                 iconColor="black"
                 rounded={true}
-                fontSize={20}
+                fontSize={18}
                 color="black"
                 placeholder="Enter a friend's nickname..."
                 placeholderTextColor="black"
@@ -183,7 +165,26 @@ const FindMatchScreen = (props) => {
             </View>
           ) : (
             <View style={{ justifyContent: "center" }}>
-              {data.denyRequest ? <DenyRequestModal nickname={"Name"} /> : null}
+              {data.denyRequest ? (
+                <DenyRequestModal
+                  nickname={"your friend"}
+                  showSearch={() => {
+                    setData((prevState) => ({
+                      ...prevState,
+                      showSearch: true,
+                      denyRequest: false,
+                    }));
+                  }}
+                />
+              ) : null}
+              {/* TODO: Add some info, that cant search other user if
+              isPaired...here will maybe be some button to
+              showRecommendations... */}
+              {data.isPaired ? (
+                <Text>
+                  You are currently paired, and cannot search other user.
+                </Text>
+              ) : null}
               <PulseM />
             </View>
           )}

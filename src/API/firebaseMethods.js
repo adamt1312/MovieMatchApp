@@ -244,3 +244,36 @@ export async function fetchUserPendingRequests() {
     Alert.alert("There is something wrong!", err.message);
   }
 }
+
+// FIXME: Check this, looks like it does not delete user in DB
+export async function deleteUserRequest(delUserUid) {
+  try {
+    console.log("delete user function called" + delUserUid);
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+    const query = await db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("pendingRequests")
+      .doc(delUserUid)
+      .delete();
+    return true;
+  } catch (error) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
+// Should be okay and working
+export async function setSentRequestFalseOrNull(uid, value) {
+  try {
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+    const query2 = await db
+      .collection("users")
+      .doc(uid)
+      .update({ sentRequest: value });
+    return true;
+  } catch (error) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}

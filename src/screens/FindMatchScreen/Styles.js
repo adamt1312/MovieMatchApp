@@ -55,6 +55,16 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
   },
+  title: {
+    color: "white",
+    fontSize: 35,
+    fontFamily: "VarelaRound_400Regular",
+  },
+  searchWrapper: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
 
 export default styles;
