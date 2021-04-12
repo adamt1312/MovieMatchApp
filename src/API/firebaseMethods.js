@@ -101,7 +101,7 @@ export async function fetchAllUsers() {
   }
 }
 
-export async function fetchUser(uid) {
+export async function fetchUserNickname(uid) {
   try {
     const db = firebase.firestore();
     const user = await db.collection("users").doc(uid).get();
@@ -196,11 +196,11 @@ export async function setSentRequest(nickname) {
       .collection("users")
       .where("nickname", "==", nickname)
       .get();
-    const docId = targetUser.docs.map((doc) => doc.id);
-    const currentName = await fetchUser(currentUser.uid);
+    const targeUserUid = targetUser.docs.map((doc) => doc.id);
+    const currentName = await fetchUserNickname(currentUser.uid);
 
     db.collection("users")
-      .doc(docId[0])
+      .doc(targeUserUid[0])
       .collection("pendingRequests")
       .doc(currentUser.uid)
       .set({
@@ -211,7 +211,7 @@ export async function setSentRequest(nickname) {
     const query2 = await db
       .collection("users")
       .doc(currentUser.uid)
-      .update({ sentRequest: docId[0] });
+      .update({ sentRequest: targeUserUid[0] });
     return 1;
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
@@ -245,7 +245,6 @@ export async function fetchUserPendingRequests() {
   }
 }
 
-// FIXME: Check this, looks like it does not delete user in DB
 export async function deleteUserRequest(delUserUid) {
   try {
     console.log("delete user function called" + delUserUid);
@@ -255,7 +254,7 @@ export async function deleteUserRequest(delUserUid) {
       .collection("users")
       .doc(currentUser.uid)
       .collection("pendingRequests")
-      .doc(delUserUid)
+      .doc(delUserUid.toString())
       .delete();
     return true;
   } catch (error) {
@@ -263,7 +262,6 @@ export async function deleteUserRequest(delUserUid) {
   }
 }
 
-// Should be okay and working
 export async function setSentRequestFalseOrNull(uid, value) {
   try {
     const db = firebase.firestore();

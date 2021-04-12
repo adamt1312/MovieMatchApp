@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Text,
   View,
@@ -8,34 +8,24 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import styles from "../../../screens/FindMatchScreen/Styles";
-import {
-  isUserPaired,
-  setSentRequest,
-  isExistingUser,
-} from "../../../API/firebaseMethods";
+import { setSentRequest } from "../../../API/firebaseMethods";
 
 const InfoModal = (props) => {
-  const { isAvailable, nickname, visible, reload } = props;
-  const [showModal, setShowModal] = useState(null);
-
-  // use Effect makes sure that modal opens from prop everytime...
-  useEffect(() => {
-    setShowModal(visible);
-  }, [reload]);
+  const { isAvailable, nickname, visible } = props;
 
   return (
     <Modal
       animationType="slide"
       transparent={true}
-      visible={showModal}
+      visible={visible}
       onRequestClose={() => {
-        setShowModal(visible);
+        props.closeModal();
       }}
     >
       <TouchableWithoutFeedback
         style={styles.container}
         activeOpacity={1}
-        onPressOut={() => setShowModal(false)}
+        onPressOut={() => props.closeModal()}
       >
         <View style={styles.centeredView}>
           <TouchableWithoutFeedback>
@@ -59,7 +49,8 @@ const InfoModal = (props) => {
                   <Pressable
                     style={[styles.button, styles.buttonClose]}
                     onPress={() => {
-                      setShowModal(false);
+                      props.closeModal();
+                      props.hideSearch();
                       setSentRequest(nickname);
                     }}
                   >
@@ -84,9 +75,9 @@ const InfoModal = (props) => {
                   </Text>
                   <Pressable
                     style={[styles.button, styles.buttonClose]}
-                    onPress={() => setShowModal(false)}
+                    onPress={() => props.closeModal()}
                   >
-                    <Text style={styles.textStyle}>Cancel</Text>
+                    <Text style={styles.textStyle}>Got it</Text>
                   </Pressable>
                 </View>
               )}

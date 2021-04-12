@@ -37,7 +37,6 @@ const FindMatchScreen = (props) => {
       } else {
         const sentRequest = doc.data().sentRequest;
         console.log("sentRequest is: " + sentRequest);
-        console.log(data);
         // user already sent request, showing waiting screen
         if (sentRequest) {
           setData((prevState) => ({
@@ -77,24 +76,22 @@ const FindMatchScreen = (props) => {
           }));
         } else {
           isUserPaired(nickname).then((isPaired) => {
-            // checking isAvailable status, then set modal text
+            // checking isAvailable status => set modal text => show modal
             if (isPaired) {
+              // user is already paired
               setData((prevState) => ({
                 ...prevState,
                 isAvailable: false,
+                modalVisible: true,
               }));
+              // user is free to pair
             } else {
               setData((prevState) => ({
                 ...prevState,
                 isAvailable: true,
+                modalVisible: true,
               }));
             }
-            // showingModal
-            openModal();
-            setData((prevState) => ({
-              ...prevState,
-              reloadModal: !data.reloadModal,
-            }));
           });
         }
       });
@@ -103,10 +100,17 @@ const FindMatchScreen = (props) => {
     }
   };
 
-  const openModal = () => {
+  const hideSearch = () => {
     setData((prevState) => ({
       ...prevState,
-      modalVisible: true,
+      showSearch: false,
+    }));
+  };
+
+  const closeModal = () => {
+    setData((prevState) => ({
+      ...prevState,
+      modalVisible: false,
     }));
   };
 
@@ -124,14 +128,24 @@ const FindMatchScreen = (props) => {
               isAvailable={true}
               nickname={data.searchUser}
               visible={data.modalVisible}
-              reload={data.reloadModal}
+              closeModal={() => {
+                closeModal();
+              }}
+              hideSearch={() => {
+                hideSearch();
+              }}
             />
           ) : (
             <InfoModal
               isAvailable={false}
               nickname={data.searchUser}
               visible={data.modalVisible}
-              reload={data.reloadModal}
+              closeModal={() => {
+                closeModal();
+              }}
+              hideSearch={() => {
+                hideSearch();
+              }}
             />
           )}
           {data.showSearch ? (
@@ -160,7 +174,7 @@ const FindMatchScreen = (props) => {
                 onSubmitEditing={() => {
                   checkAvailability(data.searchUser);
                 }}
-                // value={data.searchUser}
+                value={data.searchUser}
               />
             </View>
           ) : (
