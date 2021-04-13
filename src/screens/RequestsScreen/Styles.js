@@ -28,6 +28,12 @@ const styles = StyleSheet.create({
     fontSize: 25,
     marginVertical: 20,
   },
+  emptyView: {
+    flex: 1,
+    backgroundColor: "gray",
+    flexDirection: "column",
+    borderRadius: 30,
+  },
 });
 
 export default styles;

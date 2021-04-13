@@ -11,29 +11,34 @@ import "firebase/firestore";
 const RequestScreen = ({ params }) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isEmpty, setIsEmpty] = useState(null);
 
   const db = firebase.firestore();
-  const doc = db
-    .collection("users")
-    .doc(firebase.auth().currentUser.uid)
-    .collection("pendingRequests");
 
   useEffect(() => {
     try {
       // fetch pending requests on mount
-      fetchUserPendingRequests().then((data) => {
-        setData(data);
-        setIsLoading(false);
-      });
+      // fetchUserPendingRequests().then((data) => {
+      //   setData(data);
+      //   setIsLoading(false);
+      // });
 
       //  document listener on PendingRequests collection...when changed, fetch again..
-      doc.onSnapshot((doc) => {
-        setIsLoading(true);
-        fetchUserPendingRequests().then((data) => {
-          setData(data);
-          setIsLoading(false);
+      db.collection("users")
+        .doc(firebase.auth().currentUser.uid)
+        .collection("pendingRequests")
+        .onSnapshot(() => {
+          setIsLoading(true);
+          fetchUserPendingRequests().then((data) => {
+            setData(data);
+            if (JSON.stringify(data[0]) === "{}") {
+              setIsEmpty(true);
+            } else {
+              setIsEmpty(false);
+            }
+            setIsLoading(false);
+          });
         });
-      });
     } catch (error) {
       console.log(error);
     }
@@ -49,10 +54,29 @@ const RequestScreen = ({ params }) => {
       ) : (
         <ScrollView style={styles.scroll}>
           <Text style={styles.title}>Pairing requests</Text>
-          <View style={styles.buttonsView}>
-            {/* // TODO: For loop to render multiple components */}
-            <RequestComponent name={data[0].nickname} uid={data[0].uid} />
-          </View>
+          {isEmpty ? (
+            <View style={styles.emptyView}>
+              <Text style={[styles.title, { fontSize: 18 }]}>
+                You don't have any requests.
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.buttonsView}>
+              {data.map((request) => {
+                if (JSON.stringify(request) === "{}") {
+                  return;
+                } else {
+                  return (
+                    <RequestComponent
+                      name={request.nickname}
+                      uid={request.uid}
+                      key={request.uid}
+                    />
+                  );
+                }
+              })}
+            </View>
+          )}
         </ScrollView>
       )}
     </View>

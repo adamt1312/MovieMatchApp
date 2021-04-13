@@ -18,14 +18,14 @@ const RequestComponent = (props) => {
   };
 
   // TODO: 1. delete pendingRequest ✓
-  //       2. set sentRequest to false
-  //       2. show deny message modal in FindMatchScreen...
-  //
+  //       2. set sentRequest to false ✓
+  //       2. show deny message modal in FindMatchScreen... ✓
+
   const denyUserHandler = () => {
     deleteUserRequest(uid);
-    // setSentRequestFalseOrNull(uid, false).then((response) => {
-    //   console.log("trying to handle deny, delete user " + uid);
-    // });
+    setSentRequestFalseOrNull(uid, false).then(() => {
+      console.log("user request" + uid + "deleted");
+    });
   };
 
   return (

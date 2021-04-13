@@ -36,7 +36,6 @@ const FindMatchScreen = (props) => {
         }));
       } else {
         const sentRequest = doc.data().sentRequest;
-        console.log("sentRequest is: " + sentRequest);
         // user already sent request, showing waiting screen
         if (sentRequest) {
           setData((prevState) => ({
@@ -65,7 +64,6 @@ const FindMatchScreen = (props) => {
 
   const checkAvailability = (nickname) => {
     try {
-      console.log("Pair handler user with nickname: " + nickname);
       isExistingUser(nickname).then((response) => {
         // user doesn`t exist
         if (!response) {

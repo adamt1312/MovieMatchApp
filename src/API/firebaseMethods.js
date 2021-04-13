@@ -196,11 +196,11 @@ export async function setSentRequest(nickname) {
       .collection("users")
       .where("nickname", "==", nickname)
       .get();
-    const targeUserUid = targetUser.docs.map((doc) => doc.id);
+    const targetUserUid = targetUser.docs.map((doc) => doc.id);
     const currentName = await fetchUserNickname(currentUser.uid);
 
     db.collection("users")
-      .doc(targeUserUid[0])
+      .doc(targetUserUid[0])
       .collection("pendingRequests")
       .doc(currentUser.uid)
       .set({
@@ -211,7 +211,7 @@ export async function setSentRequest(nickname) {
     const query2 = await db
       .collection("users")
       .doc(currentUser.uid)
-      .update({ sentRequest: targeUserUid[0] });
+      .update({ sentRequest: targetUserUid[0] });
     return 1;
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
@@ -234,12 +234,19 @@ export async function fetchUserPendingRequests() {
   try {
     const db = firebase.firestore();
     const currentUser = firebase.auth().currentUser;
+    const result = [];
     const querySnapshot = await db
       .collection("users")
       .doc(currentUser.uid)
       .collection("pendingRequests")
-      .get();
-    return querySnapshot.docs.map((doc) => doc.data());
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          result.push(doc.data());
+        });
+      });
+    // console.log(result);
+    return result;
   } catch (error) {
     Alert.alert("There is something wrong!", err.message);
   }
@@ -265,10 +272,9 @@ export async function deleteUserRequest(delUserUid) {
 export async function setSentRequestFalseOrNull(uid, value) {
   try {
     const db = firebase.firestore();
-    const currentUser = firebase.auth().currentUser;
     const query2 = await db
       .collection("users")
-      .doc(uid)
+      .doc(uid.toString())
       .update({ sentRequest: value });
     return true;
   } catch (error) {
