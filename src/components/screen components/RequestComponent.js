@@ -4,17 +4,34 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import {
   deleteUserRequest,
   setSentRequestFalseOrNull,
+  createNewSession,
+  setIsPairedToSessionID,
+  fetchUserLikedMovies,
+  setUserLikedGenresIds,
 } from "../../API/firebaseMethods";
 
 const RequestComponent = (props) => {
   const { name, uid } = props;
 
   // TODO: 1. delete pendingRequest ✓
-  //       2. set isPaired to uid,
-  //       3. set sentRequest to null
+  //       2. set isPaired to session uid, ✓
+  //       3. set sentRequest to null ✓
   //       3. hide waiting message in FindMatchScreen...
-  const acceptUserHandler = () => {
-    deleteUserRequest(uid);
+  const acceptUserHandler = async () => {
+    // deleteUserRequest(uid);
+    // setSentRequestFalseOrNull(uid, null).then(() => {
+    //   createNewSession(uid).then((session_id) => {
+    //     setIsPairedToSessionID(uid, session_id);
+    //   });
+    // });
+    // const test = fetchUserLikedMovies().then((likedMovies) => {
+    //   likedMovies.forEach((movie) => {
+    //     console.log(movie.genre_ids);
+    //   });
+    // });
+
+    // just testing
+    await setUserLikedGenresIds();
   };
 
   // TODO: 1. delete pendingRequest ✓

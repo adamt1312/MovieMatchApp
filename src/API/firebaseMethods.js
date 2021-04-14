@@ -68,6 +68,9 @@ export async function dbLibraryToLiked(movieObject) {
       .collection("likedMovies")
       .doc(movieObject.id.toString())
       .set(movieObject);
+
+    // insert movie genres to liked genres
+    updateUserLikedGenres(movieObject);
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }
@@ -87,6 +90,7 @@ export async function dbLibraryToDisliked(movieObject) {
   }
 }
 
+// TODO: Is not used anywhere, can be deleted prbbly..
 export async function fetchAllUsers() {
   try {
     const db = firebase.firestore();
@@ -278,6 +282,90 @@ export async function setSentRequestFalseOrNull(uid, value) {
       .update({ sentRequest: value });
     return true;
   } catch (error) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
+export async function createNewSession(uid) {
+  try {
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+
+    // creating new session
+    await db
+      .collection("sessions")
+      .add({
+        user1: currentUser.uid,
+        user2: uid.toString(),
+      })
+      .then((docRef) => {
+        return docRef.id;
+      });
+  } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
+// set isPaired status to both users to created session id
+export async function setIsPairedToSessionID(uid, session_id) {
+  try {
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+
+    // sets current user
+    db.collection("users")
+      .doc(currentUser.uid)
+      .update({ isPaired: session_id });
+
+    // sets other user
+    db.collection("users").doc(uid.toString()).update({ isPaired: session_id });
+    return 1;
+  } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
+export async function updateUserLikedGenres(movieObject) {
+  try {
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+
+    movieObject.genre_ids.forEach((genre_id) => {
+      let gid = "liked_genres." + genre_id;
+      let obj = {};
+      obj[gid] = firebase.firestore.FieldValue.increment(1);
+      db.collection("users")
+        .doc(currentUser.uid)
+        .collection("preferencesProfile")
+        .doc("like")
+        .update(obj);
+    });
+
+    return 1;
+  } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
+// TODO: Not sure if use this
+export async function updateUserDislikedGenres(movieObject) {
+  try {
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+
+    movieObject.genre_ids.forEach((genre_id) => {
+      let gid = "disliked_genres." + genre_id;
+      let obj = {};
+      obj[gid] = firebase.firestore.FieldValue.increment(1);
+      db.collection("users")
+        .doc(currentUser.uid)
+        .collection("preferencesProfile")
+        .doc("dislike")
+        .update(obj);
+    });
+
+    return 1;
+  } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }
 }
