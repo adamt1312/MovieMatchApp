@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
 import styles from "./Styles";
-import { fetchUserDislikedMovies } from "../../API/firebaseMethods";
+import { fetchUserDislikedMovies } from "../../API/firebase/UserMethods/firebaseUserMethods";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 

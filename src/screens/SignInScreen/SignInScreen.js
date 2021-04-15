@@ -19,7 +19,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import "react-native-gesture-handler";
-import { signIn } from "../../API/firebaseMethods";
+import { signIn } from "../../API/firebase/Authentication/firestoreAuthentication";
 import Checkmark from "../../components/screen components/Checkmark";
 import styles from "./Styles";
 

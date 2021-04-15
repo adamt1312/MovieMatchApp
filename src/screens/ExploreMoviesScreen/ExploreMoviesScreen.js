@@ -6,8 +6,10 @@ import HomeButton from "../../components/screen components/HomeButton";
 import Swiper from "react-native-deck-swiper";
 import { Input } from "galio-framework";
 import styles from "./Styles";
-import { dbLibraryToDisliked } from "../../API/firebaseMethods";
-import { dbLibraryToLiked } from "../../API/firebaseMethods";
+import {
+  dbLibraryToDisliked,
+  dbLibraryToLiked,
+} from "../../API/firebase/UserMethods/firebaseUserMethods";
 
 const API_KEY = "7bcd460b3cae3a42e99555ac0e04e8f1";
 

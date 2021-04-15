@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Text, View, ActivityIndicator, Alert } from "react-native";
 import { Input } from "galio-framework";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
-import { isUserPaired, isExistingUser } from "../../API/firebaseMethods";
+import {
+  isUserPaired,
+  isExistingUser,
+} from "../../API/firebase/UserPairing/UserPairingMethods";
 import PulseM from "../../components/screen components/PulseM";
 import * as firebase from "firebase";
 import "firebase/firestore";

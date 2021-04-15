@@ -4,7 +4,7 @@ import { Entypo } from "@expo/vector-icons";
 import styles from "../../../screens/FindMatchScreen/Styles";
 import * as firebase from "firebase";
 import "firebase/firestore";
-import { setSentRequestFalseOrNull } from "../../../API/firebaseMethods";
+import { setSentRequestFalseOrNull } from "../../../API/firebase/UserPairing/UserPairingMethods";
 
 const DenyRequestModal = (props) => {
   const [modalVisible, setModalVisible] = useState(true);

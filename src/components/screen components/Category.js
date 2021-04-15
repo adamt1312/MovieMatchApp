@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, TouchableHighlight } from "react-native";
 import "react-native-gesture-handler";
-import genresIDs from "../../../genresIDs.json";
+import genresIDs from "../../../src/JSON/genresIDs.json";
 
 const Category = (props) => {
   const movieGenreID = props.id;

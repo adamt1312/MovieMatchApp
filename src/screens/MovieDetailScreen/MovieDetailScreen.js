@@ -45,6 +45,9 @@ const MovieDetailScreen = ({ route, navigation }) => {
               Original title: {data.original_title}
             </Text>
             <Text style={[styles.title, { fontSize: 18 }]}>
+              Release year: {data.release_date.split("-")[0]}
+            </Text>
+            <Text style={[styles.title, { fontSize: 18 }]}>
               Language: {data.original_language}
             </Text>
             <Text style={[styles.title, { fontSize: 18 }]}>

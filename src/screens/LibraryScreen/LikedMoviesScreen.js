@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
 import styles from "./Styles";
-import { fetchUserLikedMovies } from "../../API/firebaseMethods";
+import { fetchUserLikedMovies } from "../../API/firebase/UserMethods/firebaseUserMethods";
 import { Button } from "galio-framework";
 import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";

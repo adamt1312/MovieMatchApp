@@ -18,7 +18,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import "react-native-gesture-handler";
-import { registration } from "../../API/firebaseMethods";
+import { registration } from "../../API/firebase/Authentication/firestoreAuthentication";
 import Checkmark from "../../components/screen components/Checkmark";
 import styles from "./Styles";
 

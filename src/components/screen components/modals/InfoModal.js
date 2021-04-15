@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import styles from "../../../screens/FindMatchScreen/Styles";
-import { setSentRequest } from "../../../API/firebaseMethods";
+import { setSentRequest } from "../../../API/firebase/UserPairing/UserPairingMethods";
 
 const InfoModal = (props) => {
   const { isAvailable, nickname, visible } = props;

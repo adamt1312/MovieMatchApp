@@ -9,7 +9,7 @@ import {
 import "react-native-gesture-handler";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
 import * as firebase from "firebase";
-import { loggingOut } from "../../API/firebaseMethods";
+import { loggingOut } from "../../API/firebase/Authentication/firestoreAuthentication";
 import { Button } from "galio-framework";
 import styles from "./Styles";
 import { Entypo } from "@expo/vector-icons";

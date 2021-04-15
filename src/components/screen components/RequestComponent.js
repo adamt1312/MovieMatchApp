@@ -6,9 +6,9 @@ import {
   setSentRequestFalseOrNull,
   createNewSession,
   setIsPairedToSessionID,
-  fetchUserLikedMovies,
   setUserLikedGenresIds,
-} from "../../API/firebaseMethods";
+} from "../../API/firebase/UserPairing/UserPairingMethods";
+import { updatePreferedGenres } from "../../API/firebase/UserMethods/firebaseUserMethods";
 
 const RequestComponent = (props) => {
   const { name, uid } = props;
@@ -29,9 +29,12 @@ const RequestComponent = (props) => {
     //     console.log(movie.genre_ids);
     //   });
     // });
-
     // just testing
-    await setUserLikedGenresIds();
+    // await setUserLikedGenresIds();
+    try {
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // TODO: 1. delete pendingRequest ✓
@@ -39,10 +42,14 @@ const RequestComponent = (props) => {
   //       2. show deny message modal in FindMatchScreen... ✓
 
   const denyUserHandler = () => {
-    deleteUserRequest(uid);
-    setSentRequestFalseOrNull(uid, false).then(() => {
-      console.log("user request" + uid + "deleted");
-    });
+    try {
+      deleteUserRequest(uid);
+      setSentRequestFalseOrNull(uid, false).then(() => {
+        console.log("user request" + uid + "deleted");
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
