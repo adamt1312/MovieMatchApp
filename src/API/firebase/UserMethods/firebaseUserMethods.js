@@ -47,23 +47,32 @@ export async function dbLibraryToLiked(movieObject) {
     const currentUser = firebase.auth().currentUser;
     const db = firebase.firestore();
     // delete from disliked (if exist)
-    db.collection("users")
+    const docRef1 = await db
+      .collection("users")
       .doc(currentUser.uid)
       .collection("dislikedMovies")
       .doc(movieObject.id.toString())
       .delete();
 
     // add to liked
-    db.collection("users")
+    const docRef2 = await db
+      .collection("users")
       .doc(currentUser.uid)
       .collection("likedMovies")
       .doc(movieObject.id.toString())
       .set(movieObject);
 
     // insert movie genres to liked genres, and compute 3 most prefered genres...
-    updateLikedGenresCounter(movieObject).then(() => {
-      updatePreferedGenres();
+
+    updateLikedGenresCounter(movieObject).then((updatedGenresCounter) => {
+      updatePreferedGenres(updatedGenresCounter);
     });
+
+    // const test = await ;
+
+    // updateLikedReleaseYearsCounter(movieObject).then(() => {
+    //   updatePreferedReleaseYears();
+    // });
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }
@@ -91,30 +100,38 @@ export async function dbLibraryToDisliked(movieObject) {
   }
 }
 
-// update liked genres field in db, which counts how many times a specific genre was liked...
+// increment occurrence of genres of a movie and return the counter map from db...
 export async function updateLikedGenresCounter(movieObject) {
   try {
     const db = firebase.firestore();
     const currentUser = firebase.auth().currentUser;
 
-    movieObject.genre_ids.forEach((genre_id) => {
-      let gid = "liked_genres." + genre_id;
+    for (let i = 0; i < movieObject.genre_ids.length; i++) {
+      let gid = "liked_genres." + movieObject.genre_ids[i];
       let obj = {};
       obj[gid] = firebase.firestore.FieldValue.increment(1);
-      db.collection("users")
+      await db
+        .collection("users")
         .doc(currentUser.uid)
         .collection("preferencesProfile")
         .doc("like")
         .update(obj);
-    });
+    }
 
-    return 1;
+    const doc = await db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("preferencesProfile")
+      .doc("like")
+      .get();
+
+    return doc.data().liked_genres;
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }
 }
 
-// TODO: Not sure if to use this
+// TODO: Deciding if to use dislike logic when creating recommendations...
 export async function updateUserDislikedGenres(movieObject) {
   try {
     const db = firebase.firestore();
@@ -137,7 +154,85 @@ export async function updateUserDislikedGenres(movieObject) {
   }
 }
 
-export async function updatePreferedGenres() {
+// choose 3 genres with most occurrences...
+export async function updatePreferedGenres(liked_genres_obj) {
+  try {
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+
+    if (liked_genres_obj != {}) {
+      let arr = Object.values(liked_genres_obj);
+      console.log(arr);
+      let prefered_genres = [];
+      for (let i = 0; i < 3; i++) {
+        let maxValue = Math.max(...arr);
+        console.log("max value is:" + maxValue);
+        let keyMaxValue = getKeyByValue(liked_genres_obj, maxValue);
+        prefered_genres.push(keyMaxValue);
+        arr.splice(arr.indexOf(maxValue), 1);
+        console.log("after removal arr:" + arr);
+      }
+      db.collection("users")
+        .doc(currentUser.uid)
+        .collection("preferencesProfile")
+        .doc("like")
+        .update({ prefered_genres: prefered_genres });
+    } else {
+      console.log("No such document!");
+    }
+
+    return 1;
+  } catch (err) {
+    Alert.alert(
+      "There is something wrong in updatePreferedGenres!",
+      err.message
+    );
+  }
+}
+
+const getKeyByValue = (object, value) => {
+  return Object.keys(object).find((key) => object[key] === value);
+};
+
+export async function updateLikedReleaseYearsCounter(movieObject) {
+  try {
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+    const increment = firebase.firestore.FieldValue.increment(1);
+    db.collection("users")
+      .doc(currentUser.uid)
+      .collection("preferencesProfile")
+      .doc("like")
+      .get()
+      .then((like_doc) => {
+        if (like_doc.exists) {
+          if (movieObject.release_date) {
+            const release_year = movieObject.release_date.split("-")[0];
+            if (release_year >= 2013) {
+              like_doc.update({ "liked_release_years.now - 2013": increment });
+            } else if (release_year > 2004 && release_year <= 2012) {
+              like_doc.update({ "liked_release_years.2012 - 2005": increment });
+            } else if (release_year < 2004) {
+              like_doc.update({
+                "liked_release_years.2004 - bellow": increment,
+              });
+            }
+          }
+        } else {
+          console.log("No such document!");
+        }
+      });
+
+    return 0;
+  } catch (err) {
+    Alert.alert(
+      "There is something wrong in updateLikedReleaseYearsCounter!",
+      err.message
+    );
+  }
+}
+
+export async function updatePreferedReleaseYears() {
   try {
     const db = firebase.firestore();
     const currentUser = firebase.auth().currentUser;
@@ -149,31 +244,26 @@ export async function updatePreferedGenres() {
       .doc("like")
       .get();
 
-    const liked_genres_obj = liked_doc.data().liked_genres;
-    console.log(liked_genres_obj);
-    let favoriteGenres = [];
-    for (let i = 0; i < 3; i++) {
-      let arr = Object.values(liked_genres_obj);
+    const liked_years_obj = liked_doc.data().liked_release_years;
+    let favoriteYears = [];
+    for (let i = 0; i < 2; i++) {
+      let arr = Object.values(liked_years_obj);
       let maxValue = Math.max(...arr);
-      let keyMaxValue = getKeyByValue(liked_genres_obj, maxValue);
-      favoriteGenres.push(keyMaxValue);
-      console.log("Key for max value is: " + keyMaxValue);
-      delete liked_genres_obj[keyMaxValue];
-      console.log(favoriteGenres);
+      let keyMaxValue = getKeyByValue(liked_years_obj, maxValue);
+      favoriteYears.push(keyMaxValue);
+      console.log("max value is: " + maxValue);
+      delete liked_years_obj[keyMaxValue];
     }
+    console.log(favoriteYears);
 
     db.collection("users")
       .doc(currentUser.uid)
       .collection("preferencesProfile")
       .doc("like")
-      .update({ prefered_genres: favoriteGenres });
+      .update({ prefered_release_years: favoriteYears });
 
     return 1;
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }
 }
-
-const getKeyByValue = (object, value) => {
-  return Object.keys(object).find((key) => object[key] === value);
-};

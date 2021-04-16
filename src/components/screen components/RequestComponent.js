@@ -8,7 +8,10 @@ import {
   setIsPairedToSessionID,
   setUserLikedGenresIds,
 } from "../../API/firebase/UserPairing/UserPairingMethods";
-import { updatePreferedGenres } from "../../API/firebase/UserMethods/firebaseUserMethods";
+import {
+  updatePreferedGenres,
+  updatePreferedReleaseYears,
+} from "../../API/firebase/UserMethods/firebaseUserMethods";
 
 const RequestComponent = (props) => {
   const { name, uid } = props;
@@ -29,8 +32,9 @@ const RequestComponent = (props) => {
     //     console.log(movie.genre_ids);
     //   });
     // });
-    // just testing
-    // await setUserLikedGenresIds();
+
+    ////// JUST TESTING FUNCTIONS //////
+    updatePreferedGenres();
     try {
     } catch (error) {
       console.log(error);
