@@ -68,11 +68,9 @@ export async function dbLibraryToLiked(movieObject) {
       updatePreferedGenres(updatedGenresCounter);
     });
 
-    // const test = await ;
-
-    // updateLikedReleaseYearsCounter(movieObject).then(() => {
-    //   updatePreferedReleaseYears();
-    // });
+    updateLikedReleaseYearsCounter(movieObject).then(() => {
+      updatePreferedReleaseYears();
+    });
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }
@@ -162,15 +160,12 @@ export async function updatePreferedGenres(liked_genres_obj) {
 
     if (liked_genres_obj != {}) {
       let arr = Object.values(liked_genres_obj);
-      console.log(arr);
       let prefered_genres = [];
       for (let i = 0; i < 3; i++) {
         let maxValue = Math.max(...arr);
-        console.log("max value is:" + maxValue);
         let keyMaxValue = getKeyByValue(liked_genres_obj, maxValue);
         prefered_genres.push(keyMaxValue);
         arr.splice(arr.indexOf(maxValue), 1);
-        console.log("after removal arr:" + arr);
       }
       db.collection("users")
         .doc(currentUser.uid)
@@ -199,31 +194,34 @@ export async function updateLikedReleaseYearsCounter(movieObject) {
     const db = firebase.firestore();
     const currentUser = firebase.auth().currentUser;
     const increment = firebase.firestore.FieldValue.increment(1);
-    db.collection("users")
-      .doc(currentUser.uid)
-      .collection("preferencesProfile")
-      .doc("like")
-      .get()
-      .then((like_doc) => {
-        if (like_doc.exists) {
-          if (movieObject.release_date) {
-            const release_year = movieObject.release_date.split("-")[0];
-            if (release_year >= 2013) {
-              like_doc.update({ "liked_release_years.now - 2013": increment });
-            } else if (release_year > 2004 && release_year <= 2012) {
-              like_doc.update({ "liked_release_years.2012 - 2005": increment });
-            } else if (release_year < 2004) {
-              like_doc.update({
-                "liked_release_years.2004 - bellow": increment,
-              });
-            }
-          }
-        } else {
-          console.log("No such document!");
-        }
-      });
 
-    return 0;
+    if (movieObject != {}) {
+      if (movieObject.release_date) {
+        let liked_doc = db
+          .collection("users")
+          .doc(currentUser.uid)
+          .collection("preferencesProfile")
+          .doc("like");
+        const release_year = movieObject.release_date.split("-")[0];
+        if (release_year >= 2013) {
+          await liked_doc.update({
+            "liked_release_years.now - 2013": increment,
+          });
+        } else if (release_year > 2004 && release_year <= 2012) {
+          await liked_doc.update({
+            "liked_release_years.2012 - 2005": increment,
+          });
+        } else if (release_year < 2004) {
+          await liked_doc.update({
+            "liked_release_years.2004 - bellow": increment,
+          });
+        }
+      }
+      return 1;
+    } else {
+      console.log("No such document!");
+      return 0;
+    }
   } catch (err) {
     Alert.alert(
       "There is something wrong in updateLikedReleaseYearsCounter!",
@@ -245,6 +243,7 @@ export async function updatePreferedReleaseYears() {
       .get();
 
     const liked_years_obj = liked_doc.data().liked_release_years;
+    console.log("before algorithm: " + liked_years_obj);
     let favoriteYears = [];
     for (let i = 0; i < 2; i++) {
       let arr = Object.values(liked_years_obj);
@@ -254,8 +253,8 @@ export async function updatePreferedReleaseYears() {
       console.log("max value is: " + maxValue);
       delete liked_years_obj[keyMaxValue];
     }
-    console.log(favoriteYears);
 
+    console.log(favoriteYears);
     db.collection("users")
       .doc(currentUser.uid)
       .collection("preferencesProfile")

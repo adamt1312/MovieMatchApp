@@ -49,8 +49,10 @@ const exploreMoviesScreen = ({ navigation }) => {
   const search = () => {
     setIsLoading(true);
     axios(apiurlSearch + data.search).then(({ data }) => {
-      const results = data.results;
-      setData({ search: "", results: results });
+      if (data) {
+        const results = data.results;
+        setData({ search: "", results: results });
+      }
     });
     setIsLoading(false);
   };
