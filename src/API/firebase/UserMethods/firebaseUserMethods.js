@@ -27,6 +27,22 @@ export async function fetchUserLikedMovies() {
   }
 }
 
+export async function fetchUserPreferences() {
+  try {
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+    const preferencesProfile = await db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("preferencesProfile")
+      .doc("like")
+      .get();
+    return preferencesProfile.data();
+  } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
 export async function fetchUserDislikedMovies() {
   try {
     const db = firebase.firestore();
