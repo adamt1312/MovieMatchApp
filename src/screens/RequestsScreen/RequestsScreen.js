@@ -8,6 +8,7 @@ import { isLoading } from "expo-font";
 import * as firebase from "firebase";
 import "firebase/firestore";
 
+// TODO: Add cancel request
 const RequestScreen = ({ params }) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -31,7 +32,7 @@ const RequestScreen = ({ params }) => {
           setIsLoading(true);
           fetchUserPendingRequests().then((data) => {
             setData(data);
-            if (JSON.stringify(data[0]) === "{}") {
+            if (JSON.stringify(data.length) == 1) {
               setIsEmpty(true);
             } else {
               setIsEmpty(false);

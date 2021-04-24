@@ -14,8 +14,8 @@ import BackgroundBlurred from "../../components/BackgroundBlurred";
 const MyProfileScreen = () => {
   const [nickname, setNickname] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [preferedGenres, setPreferedGenres] = useState(null);
-  const [preferedReleaseYears, setpreferedReleaseYears] = useState(null);
+  const [preferedGenres, setPreferedGenres] = useState("none");
+  const [preferedReleaseYears, setpreferedReleaseYears] = useState("none");
 
   const getNamesForGenres = (genres_ids) => {
     let genres_names = [];
@@ -31,13 +31,21 @@ const MyProfileScreen = () => {
 
   useEffect(() => {
     try {
-      fetchUserPreferences().then((profilePreferences) => {
-        setPreferedGenres(
-          getNamesForGenres(profilePreferences.prefered_genres)
-        );
-        setpreferedReleaseYears(profilePreferences.prefered_release_years);
-        setIsLoading(false);
-      });
+      console.log("UE");
+      fetchUserPreferences(firebase.auth().currentUser.uid).then(
+        (profilePreferences) => {
+          console.log(profilePreferences.prefered_genres);
+          if (profilePreferences.prefered_genres != null) {
+            console.log(profilePreferences.prefered_genres);
+            setPreferedGenres(
+              getNamesForGenres(profilePreferences.prefered_genres)
+            );
+          }
+          if (!profilePreferences.prefered_release_years != null)
+            setpreferedReleaseYears(profilePreferences.prefered_release_years);
+          setIsLoading(false);
+        }
+      );
       fetchUserNickname(firebase.auth().currentUser.uid).then((nickname) => {
         setNickname(nickname);
       });
@@ -66,7 +74,7 @@ const MyProfileScreen = () => {
             <FontAwesome name="user-circle" size={100} color="white" />
           </View>
           <View style={styles.info}>
-            <Text style={styles.title}>Profile screen.</Text>
+            <Text style={styles.title}>Your profile</Text>
             <View style={styles.userDetails}>
               <Text style={styles.infoDetail}>{"Nickname: " + nickname}</Text>
               <Text style={styles.infoDetail}>

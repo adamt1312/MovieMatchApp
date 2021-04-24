@@ -20,7 +20,7 @@ const MovieDetailScreen = ({ route, navigation }) => {
 
   return (
     <ImageBackground
-      source={{ uri: "https://image.tmdb.org/t/p/w300" + data.poster_path }}
+      source={{ uri: "https://image.tmdb.org/t/p/w780" + data.poster_path }}
       style={styles.backgroundImage}
     >
       <View style={styles.buttonsWrapper}>
@@ -32,7 +32,9 @@ const MovieDetailScreen = ({ route, navigation }) => {
       <ScrollView style={styles.scrollV}>
         <View style={styles.infoContainer}>
           <View style={[styles.titleContainer, { margin: 15 }]}>
-            <Text style={styles.title}>{data.title}</Text>
+            <Text style={styles.title}>
+              {data.title ? data.title : data.original_name}
+            </Text>
             <View style={styles.categoryContainer}>
               {data.genre_ids.map((n) => {
                 return <Category id={n} key={n} />;
@@ -42,10 +44,14 @@ const MovieDetailScreen = ({ route, navigation }) => {
 
           <View style={styles.overviewContainer}>
             <Text style={[styles.title, { fontSize: 18 }]}>
-              Original title: {data.original_title}
+              {data.original_title
+                ? "Original title: " + data.original_title
+                : "Original name: " + data.original_name}
             </Text>
             <Text style={[styles.title, { fontSize: 18 }]}>
-              Release year: {data.release_date.split("-")[0]}
+              {data.release_date
+                ? "Release year: " + data.release_date.split("-")[0]
+                : "First air year: " + data.first_air_date.split("-")[0]}
             </Text>
             <Text style={[styles.title, { fontSize: 18 }]}>
               Language: {data.original_language}
@@ -78,7 +84,7 @@ const MovieDetailScreen = ({ route, navigation }) => {
                     fontFamily: "Roboto_300Light",
                   }}
                 >
-                  Go home
+                  Home
                 </Text>
               </Button>
             </View>

@@ -18,21 +18,22 @@ const homeScreen = ({ navigation }) => {
   let currentUserUID = firebase.auth().currentUser.uid;
   const [nickname, setNickname] = useState("");
 
-  useEffect(() => {
-    async function getUserInfo() {
-      let doc = await firebase
-        .firestore()
-        .collection("users")
-        .doc(currentUserUID)
-        .get();
+  async function getUserInfo() {
+    let doc = await firebase
+      .firestore()
+      .collection("users")
+      .doc(currentUserUID)
+      .get();
 
-      if (!doc.exists) {
-        Alert.alert("No user data found!");
-      } else {
-        let dataObj = doc.data();
-        setNickname(dataObj.nickname);
-      }
+    if (!doc.exists) {
+      Alert.alert("No user data found!");
+    } else {
+      let dataObj = doc.data();
+      setNickname(dataObj.nickname);
     }
+  }
+  // TODO: Add loading when fetching nickname
+  useEffect(() => {
     getUserInfo();
   }, []);
 
@@ -61,6 +62,7 @@ const homeScreen = ({ navigation }) => {
             fontSize: 30,
             color: "white",
             fontFamily: "VarelaRound_400Regular",
+            textAlign: "center",
           }}
         >
           {"Welcome back, " + nickname + " !"}

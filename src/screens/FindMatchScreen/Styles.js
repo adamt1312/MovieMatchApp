@@ -65,6 +65,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  deniedMsg: {
+    fontSize: 29,
+    fontFamily: "VarelaRound_400Regular",
+    color: "white",
+    textAlign: "center",
+  },
 });
 
 export default styles;

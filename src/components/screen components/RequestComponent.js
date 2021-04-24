@@ -12,32 +12,45 @@ import {
   updatePreferedGenres,
   updatePreferedReleaseYears,
 } from "../../API/firebase/UserMethods/firebaseUserMethods";
+import {
+  generateRecommendationsForSession,
+  generatePreferencesForSession,
+} from "../../API/firebase/UserPairing/RecommendationsLogic";
+import keys from "../../../config/keys";
 
 const RequestComponent = (props) => {
   const { name, uid } = props;
 
   // TODO: 1. delete pendingRequest ✓
-  //       2. set isPaired to session uid, ✓
-  //       3. set sentRequest to null ✓
-  //       3. hide waiting message in FindMatchScreen...
+  //       2. Set sent request null ✓
+  //       3. create new session
+  //          - sessions -> session_id = user1(uid), user2(uid), user1_recommendations, user2_recommendations, session_liked_ids, session_matched_ids
+  //          - generate recommendations for the session
+  //            - generate preferences for session
+  //            - generate recommendations
+  //       4. Set isPaired to session uid ✓
+  //       5. hide waiting message in FindMatchScreen...
   const acceptUserHandler = async () => {
-    // deleteUserRequest(uid);
-    // setSentRequestFalseOrNull(uid, null).then(() => {
-    //   createNewSession(uid).then((session_id) => {
-    //     setIsPairedToSessionID(uid, session_id);
-    //   });
-    // });
-    // const test = fetchUserLikedMovies().then((likedMovies) => {
-    //   likedMovies.forEach((movie) => {
-    //     console.log(movie.genre_ids);
-    //   });
-    // });
-
-    ////// JUST TESTING FUNCTIONS //////
-    updatePreferedGenres();
     try {
+      deleteUserRequest(uid);
+      setSentRequestFalseOrNull(uid, null).then(() => {
+        createNewSession(uid).then((session_id) => {
+          setIsPairedToSessionID(uid, session_id);
+          generatePreferencesForSession(
+            uid,
+            session_id
+          ).then((sessionPreferences) =>
+            generateRecommendationsForSession(sessionPreferences, session_id)
+          );
+        });
+      });
+      const test = fetchUserLikedMovies().then((likedMovies) => {
+        likedMovies.forEach((movie) => {
+          console.log(movie.genre_ids);
+        });
+      });
     } catch (error) {
-      console.log(error);
+      console.log("acceptUserHandler: " + error);
     }
   };
 
@@ -48,11 +61,9 @@ const RequestComponent = (props) => {
   const denyUserHandler = () => {
     try {
       deleteUserRequest(uid);
-      setSentRequestFalseOrNull(uid, false).then(() => {
-        console.log("user request" + uid + "deleted");
-      });
+      setSentRequestFalseOrNull(uid, false).then(() => {});
     } catch (error) {
-      console.log(error);
+      console.log("denyUserHandler: " + error);
     }
   };
 

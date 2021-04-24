@@ -1,6 +1,7 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 import { Alert } from "react-native";
+import { fetchUserNickname } from "../UserMethods/firebaseUserMethods";
 
 export async function isExistingUser(nickname) {
   try {
@@ -115,7 +116,7 @@ export async function fetchUserPendingRequests() {
 
 export async function deleteUserRequest(delUserUid) {
   try {
-    console.log("delete user function called" + delUserUid);
+    console.log("deleting pending request of user " + delUserUid);
     const db = firebase.firestore();
     const currentUser = firebase.auth().currentUser;
     const query = await db
@@ -132,6 +133,7 @@ export async function deleteUserRequest(delUserUid) {
 
 export async function setSentRequestFalseOrNull(uid, value) {
   try {
+    console.log("seting sent request to false to a user " + uid);
     const db = firebase.firestore();
     const query2 = await db
       .collection("users")
@@ -148,16 +150,22 @@ export async function createNewSession(uid) {
     const db = firebase.firestore();
     const currentUser = firebase.auth().currentUser;
 
+    let session_id;
     // creating new session
     await db
       .collection("sessions")
       .add({
         user1: currentUser.uid,
         user2: uid.toString(),
+        user1_recommendations: [],
+        user2_recommendations: [],
+        session_liked_ids: [],
+        session_matched_ids: [],
       })
       .then((docRef) => {
-        return docRef.id;
+        session_id = docRef.id;
       });
+    return session_id;
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }

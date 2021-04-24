@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     backgroundColor: "gray",
     flexDirection: "column",
     borderRadius: 30,
+    marginHorizontal: 20,
   },
 });
 

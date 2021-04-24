@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
   },
   title: {
     fontSize: 25,
@@ -12,7 +13,6 @@ const styles = StyleSheet.create({
   movieButton: {
     height: 100,
     width: "95%",
-    // backgroundColor: "pink",
     borderRadius: 20,
     justifyContent: "center",
     marginVertical: 10,
@@ -42,6 +42,22 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: "100%",
     height: "100%",
+  },
+  emptyView: {
+    height: "10%",
+    width: "80%",
+    backgroundColor: "gray",
+    flexDirection: "column",
+    borderRadius: 30,
+    marginTop: 20,
+    marginHorizontal: 20,
+  },
+  titleEmpty: {
+    fontFamily: "VarelaRound_400Regular",
+    color: "white",
+    textAlign: "center",
+    fontSize: 18,
+    marginVertical: 20,
   },
 });
 

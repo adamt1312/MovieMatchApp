@@ -5,6 +5,7 @@ import BackgroundBlurred from "../../components/BackgroundBlurred";
 import {
   isUserPaired,
   isExistingUser,
+  setSentRequestFalseOrNull,
 } from "../../API/firebase/UserPairing/UserPairingMethods";
 import PulseM from "../../components/screen components/PulseM";
 import * as firebase from "firebase";
@@ -12,6 +13,7 @@ import "firebase/firestore";
 import styles from "./Styles";
 import DenyRequestModal from "../../components/screen components/modals/DenyRequestModal";
 import InfoModal from "../../components/screen components/modals/InfoModal";
+import { Button } from "galio-framework";
 
 const FindMatchScreen = (props) => {
   const [data, setData] = useState({
@@ -24,7 +26,6 @@ const FindMatchScreen = (props) => {
     denyRequest: false,
     reloadModal: true,
   });
-
   const db = firebase.firestore();
   const doc = db.collection("users").doc(firebase.auth().currentUser.uid);
 
@@ -39,8 +40,10 @@ const FindMatchScreen = (props) => {
         }));
       } else {
         const sentRequest = doc.data().sentRequest;
+        console.log(doc.data());
         // user already sent request, showing waiting screen
         if (sentRequest) {
+          console.log("user already sent request, showing waiting screen");
           setData((prevState) => ({
             ...prevState,
             showSearch: false,
@@ -48,6 +51,7 @@ const FindMatchScreen = (props) => {
         }
         // user request is denied, show denyModal
         else if (sentRequest == false) {
+          console.log("sent request should be false, and is " + sentRequest);
           setData((prevState) => ({
             ...prevState,
             showSearch: false,
@@ -55,7 +59,8 @@ const FindMatchScreen = (props) => {
           }));
         }
         // user doesn`t sent request, show search
-        else if (!sentRequest) {
+        else if (sentRequest == null) {
+          console.log("user doesn`t sent request, show search");
           setData((prevState) => ({
             ...prevState,
             showSearch: true,
@@ -181,26 +186,49 @@ const FindMatchScreen = (props) => {
           ) : (
             <View style={{ justifyContent: "center" }}>
               {data.denyRequest ? (
-                <DenyRequestModal
-                  nickname={"your friend"}
-                  showSearch={() => {
-                    setData((prevState) => ({
-                      ...prevState,
-                      showSearch: true,
-                      denyRequest: false,
-                    }));
-                  }}
-                />
-              ) : null}
+                // <DenyRequestModal
+                //   nickname={"your friend"}
+                //   showSearch={() => {
+                //     setData((prevState) => ({
+                //       ...prevState,
+                //       showSearch: true,
+                //       denyRequest: false,
+                //     }));
+                //   }}
+                // />
+                <View style={styles.searchWrapper}>
+                  <Text style={styles.deniedMsg}>
+                    Sorry, your friend denied your request. Try again later.
+                  </Text>
+                  <Button
+                    color="#e91e63"
+                    round
+                    onPress={() => {
+                      setSentRequestFalseOrNull(
+                        firebase.auth().currentUser.uid,
+                        null
+                      );
+                      setData((prevState) => ({
+                        ...prevState,
+                        showSearch: true,
+                        denyRequest: false,
+                      }));
+                    }}
+                  >
+                    Got it
+                  </Button>
+                </View>
+              ) : (
+                <PulseM />
+              )}
               {/* TODO: Add some info, that cant search other user if
-              isPaired...here will maybe be some button to
+              isPaired...here will be maybe some button to
               showRecommendations... */}
               {data.isPaired ? (
                 <Text>
                   You are currently paired, and cannot search other user.
                 </Text>
               ) : null}
-              <PulseM />
             </View>
           )}
         </View>

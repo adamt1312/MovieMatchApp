@@ -21,7 +21,6 @@ const DislikedMoviesScreen = ({ navigation }) => {
     try {
       fetchUserDislikedMovies().then((data) => {
         setData(data);
-        console.log(data);
       });
     } catch (error) {
       console.log(error);

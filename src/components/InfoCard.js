@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "auto",
     position: "relative",
-    resizeMode: "cover",
+    resizeMode: "contain",
     justifyContent: "center",
   },
   movieInfo: {

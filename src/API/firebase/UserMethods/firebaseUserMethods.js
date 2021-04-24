@@ -27,13 +27,13 @@ export async function fetchUserLikedMovies() {
   }
 }
 
-export async function fetchUserPreferences() {
+export async function fetchUserPreferences(uid) {
   try {
     const db = firebase.firestore();
-    const currentUser = firebase.auth().currentUser;
+    // const currentUser = firebase.auth().currentUser;
     const preferencesProfile = await db
       .collection("users")
-      .doc(currentUser.uid)
+      .doc(uid)
       .collection("preferencesProfile")
       .doc("like")
       .get();
@@ -182,6 +182,9 @@ export async function updatePreferedGenres(liked_genres_obj) {
         let keyMaxValue = getKeyByValue(liked_genres_obj, maxValue);
         prefered_genres.push(keyMaxValue);
         arr.splice(arr.indexOf(maxValue), 1);
+        console.log("max value of arr: " + maxValue);
+        console.log(liked_genres_obj);
+        delete liked_genres_obj[keyMaxValue];
       }
       db.collection("users")
         .doc(currentUser.uid)
@@ -212,13 +215,15 @@ export async function updateLikedReleaseYearsCounter(movieObject) {
     const increment = firebase.firestore.FieldValue.increment(1);
 
     if (movieObject != {}) {
-      if (movieObject.release_date) {
+      if (movieObject.release_date || movieObject.first_air_date) {
         let liked_doc = db
           .collection("users")
           .doc(currentUser.uid)
           .collection("preferencesProfile")
           .doc("like");
-        const release_year = movieObject.release_date.split("-")[0];
+        const release_year = movieObject.release_date
+          ? movieObject.release_date.split("-")[0]
+          : movieObject.first_air_date.split("-")[0];
         if (release_year >= 2013) {
           await liked_doc.update({
             "liked_release_years.now - 2013": increment,
@@ -259,18 +264,20 @@ export async function updatePreferedReleaseYears() {
       .get();
 
     const liked_years_obj = liked_doc.data().liked_release_years;
-    console.log("before algorithm: " + liked_years_obj);
     let favoriteYears = [];
-    for (let i = 0; i < 2; i++) {
-      let arr = Object.values(liked_years_obj);
-      let maxValue = Math.max(...arr);
-      let keyMaxValue = getKeyByValue(liked_years_obj, maxValue);
-      favoriteYears.push(keyMaxValue);
-      console.log("max value is: " + maxValue);
-      delete liked_years_obj[keyMaxValue];
+
+    if (!(Object.entries(liked_years_obj).length === 1)) {
+      for (let i = 0; i < 2; i++) {
+        let arr = Object.values(liked_years_obj);
+        let maxValue = Math.max(...arr);
+        let keyMaxValue = getKeyByValue(liked_years_obj, maxValue);
+        favoriteYears.push(keyMaxValue);
+        delete liked_years_obj[keyMaxValue];
+      }
+    } else {
+      favoriteYears.push(Object.keys(liked_years_obj)[0]);
     }
 
-    console.log(favoriteYears);
     db.collection("users")
       .doc(currentUser.uid)
       .collection("preferencesProfile")

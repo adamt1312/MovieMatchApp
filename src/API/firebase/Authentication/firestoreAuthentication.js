@@ -52,6 +52,31 @@ export async function dbCreateLibrary() {
       .collection("dislikedMovies")
       .doc("init")
       .set({});
+    db.collection("users")
+      .doc(currentUser.uid)
+      .collection("pendingRequests")
+      .doc("init")
+      .set({});
+    db.collection("users")
+      .doc(currentUser.uid)
+      .collection("pendingRequests")
+      .doc("init")
+      .set({});
+    db.collection("users")
+      .doc(currentUser.uid)
+      .collection("preferencesProfile")
+      .doc("like")
+      .set({
+        liked_genres: null,
+        liked_release_years: null,
+        prefered_genres: null,
+        prefered_release_years: null,
+      });
+    db.collection("users")
+      .doc(currentUser.uid)
+      .collection("preferencesProfile")
+      .doc("dislike")
+      .set({});
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }

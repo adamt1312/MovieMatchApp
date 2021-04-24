@@ -10,17 +10,16 @@ import {
   dbLibraryToDisliked,
   dbLibraryToLiked,
 } from "../../API/firebase/UserMethods/firebaseUserMethods";
-
-const API_KEY = "7bcd460b3cae3a42e99555ac0e04e8f1";
+import keys from "../../../config/keys";
 
 const exploreMoviesScreen = ({ navigation }) => {
   const apiurlSearch =
-    "https://api.themoviedb.org/3/search/movie?api_key=" +
-    API_KEY +
+    "https://api.themoviedb.org/3/search/multi?api_key=" +
+    keys.tmdbConfig.apiKey +
     "&language=en-US&query=";
   const apiurlPopular =
-    "https://api.themoviedb.org/3/movie/popular?api_key=" +
-    API_KEY +
+    "https://api.themoviedb.org/3/trending/all/week?api_key=" +
+    keys.tmdbConfig.apiKey +
     "&language=en-US";
 
   const [data, setData] = useState({
@@ -30,7 +29,7 @@ const exploreMoviesScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   let currentMovieInfo;
-  // TBD - error handling
+  // TODO: - error handling
 
   useEffect(() => {
     try {
@@ -52,9 +51,9 @@ const exploreMoviesScreen = ({ navigation }) => {
       if (data) {
         const results = data.results;
         setData({ search: "", results: results });
+        setIsLoading(false);
       }
     });
-    setIsLoading(false);
   };
 
   const tapHandler = (cardIndex) => {
@@ -98,9 +97,9 @@ const exploreMoviesScreen = ({ navigation }) => {
           renderCard={(card) => {
             return (
               <InfoCard
-                imgUrl={"https://image.tmdb.org/t/p/w300" + card.poster_path}
+                imgUrl={"https://image.tmdb.org/t/p/w780" + card.poster_path}
                 vote_average={card.vote_average}
-                original_title={card.title}
+                original_title={card.title ? card.title : card.original_name}
                 overview={card.overview}
               />
             );
