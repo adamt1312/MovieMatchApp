@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.92);",
+    // backgroundColor: "rgba(0, 0, 0, 0.92);",
     fontFamily: "VarelaRound_400Regular",
   },
   linearGradient: {

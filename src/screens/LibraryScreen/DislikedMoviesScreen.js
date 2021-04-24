@@ -5,27 +5,22 @@ import {
   FlatList,
   TouchableHighlight,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
 import styles from "./Styles";
-import { fetchUserDislikedMovies } from "../../API/firebase/UserMethods/firebaseUserMethods";
-import { FontAwesome5 } from "@expo/vector-icons";
+import {
+  fetchUserDislikedMovies,
+  fetchUserLikedMovies,
+} from "../../API/firebase/UserMethods/firebaseUserMethods";
+import { Button } from "galio-framework";
+import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-
-// TODO: Modify to matched movies not disliked
+import { FontAwesome5 } from "@expo/vector-icons";
 
 const DislikedMoviesScreen = ({ navigation }) => {
   const [data, setData] = useState();
-
-  useEffect(() => {
-    try {
-      fetchUserDislikedMovies().then((data) => {
-        setData(data);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const [isLoading, setIsLoading] = useState(true);
 
   const tapHandler = (movieData) => {
     navigation.navigate("MovieDetail", {
@@ -33,50 +28,74 @@ const DislikedMoviesScreen = ({ navigation }) => {
     });
   };
 
+  const Item = ({ item, index }) => (
+    <TouchableHighlight
+      key={item.id.toString()}
+      // FIXME: Printing some error with keyExtractor regarding expecting string, but gets number instead
+      onPress={() => tapHandler(data[index])}
+      style={{ width: "100%", alignItems: "center" }}
+    >
+      <View style={styles.movieButton}>
+        <ImageBackground
+          imageStyle={{ borderRadius: 20 }}
+          source={{
+            uri: "https://image.tmdb.org/t/p/w500" + item.poster_path,
+          }}
+          style={styles.backgroundImage}
+        >
+          <LinearGradient
+            colors={["transparent", "white"]}
+            locations={[0, 0.35]}
+            start={{ x: 1, y: 0 }}
+            end={{ x: -1, y: 0 }}
+            style={styles.linearGradient}
+          />
+          <Text style={styles.movieTitle}>{item.title}</Text>
+        </ImageBackground>
+      </View>
+    </TouchableHighlight>
+  );
+
+  const renderItem = ({ item, index }) => {
+    return <Item item={item} index={index} />;
+  };
+
+  useEffect(() => {
+    try {
+      fetchUserDislikedMovies().then((data) => {
+        setData(data);
+        setIsLoading(false);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
       <BackgroundBlurred />
-      <Text style={styles.title}>
-        These not so much...
-        <FontAwesome5 name="heart-broken" size={40} color="red" />
-      </Text>
+      {isLoading ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size={100} color="white" />
+        </View>
+      ) : (
+        <>
+          <Text style={styles.title}>
+            These not so much...
+            <FontAwesome5 name="heart-broken" size={40} color="red" />{" "}
+          </Text>
 
-      <FlatList
-        data={data}
-        initialNumToRender={5}
-        maxToRenderPerBatch={10}
-        renderItem={({ item, index, separators }) => (
-          <TouchableHighlight
-            key={item.id.toString()}
-            // FIXME: Printing some error with keyExtractor regarding expecting string=, but gets number instead
+          <FlatList
+            data={data}
             keyExtractor={(item) => item.id.toString()}
-            onPress={() => tapHandler(data[index])}
-            onShowUnderlay={separators.highlight}
-            onHideUnderlay={separators.unhighlight}
-          >
-            <View style={styles.movieButton}>
-              <ImageBackground
-                imageStyle={{ borderRadius: 20 }}
-                source={{
-                  uri: "https://image.tmdb.org/t/p/w300" + item.poster_path,
-                }}
-                style={styles.backgroundImage}
-              >
-                <LinearGradient
-                  colors={["transparent", "white"]}
-                  locations={[0.1, 0.4]}
-                  start={{ x: 1, y: 0 }}
-                  end={{ x: -1, y: 0 }}
-                  style={styles.linearGradient}
-                />
-                <Text style={styles.movieTitle}>{item.title}</Text>
-              </ImageBackground>
-            </View>
-          </TouchableHighlight>
-        )}
-      />
+            renderItem={renderItem}
+            style={{ width: "100%" }}
+          />
+        </>
+      )}
     </View>
   );
 };
-
 export default DislikedMoviesScreen;

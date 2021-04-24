@@ -28,11 +28,17 @@ const MovieDetailScreen = ({ route, navigation }) => {
         <CrossButtton />
         <HeartButton />
       </View>
-
+      <LinearGradient
+        colors={["transparent", "black"]}
+        locations={[0, 0.5]}
+        start={[0.1, 0.2]}
+        end={{ x: 0, y: 1 }}
+        style={styles.linearGradient}
+      />
       <ScrollView style={styles.scrollV}>
         <View style={styles.infoContainer}>
           <View style={[styles.titleContainer, { margin: 15 }]}>
-            <Text style={styles.title}>
+            <Text style={[styles.title, { marginVertical: 10 }]}>
               {data.title ? data.title : data.original_name}
             </Text>
             <View style={styles.categoryContainer}>

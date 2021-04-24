@@ -218,17 +218,18 @@ const FindMatchScreen = (props) => {
                     Got it
                   </Button>
                 </View>
+              ) : data.isPaired ? (
+                <View>
+                  <Text style={styles.deniedMsg}>
+                    You are currently paired, and unable to sent requests.
+                  </Text>
+                </View>
               ) : (
                 <PulseM />
               )}
               {/* TODO: Add some info, that cant search other user if
               isPaired...here will be maybe some button to
               showRecommendations... */}
-              {data.isPaired ? (
-                <Text>
-                  You are currently paired, and cannot search other user.
-                </Text>
-              ) : null}
             </View>
           )}
         </View>

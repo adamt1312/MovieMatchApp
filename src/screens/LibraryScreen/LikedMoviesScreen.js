@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableHighlight,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
 import styles from "./Styles";
@@ -14,20 +15,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 
 const LikedMoviesScreen = ({ navigation }) => {
-  const [data, setData] = useState(false);
-
-  useEffect(() => {
-    try {
-      fetchUserLikedMovies().then((data) => {
-        // checks if there are movies to show
-        if (!Object.entries(data[0]).length === 0) {
-          setData(data);
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const [data, setData] = useState();
+  const [isLoading, setIsLoading] = useState(true);
 
   const tapHandler = (movieData) => {
     navigation.navigate("MovieDetail", {
@@ -35,57 +24,74 @@ const LikedMoviesScreen = ({ navigation }) => {
     });
   };
 
+  const Item = ({ item, index }) => (
+    <TouchableHighlight
+      key={item.id.toString()}
+      // FIXME: Printing some error with keyExtractor regarding expecting string, but gets number instead
+      onPress={() => tapHandler(data[index])}
+      style={{ width: "100%", alignItems: "center" }}
+    >
+      <View style={styles.movieButton}>
+        <ImageBackground
+          imageStyle={{ borderRadius: 20 }}
+          source={{
+            uri: "https://image.tmdb.org/t/p/w500" + item.poster_path,
+          }}
+          style={styles.backgroundImage}
+        >
+          <LinearGradient
+            colors={["transparent", "white"]}
+            locations={[0, 0.35]}
+            start={{ x: 1, y: 0 }}
+            end={{ x: -1, y: 0 }}
+            style={styles.linearGradient}
+          />
+          <Text style={styles.movieTitle}>{item.title}</Text>
+        </ImageBackground>
+      </View>
+    </TouchableHighlight>
+  );
+
+  const renderItem = ({ item, index }) => {
+    return <Item item={item} index={index} />;
+  };
+
+  useEffect(() => {
+    try {
+      fetchUserLikedMovies().then((data) => {
+        setData(data);
+        setIsLoading(false);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
       <BackgroundBlurred />
-      <Text style={styles.title}>
-        You liked these...
-        <AntDesign name="heart" size={40} color="red" />
-      </Text>
-      {data ? (
-        <FlatList
-          data={data}
-          initialNumToRender={5}
-          maxToRenderPerBatch={10}
-          renderItem={({ item, index, separators }) => (
-            <TouchableHighlight
-              key={item.id.toString()}
-              // FIXME: Printing some error with keyExtractor regarding expecting string, but gets number instead
-              keyExtractor={(item) => item.id.toString()}
-              onPress={() => tapHandler(data[index])}
-              onShowUnderlay={separators.highlight}
-              onHideUnderlay={separators.unhighlight}
-            >
-              <View style={styles.movieButton}>
-                <ImageBackground
-                  imageStyle={{ borderRadius: 20 }}
-                  source={{
-                    uri: "https://image.tmdb.org/t/p/w300" + item.poster_path,
-                  }}
-                  style={styles.backgroundImage}
-                >
-                  <LinearGradient
-                    colors={["transparent", "white"]}
-                    locations={[0.1, 0.4]}
-                    start={{ x: 1, y: 0 }}
-                    end={{ x: -1, y: 0 }}
-                    style={styles.linearGradient}
-                  />
-                  <Text style={styles.movieTitle}>{item.title}</Text>
-                </ImageBackground>
-              </View>
-            </TouchableHighlight>
-          )}
-        />
-      ) : (
-        <View style={styles.emptyView}>
-          <Text style={[styles.titleEmpty]}>
-            You don't have any liked movies.
-          </Text>
+      {isLoading ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size={100} color="white" />
         </View>
+      ) : (
+        <>
+          <Text style={styles.title}>
+            You liked these...
+            <AntDesign name="heart" size={40} color="red" />
+          </Text>
+
+          <FlatList
+            data={data}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderItem}
+            style={{ width: "100%" }}
+          />
+        </>
       )}
     </View>
   );
 };
-
 export default LikedMoviesScreen;

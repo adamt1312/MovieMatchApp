@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: "white",
     textAlign: "center",
+    marginVertical: 20,
   },
   movieButton: {
     height: 100,
