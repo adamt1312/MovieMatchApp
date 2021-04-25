@@ -4,10 +4,19 @@ import { Alert } from "react-native";
 
 export async function fetchUserNickname(uid) {
   try {
-    console.log("UID" + uid);
     const db = firebase.firestore();
     const user = await db.collection("users").doc(uid).get();
     return user.data().nickname;
+  } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
+export async function fetchUser(uid) {
+  try {
+    const db = firebase.firestore();
+    const user = await db.collection("users").doc(uid).get();
+    return user.data();
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }

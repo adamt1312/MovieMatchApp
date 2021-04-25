@@ -18,7 +18,7 @@ import * as firebase from "firebase";
 import apiKeys from "./config/keys";
 import { MainStackNavigator } from "./navigation/StackNavigator";
 import LoadingScreen from "./src/screens/LoadingScreen/LoadingScreen";
-import SessionScreen from "./src/screens/SessionScreen/SessionScreen";
+import SessionScreen from "./src/screens/SessionScreens/SessionScreen";
 
 export default function App() {
   if (!firebase.apps.length) {
