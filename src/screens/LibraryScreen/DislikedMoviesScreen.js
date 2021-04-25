@@ -30,8 +30,7 @@ const DislikedMoviesScreen = ({ navigation }) => {
 
   const Item = ({ item, index }) => (
     <TouchableHighlight
-      key={item.id.toString()}
-      // FIXME: Printing some error with keyExtractor regarding expecting string, but gets number instead
+      key={Math.random().toString(36).substr(2, 9)}
       onPress={() => tapHandler(data[index])}
       style={{ width: "100%", alignItems: "center" }}
     >

@@ -4,11 +4,7 @@ import * as firebase from "firebase";
 import { genres } from "../../JSON/genresIDs.json";
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import {
-  fetchUserNickname,
-  fetchUserPreferences,
-} from "../../API/firebase/UserMethods/firebaseUserMethods";
+import { fetchUserPreferences } from "../../API/firebase/UserMethods/firebaseUserMethods";
 import { FontAwesome } from "@expo/vector-icons";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
 
