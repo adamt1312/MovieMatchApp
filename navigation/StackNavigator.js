@@ -14,6 +14,7 @@ import DrawerNavigator from "./DrawerNavigator";
 import LikedMoviesScreen from "../src/screens/LibraryScreen/LikedMoviesScreen";
 import BottomTabNavigator2 from "./TabNavigator2";
 import RequestsScreen from "../src/screens/RequestsScreen/RequestsScreen";
+import SessionScreen from "../src/screens/SessionScreen/SessionScreen";
 
 const Stack = createStackNavigator();
 const config2 = {
@@ -82,6 +83,11 @@ const MainStackNavigator = () => {
       <Stack.Screen
         name={"RequestsScreen"}
         component={RequestsScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"SessionScreen"}
+        component={SessionScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

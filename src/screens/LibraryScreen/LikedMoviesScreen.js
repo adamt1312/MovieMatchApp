@@ -46,7 +46,9 @@ const LikedMoviesScreen = ({ navigation }) => {
             end={{ x: -1, y: 0 }}
             style={styles.linearGradient}
           />
-          <Text style={styles.movieTitle}>{item.title}</Text>
+          <Text style={styles.movieTitle}>
+            {item.title ? item.title : item.original_name}
+          </Text>
         </ImageBackground>
       </View>
     </TouchableHighlight>
@@ -70,27 +72,38 @@ const LikedMoviesScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <BackgroundBlurred />
-      {isLoading ? (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <ActivityIndicator size={100} color="white" />
-        </View>
-      ) : (
-        <>
-          <Text style={styles.title}>
-            You liked these...
-            <AntDesign name="heart" size={40} color="red" />
-          </Text>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "rgba(0,0,0,0.6)",
+          position: "relative",
+          width: "100%",
+        }}
+      >
+        {isLoading ? (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <ActivityIndicator size={100} color="white" />
+          </View>
+        ) : (
+          <>
+            <Text style={styles.title}>
+              You liked these...
+              <AntDesign name="heart" size={40} color="red" />
+            </Text>
 
-          <FlatList
-            data={data}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderItem}
-            style={{ width: "100%" }}
-          />
-        </>
-      )}
+            <FlatList
+              data={data}
+              keyExtractor={(item) => {
+                item.id.toString() ? item.id.toString() : item.poster_path;
+              }}
+              renderItem={renderItem}
+              style={{ width: "100%" }}
+            />
+          </>
+        )}
+      </View>
     </View>
   );
 };

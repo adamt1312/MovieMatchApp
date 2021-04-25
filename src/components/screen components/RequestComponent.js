@@ -44,11 +44,6 @@ const RequestComponent = (props) => {
           );
         });
       });
-      const test = fetchUserLikedMovies().then((likedMovies) => {
-        likedMovies.forEach((movie) => {
-          console.log(movie.genre_ids);
-        });
-      });
     } catch (error) {
       console.log("acceptUserHandler: " + error);
     }

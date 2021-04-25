@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     zIndex: 100,
     top: 0,
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "space-evenly",
     alignItems: "center",
     paddingHorizontal: 10,
     marginTop: 15,

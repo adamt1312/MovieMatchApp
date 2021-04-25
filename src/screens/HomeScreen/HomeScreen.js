@@ -13,6 +13,7 @@ import { loggingOut } from "../../API/firebase/Authentication/firestoreAuthentic
 import { Button } from "galio-framework";
 import styles from "./Styles";
 import { Entypo } from "@expo/vector-icons";
+import ButtonComponent from "../../components/screen components/ButtonComponent";
 
 const homeScreen = ({ navigation }) => {
   let currentUserUID = firebase.auth().currentUser.uid;
@@ -37,10 +38,6 @@ const homeScreen = ({ navigation }) => {
     getUserInfo();
   }, []);
 
-  const handleLogOut = () => {
-    loggingOut();
-    navigation.replace("SignIn");
-  };
   return (
     <View style={styles.screenView}>
       <BackgroundBlurred />
@@ -69,18 +66,21 @@ const homeScreen = ({ navigation }) => {
         </Text>
       </View>
       <View style={[styles.contentWrapper, { flex: 2 }]}>
-        <Button
+        <ButtonComponent
+          title={"Explore Movies"}
           onPress={() => {
             // navigation.replace("ExploreMovies");
             navigation.replace("BottomTabNavigator");
           }}
-          style={styles.button}
-        >
-          <Text style={styles.btnTitle}>Explore movies</Text>
-        </Button>
-        <Button onPress={handleLogOut} style={styles.button}>
-          <Text style={styles.btnTitle}>Log Out</Text>
-        </Button>
+        />
+        <ButtonComponent
+          title={"Session"}
+          onPress={() => {
+            // navigation.replace("ExploreMovies");
+            navigation.replace("SessionScreen");
+          }}
+        />
+        <ButtonComponent title={"Log Out"} onPress={loggingOut} />
       </View>
     </View>
   );

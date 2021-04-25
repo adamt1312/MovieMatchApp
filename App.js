@@ -18,6 +18,7 @@ import * as firebase from "firebase";
 import apiKeys from "./config/keys";
 import { MainStackNavigator } from "./navigation/StackNavigator";
 import LoadingScreen from "./src/screens/LoadingScreen/LoadingScreen";
+import SessionScreen from "./src/screens/SessionScreen/SessionScreen";
 
 export default function App() {
   if (!firebase.apps.length) {
@@ -40,16 +41,9 @@ export default function App() {
   }
 
   return (
-    // <View style={{ flex: 1, backgroundColor: "red" }}></View>
     <NavigationContainer>
       <MainStackNavigator />
-      <StatusBar
-        // animated={false}
-        hidden={true}
-        translucent={true}
-        currentHeight={200}
-        // backgroundColor={"red"}
-      />
+      <StatusBar hidden={true} translucent={true} currentHeight={200} />
     </NavigationContainer>
   );
 }

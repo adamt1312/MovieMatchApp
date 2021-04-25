@@ -74,27 +74,38 @@ const DislikedMoviesScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <BackgroundBlurred />
-      {isLoading ? (
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <ActivityIndicator size={100} color="white" />
-        </View>
-      ) : (
-        <>
-          <Text style={styles.title}>
-            These not so much...
-            <FontAwesome5 name="heart-broken" size={40} color="red" />{" "}
-          </Text>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "rgba(0,0,0,0.6)",
+          position: "relative",
+          width: "100%",
+        }}
+      >
+        {isLoading ? (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <ActivityIndicator size={100} color="white" />
+          </View>
+        ) : (
+          <>
+            <Text style={styles.title}>
+              These not so much...
+              <FontAwesome5 name="heart-broken" size={40} color="red" />{" "}
+            </Text>
 
-          <FlatList
-            data={data}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderItem}
-            style={{ width: "100%" }}
-          />
-        </>
-      )}
+            <FlatList
+              data={data}
+              keyExtractor={(item) => {
+                item.id.toString() ? item.id.toString() : item.poster_path;
+              }}
+              renderItem={renderItem}
+              style={{ width: "100%" }}
+            />
+          </>
+        )}
+      </View>
     </View>
   );
 };
