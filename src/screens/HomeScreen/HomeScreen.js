@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  StatusBar,
-} from "react-native";
+import { Text, View } from "react-native";
 import "react-native-gesture-handler";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
 import * as firebase from "firebase";
 import { loggingOut } from "../../API/firebase/Authentication/firestoreAuthentication";
-import { Button } from "galio-framework";
 import styles from "./Styles";
 import { Entypo } from "@expo/vector-icons";
 import ButtonComponent from "../../components/screen components/ButtonComponent";
@@ -77,7 +70,7 @@ const homeScreen = ({ navigation }) => {
           title={"Session"}
           onPress={() => {
             // navigation.replace("ExploreMovies");
-            navigation.replace("SessionScreen");
+            navigation.replace("SessionTabNavigator");
           }}
         />
         <ButtonComponent title={"Log Out"} onPress={loggingOut} />
