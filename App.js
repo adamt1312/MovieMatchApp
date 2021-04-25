@@ -38,12 +38,12 @@ export default function App() {
 
   if (!fontsLoaded || !assetsLoaded) {
     return <ActivityIndicator size={100} color="gray" />;
+  } else {
+    return (
+      <NavigationContainer>
+        <MainStackNavigator />
+        <StatusBar hidden={true} translucent={true} currentHeight={200} />
+      </NavigationContainer>
+    );
   }
-
-  return (
-    <NavigationContainer>
-      <MainStackNavigator />
-      <StatusBar hidden={true} translucent={true} currentHeight={200} />
-    </NavigationContainer>
-  );
 }

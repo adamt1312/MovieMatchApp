@@ -21,9 +21,11 @@ export async function isExistingUser(nickname) {
   }
 }
 
+// checks whether is paired, and return ni
 export async function isUserPaired(nickname) {
   try {
     const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
     // TODO: Add check if user is not trying to pair to himself
     // const currentUserNickname = await db
     //   .collection("users")
@@ -40,11 +42,20 @@ export async function isUserPaired(nickname) {
       console.log("User doesn`t exist.");
       return -1;
     }
-    let b;
+    let isPaired;
     user.forEach((doc) => {
-      b = doc.data().isPaired;
+      isPaired = doc.data().isPaired;
     });
-    return b;
+    if (isPaired) {
+      const session = await db.collection("sessions").doc(isPaired).get();
+      if (session.data().user1 != currentUser.uid) {
+        return session.data().user1;
+      } else if (session.data().user2 != currentUser.uid) {
+        return session.data().user2;
+      }
+    } else {
+      return isPaired;
+    }
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }

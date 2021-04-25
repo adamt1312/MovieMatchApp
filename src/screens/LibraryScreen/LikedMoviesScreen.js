@@ -26,7 +26,6 @@ const LikedMoviesScreen = ({ navigation }) => {
 
   const Item = ({ item, index }) => (
     <TouchableHighlight
-      key={item.id.toString()}
       // FIXME: Printing some error with keyExtractor regarding expecting string, but gets number instead
       onPress={() => tapHandler(data[index])}
       style={{ width: "100%", alignItems: "center" }}
@@ -95,6 +94,9 @@ const LikedMoviesScreen = ({ navigation }) => {
 
             <FlatList
               data={data}
+              key={(item) => {
+                item.id.toString();
+              }}
               keyExtractor={(item) => {
                 item.id.toString() ? item.id.toString() : item.poster_path;
               }}

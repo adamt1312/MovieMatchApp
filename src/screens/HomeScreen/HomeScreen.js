@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Text, View, ActivityIndicator } from "react-native";
 import "react-native-gesture-handler";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
 import * as firebase from "firebase";
@@ -7,74 +7,113 @@ import { loggingOut } from "../../API/firebase/Authentication/firestoreAuthentic
 import styles from "./Styles";
 import { Entypo } from "@expo/vector-icons";
 import ButtonComponent from "../../components/screen components/ButtonComponent";
+import { isUserPaired } from "../../API/firebase/UserPairing/UserPairingMethods";
+import { fetchUserNickname } from "../../API/firebase/UserMethods/firebaseUserMethods";
 
 const homeScreen = ({ navigation }) => {
   let currentUserUID = firebase.auth().currentUser.uid;
   const [nickname, setNickname] = useState("");
+  const [isPaired, setIsPaired] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  async function getUserInfo() {
-    let doc = await firebase
-      .firestore()
-      .collection("users")
-      .doc(currentUserUID)
-      .get();
-
-    if (!doc.exists) {
-      Alert.alert("No user data found!");
-    } else {
-      let dataObj = doc.data();
-      setNickname(dataObj.nickname);
-    }
-  }
-  // TODO: Add loading when fetching nickname
   useEffect(() => {
-    getUserInfo();
+    fetchUserNickname(currentUserUID).then((nickname) => {
+      setNickname(nickname);
+      isUserPaired(nickname).then((fetchedUid) => {
+        if (fetchedUid) {
+          fetchUserNickname(fetchedUid).then((fetchedNickname) => {
+            setIsPaired(fetchedNickname);
+          });
+        }
+        setIsLoading(false);
+      });
+    });
   }, []);
 
   return (
     <View style={styles.screenView}>
       <BackgroundBlurred />
-
-      <View style={styles.contentWrapper}>
-        <View style={styles.iconWrapper}>
-          <Entypo
-            name="menu"
-            size={45}
-            color="white"
-            iconStyle={{ color: "red" }}
-            onPress={() => {
-              navigation.openDrawer();
-            }}
-          />
+      {isLoading ? (
+        <View style={styles.loadWrapper}>
+          <ActivityIndicator size={100} color="white" />
         </View>
-        <Text
-          style={{
-            fontSize: 30,
-            color: "white",
-            fontFamily: "VarelaRound_400Regular",
-            textAlign: "center",
-          }}
-        >
-          {"Welcome back, " + nickname + " !"}
-        </Text>
-      </View>
-      <View style={[styles.contentWrapper, { flex: 2 }]}>
-        <ButtonComponent
-          title={"Explore Movies"}
-          onPress={() => {
-            // navigation.replace("ExploreMovies");
-            navigation.replace("BottomTabNavigator");
-          }}
-        />
-        <ButtonComponent
-          title={"Session"}
-          onPress={() => {
-            // navigation.replace("ExploreMovies");
-            navigation.replace("SessionTabNavigator");
-          }}
-        />
-        <ButtonComponent title={"Log Out"} onPress={loggingOut} />
-      </View>
+      ) : (
+        <>
+          <View style={styles.contentWrapper}>
+            <View style={styles.iconWrapper}>
+              <Entypo
+                name="menu"
+                size={45}
+                color="white"
+                iconStyle={{ color: "red" }}
+                onPress={() => {
+                  navigation.openDrawer();
+                }}
+              />
+            </View>
+            <View
+              style={{
+                width: "100%",
+                backgroundColor: "rgba(255,255,255,0.1)",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 20,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 30,
+                  color: "white",
+                  fontFamily: "VarelaRound_400Regular",
+                  textAlign: "center",
+                  margin: 15,
+                }}
+              >
+                {"Welcome back, " + nickname + " !"}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: "white",
+                  fontFamily: "VarelaRound_400Regular",
+                  textAlign: "center",
+                  textDecorationLine: "underline",
+                  fontWeight: "bold",
+                }}
+              >
+                CURRENT STATUS
+              </Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "white",
+                  fontFamily: "VarelaRound_400Regular",
+                  textAlign: "center",
+                }}
+              >
+                {isPaired ? "Paired with " + isPaired : "You are free to pair"}
+              </Text>
+            </View>
+          </View>
+          <View style={[styles.contentWrapper, { flex: 2 }]}>
+            <ButtonComponent
+              title={"Explore Movies"}
+              onPress={() => {
+                // navigation.replace("ExploreMovies");
+                navigation.replace("BottomTabNavigator");
+              }}
+            />
+            <ButtonComponent
+              title={"Session"}
+              onPress={() => {
+                // navigation.replace("ExploreMovies");
+                navigation.replace("SessionTabNavigator");
+              }}
+            />
+            <ButtonComponent title={"Log Out"} onPress={loggingOut} />
+          </View>
+        </>
+      )}
     </View>
   );
 };

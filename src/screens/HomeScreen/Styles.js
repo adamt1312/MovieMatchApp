@@ -2,12 +2,8 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   screenView: {
-    // height: "100%",
-    // width: "100%",
     flex: 1,
     alignItems: "center",
-    // borderColor: "red",
-    // borderWidth: 5,
   },
   appName: {
     color: "white",
@@ -46,6 +42,7 @@ const styles = StyleSheet.create({
     // borderColor: "yellow",
     // borderWidth: 5,
     padding: 15,
+    marginBottom: 20,
   },
   btnTitle: {
     color: "black",
