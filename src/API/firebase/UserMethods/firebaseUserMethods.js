@@ -7,7 +7,6 @@ export async function fetchUserNickname(uid) {
     console.log("UID" + uid);
     const db = firebase.firestore();
     const user = await db.collection("users").doc(uid).get();
-    console.log(user.data().nickname);
     return user.data().nickname;
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);

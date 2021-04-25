@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, ActivityIndicator } from "react-native";
 import * as firebase from "firebase";
 import { genres } from "../../JSON/genresIDs.json";
 import { LinearGradient } from "expo-linear-gradient";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
   fetchUserNickname,
@@ -31,7 +32,6 @@ const MyProfileScreen = () => {
 
   useEffect(() => {
     try {
-      console.log("UE");
       fetchUserPreferences(firebase.auth().currentUser.uid).then(
         (profilePreferences) => {
           console.log(profilePreferences.prefered_genres);
@@ -46,7 +46,7 @@ const MyProfileScreen = () => {
           setIsLoading(false);
         }
       );
-      fetchUserNickname(firebase.auth().currentUser.uid).then((nickname) => {
+      AsyncStorage.getItem("nickname").then((nickname) => {
         setNickname(nickname);
       });
     } catch (error) {

@@ -9,6 +9,7 @@ import { Entypo } from "@expo/vector-icons";
 import ButtonComponent from "../../components/screen components/ButtonComponent";
 import { isUserPaired } from "../../API/firebase/UserPairing/UserPairingMethods";
 import { fetchUserNickname } from "../../API/firebase/UserMethods/firebaseUserMethods";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const homeScreen = ({ navigation }) => {
   let currentUserUID = firebase.auth().currentUser.uid;
@@ -17,7 +18,7 @@ const homeScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchUserNickname(currentUserUID).then((nickname) => {
+    AsyncStorage.getItem("nickname").then((nickname) => {
       setNickname(nickname);
       isUserPaired(nickname).then((fetchedUid) => {
         if (fetchedUid) {
