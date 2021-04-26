@@ -14,7 +14,7 @@ import DrawerNavigator from "./DrawerNavigator";
 import LikedMoviesScreen from "../src/screens/LibraryScreen/LikedMoviesScreen";
 import BottomTabNavigator2 from "./TabNavigator2";
 import RequestsScreen from "../src/screens/RequestsScreen/RequestsScreen";
-import SessionScreen from "../src/screens/SessionScreen/SessionScreen";
+import SessionScreen from "../src/screens/SessionScreens/SessionScreen";
 import SessionTabNavigator from "./SessionTabNavigator";
 
 const Stack = createStackNavigator();

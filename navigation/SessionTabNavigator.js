@@ -4,7 +4,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import FindMatchScreen from "../src/screens/FindMatchScreen/FindMatchScreen";
 import { Text } from "react-native";
-import SessionScreen from "../src/screens/SessionScreen/SessionScreen";
+import SessionScreen from "../src/screens/SessionScreens/SessionScreen";
+import MatchedMoviesScreen from "../src/screens/SessionScreens/MatchedMoviesScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -38,8 +39,8 @@ const SessionTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="FindMatchScreen"
-        component={FindMatchScreen}
+        name="MatchedMoviesScreen"
+        component={MatchedMoviesScreen}
         options={{
           tabBarLabel: ({ focused }) => (
             <Text

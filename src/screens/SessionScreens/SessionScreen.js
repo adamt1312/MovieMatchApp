@@ -4,14 +4,19 @@ import axios from "axios";
 import InfoCard from "../../components/InfoCard";
 import HomeButton from "../../components/screen components/HomeButton";
 import Swiper from "react-native-deck-swiper";
-import { Input } from "galio-framework";
 import styles from "./Styles";
 import {
   dbLibraryToDisliked,
   dbLibraryToLiked,
 } from "../../API/firebase/UserMethods/firebaseUserMethods";
 import keys from "../../../config/keys";
+import {
+  fetchUserSession,
+  getCorrectRecommendData,
+} from "../../API/firebase/SessionMethods/SessionMethods";
 
+// TODO: 1. On swipeLeft remove from current user recommend list in DB
+//       2. On swipeRight remove from current user recommend list in DB and add to liked session list in DB
 const SessionScreen = ({ navigation }) => {
   const apiurlSearch =
     "https://api.themoviedb.org/3/search/multi?api_key=" +
@@ -30,12 +35,14 @@ const SessionScreen = ({ navigation }) => {
 
   useEffect(() => {
     try {
-      axios(apiurlPopular).then(({ data }) => {
-        setData({
-          ...data,
-          results: data.results,
+      fetchUserSession().then((data) => {
+        getCorrectRecommendData(data).then((correct_data) => {
+          setData({
+            ...data,
+            results: correct_data,
+          });
+          setIsLoading(false);
         });
-        setIsLoading(false);
       });
     } catch (error) {
       console.log(error);
@@ -57,7 +64,7 @@ const SessionScreen = ({ navigation }) => {
             height: 40,
             borderRadius: 20,
             width: "80%",
-            backgroundColor: "rgba(255, 255, 255, 0.3)",
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
             justifyContent: "center",
           }}
         >
@@ -83,7 +90,11 @@ const SessionScreen = ({ navigation }) => {
           renderCard={(card) => {
             return (
               <InfoCard
-                imgUrl={"https://image.tmdb.org/t/p/w780" + card.poster_path}
+                imgUrl={
+                  card.poster_path
+                    ? "https://image.tmdb.org/t/p/w780" + card.poster_path
+                    : "https://wallpaperaccess.com/full/1750657.jpg"
+                }
                 vote_average={card.vote_average}
                 original_title={card.title ? card.title : card.original_name}
                 overview={card.overview}
