@@ -9,7 +9,10 @@ import { FontAwesome } from "@expo/vector-icons";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
 
 const MyProfileScreen = () => {
-  const [nickname, setNickname] = useState(null);
+  const [nickname, setNickname] = useState(
+    firebase.auth().currentUser.displayName
+  );
+  const [email, setEmail] = useState(firebase.auth().currentUser.email);
   const [isLoading, setIsLoading] = useState(true);
   const [preferedGenres, setPreferedGenres] = useState("none");
   const [preferedReleaseYears, setpreferedReleaseYears] = useState("none");
@@ -30,9 +33,7 @@ const MyProfileScreen = () => {
     try {
       fetchUserPreferences(firebase.auth().currentUser.uid).then(
         (profilePreferences) => {
-          console.log(profilePreferences.prefered_genres);
           if (profilePreferences.prefered_genres != null) {
-            console.log(profilePreferences.prefered_genres);
             setPreferedGenres(
               getNamesForGenres(profilePreferences.prefered_genres)
             );
@@ -42,9 +43,6 @@ const MyProfileScreen = () => {
           setIsLoading(false);
         }
       );
-      AsyncStorage.getItem("nickname").then((nickname) => {
-        setNickname(nickname);
-      });
     } catch (error) {
       console.log(error);
     }
@@ -73,9 +71,7 @@ const MyProfileScreen = () => {
             <Text style={styles.title}>Your profile</Text>
             <View style={styles.userDetails}>
               <Text style={styles.infoDetail}>{"Nickname: " + nickname}</Text>
-              <Text style={styles.infoDetail}>
-                {"Email: " + firebase.auth().currentUser.email}
-              </Text>
+              <Text style={styles.infoDetail}>{"Email: " + email}</Text>
               <Text style={styles.infoDetail}>
                 {"Prefered Genres: " + preferedGenres.toString()}
               </Text>

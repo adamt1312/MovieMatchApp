@@ -26,7 +26,6 @@ const MatchedMoviesScreen = ({ navigation }) => {
 
   const Item = ({ item, index }) => (
     <TouchableHighlight
-      key={Math.random().toString(36).substr(2, 9)}
       onPress={() => tapHandler(data[index])}
       style={{ width: "100%", alignItems: "center" }}
     >
@@ -59,10 +58,11 @@ const MatchedMoviesScreen = ({ navigation }) => {
 
   useEffect(() => {
     try {
-      fetchUserLikedMovies().then((data) => {
-        setData(data);
-        setIsLoading(false);
-      });
+      fetchUserLikedMovies()
+        .then((data) => {
+          setData(data);
+        })
+        .then(setIsLoading(false));
     } catch (error) {
       console.log(error);
     }
@@ -94,7 +94,8 @@ const MatchedMoviesScreen = ({ navigation }) => {
 
             <FlatList
               data={data}
-              keyExtractor={(item, index) => {
+              keyExtractor={(item) => {
+                console.log("item id: ", item.id);
                 return item.id.toString();
               }}
               renderItem={renderItem}

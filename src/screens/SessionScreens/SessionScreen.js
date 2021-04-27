@@ -28,7 +28,6 @@ const SessionScreen = ({ navigation }) => {
     "&language=en-US";
 
   const [data, setData] = useState({
-    search: "Search your own...",
     results: [],
   });
   const [isLoading, setIsLoading] = useState(true);

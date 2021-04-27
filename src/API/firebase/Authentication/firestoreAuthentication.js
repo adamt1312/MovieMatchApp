@@ -13,7 +13,7 @@ export async function registration(email, password, nickname) {
       isPaired: null,
       sentRequest: null,
     });
-    currentUser.updateProfile({ displayName: nickname });
+    currentUser.updateProfile({ displayName: nickname, email: email });
     dbCreateLibrary();
     // TODO: just uncomment
     // currentUser.sendEmailVerification();
@@ -38,6 +38,7 @@ export async function loggingOut() {
   }
 }
 
+// TODO: Delete init, cause failing of other components...
 export async function dbCreateLibrary() {
   try {
     const currentUser = firebase.auth().currentUser;

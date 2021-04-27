@@ -56,7 +56,8 @@ const merge2arrays_RemoveDuplicates = (array) => {
 
 export async function generateRecommendationsForSession(
   sessionPreferences,
-  session_id
+  session_id,
+  other_user_uid
 ) {
   try {
     const db = firebase.firestore();
@@ -77,15 +78,19 @@ export async function generateRecommendationsForSession(
       query;
 
     // fetch recommend movies
-    axios(url).then((data) => {
-      // insert data into DB
-      console.log(data.data.results);
+    await axios(url).then((data) => {
+      // insert data into DB as a map movieId - movieData pairs
+      let obj = {};
+      data.data.results.forEach((movie) => {
+        console.log(movie);
+        obj[movie.id] = movie;
+      });
       db.collection("sessions")
         .doc(session_id)
-        .update({ user1_recommendations: data.data.results });
+        .update({ [currentUser.uid]: obj });
       db.collection("sessions")
         .doc(session_id)
-        .update({ user2_recommendations: data.data.results });
+        .update({ [other_user_uid]: obj });
     });
     return 1;
   } catch (error) {

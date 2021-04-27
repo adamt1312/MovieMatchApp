@@ -24,7 +24,7 @@ const RequestComponent = (props) => {
   // TODO: 1. delete pendingRequest ✓
   //       2. Set sent request null ✓
   //       3. create new session
-  //          - sessions -> session_id = user1(uid), user2(uid), user1_recommendations, user2_recommendations, session_liked_ids, session_matched_ids
+  //          - sessions -> session_id = user1_id (inside a map where movieId - data pairs), user2_id (the same), session_liked_ids, session_matched_movies (movie objects)
   //          - generate recommendations for the session
   //            - generate preferences for session
   //            - generate recommendations
@@ -40,7 +40,11 @@ const RequestComponent = (props) => {
             uid,
             session_id
           ).then((sessionPreferences) =>
-            generateRecommendationsForSession(sessionPreferences, session_id)
+            generateRecommendationsForSession(
+              sessionPreferences,
+              session_id,
+              uid
+            )
           );
         });
       });

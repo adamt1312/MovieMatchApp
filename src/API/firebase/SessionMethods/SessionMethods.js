@@ -21,15 +21,23 @@ export async function fetchUserSession() {
   }
 }
 
+// returns an object where movieId => data pairs are for the user
 export async function getCorrectRecommendData(data) {
   try {
-    let correct_data;
-    if (data.user1 == firebase.auth().currentUser.uid) {
-      correct_data = data.user1_recommendations;
-    } else {
-      correct_data = data.user2_recommendations;
-    }
-    return correct_data;
+    const currentUserUID = await firebase.auth().currentUser.uid;
+    return data.currentUserUID;
+  } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
+export async function likeMovieInSession(movie_id, session_id) {
+  try {
+    const db = firebase.firestore();
+    db.collection("sessions")
+      .doc(session_id)
+      .update({ session_liked_ids: movie_id });
+    return 1;
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }

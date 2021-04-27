@@ -60,6 +60,7 @@ const LikedMoviesScreen = ({ navigation }) => {
   useEffect(() => {
     try {
       fetchUserLikedMovies().then((data) => {
+        console.log(data);
         setData(data);
         setIsLoading(false);
       });

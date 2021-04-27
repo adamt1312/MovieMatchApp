@@ -21,7 +21,7 @@ export async function isExistingUser(nickname) {
   }
 }
 
-// checks whether is paired, and return ni
+// checks whether is paired, and if yes returns the id of the other user
 export async function isUserPaired(nickname) {
   try {
     const db = firebase.firestore();
@@ -144,7 +144,6 @@ export async function deleteUserRequest(delUserUid) {
 
 export async function setSentRequestFalseOrNull(uid, value) {
   try {
-    console.log("seting sent request to false to a user " + uid);
     const db = firebase.firestore();
     const query2 = await db
       .collection("users")
@@ -167,11 +166,11 @@ export async function createNewSession(uid) {
       .collection("sessions")
       .add({
         user1: currentUser.uid,
-        user2: uid.toString(),
-        user1_recommendations: [],
-        user2_recommendations: [],
+        user2: uid,
+        [currentUser.uid]: {},
+        [uid.toString()]: {},
         session_liked_ids: [],
-        session_matched_ids: [],
+        session_matched_movies: {},
       })
       .then((docRef) => {
         session_id = docRef.id;

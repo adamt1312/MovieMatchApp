@@ -12,22 +12,21 @@ import { fetchUserNickname } from "../../API/firebase/UserMethods/firebaseUserMe
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const homeScreen = ({ navigation }) => {
-  let currentUserUID = firebase.auth().currentUser.uid;
-  const [nickname, setNickname] = useState("");
+  const [nickname, setNickname] = useState(
+    firebase.auth().currentUser.displayName
+  );
   const [isPaired, setIsPaired] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // handle current status on mount
   useEffect(() => {
-    AsyncStorage.getItem("nickname").then((nickname) => {
-      setNickname(nickname);
-      isUserPaired(nickname).then((fetchedUid) => {
-        if (fetchedUid) {
-          fetchUserNickname(fetchedUid).then((fetchedNickname) => {
-            setIsPaired(fetchedNickname);
-          });
-        }
-        setIsLoading(false);
-      });
+    isUserPaired(nickname).then((fetchedUid) => {
+      if (fetchedUid) {
+        fetchUserNickname(fetchedUid).then((fetchedNickname) => {
+          setIsPaired(fetchedNickname);
+        });
+      }
+      setIsLoading(false);
     });
   }, []);
 
