@@ -155,7 +155,8 @@ export async function setSentRequestFalseOrNull(uid, value) {
   }
 }
 
-export async function createNewSession(uid) {
+// create a new session in a DB
+export async function createNewSession(other_user_uid) {
   try {
     const db = firebase.firestore();
     const currentUser = firebase.auth().currentUser;
@@ -166,11 +167,8 @@ export async function createNewSession(uid) {
       .collection("sessions")
       .add({
         user1: currentUser.uid,
-        user2: uid,
-        [currentUser.uid]: {},
-        [uid.toString()]: {},
+        user2: other_user_uid,
         session_liked_ids: [],
-        session_matched_movies: {},
       })
       .then((docRef) => {
         session_id = docRef.id;

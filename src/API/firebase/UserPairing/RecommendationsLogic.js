@@ -79,18 +79,19 @@ export async function generateRecommendationsForSession(
 
     // fetch recommend movies
     await axios(url).then((data) => {
-      // insert data into DB as a map movieId - movieData pairs
-      let obj = {};
+      // insert data into DB as a subcollection for session named "user_uid" containing recommended movie objects as docs for each user
       data.data.results.forEach((movie) => {
-        console.log(movie);
-        obj[movie.id] = movie;
+        db.collection("sessions")
+          .doc(session_id)
+          .collection(currentUser.uid)
+          .doc(movie.id.toString())
+          .set(movie);
+        db.collection("sessions")
+          .doc(session_id)
+          .collection(other_user_uid)
+          .doc(movie.id.toString())
+          .set(movie);
       });
-      db.collection("sessions")
-        .doc(session_id)
-        .update({ [currentUser.uid]: obj });
-      db.collection("sessions")
-        .doc(session_id)
-        .update({ [other_user_uid]: obj });
     });
     return 1;
   } catch (error) {

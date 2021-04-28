@@ -15,7 +15,7 @@ import styles from "./Styles";
 import HeartButton from "../../components/screen components/HeartButton";
 import CrossButtton from "../../components/screen components/CrossButton";
 
-const MovieDetailScreen = ({ route, navigation }) => {
+const MovieDetailScreen = ({ route, navigation: { goBack } }) => {
   const data = route.params.data;
 
   return (
@@ -23,19 +23,14 @@ const MovieDetailScreen = ({ route, navigation }) => {
       source={{ uri: "https://image.tmdb.org/t/p/w780" + data.poster_path }}
       style={styles.backgroundImage}
     >
-      <View style={styles.buttonsWrapper}>
-        {/* TODO:Connect buttons + add its functionality*/}
-        <CrossButtton />
-        <HeartButton />
-      </View>
-      <LinearGradient
-        colors={["transparent", "black"]}
-        locations={[0, 0.5]}
-        start={[0.1, 0.2]}
-        end={{ x: 0, y: 1 }}
-        style={styles.linearGradient}
-      />
       <ScrollView style={styles.scrollV}>
+        <LinearGradient
+          colors={["transparent", "black"]}
+          locations={[0, 0.3]}
+          start={[0.1, 0.2]}
+          end={{ x: 0, y: 1 }}
+          style={styles.linearGradient}
+        />
         <View style={styles.infoContainer}>
           <View style={[styles.titleContainer, { margin: 15 }]}>
             <Text style={[styles.title, { marginVertical: 10 }]}>
@@ -76,12 +71,8 @@ const MovieDetailScreen = ({ route, navigation }) => {
             <Text style={[styles.title, { fontSize: 15, marginTop: 10 }]}>
               {data.overview}
             </Text>
-            <View style={{ alignItems: "center", marginTop: 100 }}>
-              <Button
-                onPress={() => {
-                  navigation.navigate("Home");
-                }}
-              >
+            <View style={{ alignItems: "center", marginTop: 25 }}>
+              <Button onPress={() => goBack()}>
                 <Text
                   style={{
                     color: "black",
@@ -90,7 +81,7 @@ const MovieDetailScreen = ({ route, navigation }) => {
                     fontFamily: "Roboto_300Light",
                   }}
                 >
-                  Home
+                  GO BACK
                 </Text>
               </Button>
             </View>

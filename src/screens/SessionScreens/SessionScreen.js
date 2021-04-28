@@ -11,7 +11,7 @@ import {
 } from "../../API/firebase/UserMethods/firebaseUserMethods";
 import keys from "../../../config/keys";
 import {
-  fetchUserSession,
+  fetchUserSessionRecommendations,
   getCorrectRecommendData,
 } from "../../API/firebase/SessionMethods/SessionMethods";
 
@@ -27,30 +27,23 @@ const SessionScreen = ({ navigation }) => {
     keys.tmdbConfig.apiKey +
     "&language=en-US";
 
-  const [data, setData] = useState({
-    results: [],
-  });
+  const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     try {
-      fetchUserSession().then((data) => {
-        getCorrectRecommendData(data).then((correct_data) => {
-          setData({
-            ...data,
-            results: correct_data,
-          });
-          setIsLoading(false);
-        });
+      fetchUserSessionRecommendations().then((data) => {
+        setData(data);
+        setIsLoading(false);
       });
     } catch (error) {
-      console.log(error);
+      console.log("Session Screen use effect: " + error);
     }
   }, []);
 
   const tapHandler = (cardIndex) => {
     navigation.navigate("MovieDetail", {
-      data: data.results[cardIndex],
+      data: data[cardIndex],
     });
   };
 
@@ -85,7 +78,7 @@ const SessionScreen = ({ navigation }) => {
         </View>
       ) : (
         <Swiper
-          cards={data.results}
+          cards={data}
           renderCard={(card) => {
             return (
               <InfoCard
@@ -104,10 +97,10 @@ const SessionScreen = ({ navigation }) => {
             tapHandler(cardIndex);
           }}
           onSwipedRight={(cardIndex) => {
-            dbLibraryToLiked(data.results[cardIndex]);
+            dbLibraryToLiked(data[cardIndex]);
           }}
           onSwipedLeft={(cardIndex) => {
-            dbLibraryToDisliked(data.results[cardIndex]);
+            dbLibraryToDisliked(data[cardIndex]);
           }}
           horizontalSwipe={true}
           backgroundColor={"transparent"}
