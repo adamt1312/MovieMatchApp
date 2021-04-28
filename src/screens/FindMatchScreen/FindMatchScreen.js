@@ -30,7 +30,7 @@ const FindMatchScreen = (props) => {
   const doc = db.collection("users").doc(firebase.auth().currentUser.uid);
 
   useEffect(() => {
-    doc.onSnapshot((doc) => {
+    let unsubscribe = doc.onSnapshot((doc) => {
       if (doc.data().isPaired) {
         setData((prevState) => ({
           ...prevState,
@@ -43,7 +43,6 @@ const FindMatchScreen = (props) => {
         console.log(doc.data());
         // user already sent request, showing waiting screen
         if (sentRequest) {
-          console.log("user already sent request, showing waiting screen");
           setData((prevState) => ({
             ...prevState,
             showSearch: false,
@@ -51,7 +50,6 @@ const FindMatchScreen = (props) => {
         }
         // user request is denied, show denyModal
         else if (sentRequest == false) {
-          console.log("sent request should be false, and is " + sentRequest);
           setData((prevState) => ({
             ...prevState,
             showSearch: false,
@@ -60,7 +58,6 @@ const FindMatchScreen = (props) => {
         }
         // user doesn`t sent request, show search
         else if (sentRequest == null) {
-          console.log("user doesn`t sent request, show search");
           setData((prevState) => ({
             ...prevState,
             showSearch: true,
@@ -68,6 +65,9 @@ const FindMatchScreen = (props) => {
         }
       }
     });
+    return function cleanup() {
+      unsubscribe();
+    };
   }, []);
 
   const checkAvailability = (nickname) => {
@@ -87,14 +87,14 @@ const FindMatchScreen = (props) => {
               // user is already paired
               setData((prevState) => ({
                 ...prevState,
-                isAvailable: false,
+                isAvailableModalText: false,
                 modalVisible: true,
               }));
               // user is free to pair
             } else {
               setData((prevState) => ({
                 ...prevState,
-                isAvailable: true,
+                isAvailableModalText: true,
                 modalVisible: true,
               }));
             }
@@ -102,7 +102,7 @@ const FindMatchScreen = (props) => {
         }
       });
     } catch (error) {
-      console.log(error);
+      console.log("checkAvailability error: " + error);
     }
   };
 
@@ -129,7 +129,7 @@ const FindMatchScreen = (props) => {
         </View>
       ) : (
         <View style={styles.container}>
-          {data.isAvailable ? (
+          {data.isAvailableModalText ? (
             <InfoModal
               isAvailable={true}
               nickname={data.searchUser}

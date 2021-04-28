@@ -12,7 +12,6 @@ import {
 import keys from "../../../config/keys";
 import {
   fetchUserSessionRecommendations,
-  getCorrectRecommendData,
   sessionMovieLike,
   sessionMovieDislike,
   endSession,
@@ -102,7 +101,7 @@ const SessionScreen = ({ navigation }) => {
           ></Swiper>
         </>
       ) : (
-        <NoSession />
+        <NoSession navigation={navigation} />
       )}
     </View>
   );

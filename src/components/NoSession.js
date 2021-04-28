@@ -2,8 +2,9 @@ import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Swing } from "react-native-animated-spinkit";
 import { LinearGradient } from "expo-linear-gradient";
+import ButtonComponent from "../components/screen components/ButtonComponent";
 
-const NoSession = () => {
+const NoSession = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Swing size={100} color="#FFF" />
@@ -13,6 +14,10 @@ const NoSession = () => {
         style={styles.linearGradient}
       />
       <Text style={styles.title}>You are not in any session.</Text>
+      <ButtonComponent
+        title={"Go back"}
+        onPress={() => navigation.navigate("Home")}
+      />
     </View>
   );
 };
@@ -20,6 +25,7 @@ const NoSession = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
