@@ -56,12 +56,12 @@ const merge2arrays_RemoveDuplicates = (array) => {
 export async function generateRecommendationsForSession(
   sessionPreferences,
   session_id,
-  other_user_uid
+  other_user_uid,
+  pageNum
 ) {
   try {
     const db = firebase.firestore();
     const currentUser = firebase.auth().currentUser;
-    let pageNum = 1;
     let prefered_genres = "";
     sessionPreferences.prefered_genres.forEach((genre_id) => {
       prefered_genres += genre_id + ",";

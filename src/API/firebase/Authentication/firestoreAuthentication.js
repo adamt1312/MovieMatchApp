@@ -38,7 +38,7 @@ export async function loggingOut() {
   }
 }
 
-// TODO: Delete init, cause failing of other components...
+// TODO: Delete init, after react-native-app-intro-slider will be aded.. its causing other components failures...
 export async function dbCreateLibrary() {
   try {
     const currentUser = firebase.auth().currentUser;

@@ -2,22 +2,10 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
-    // height: "100%",
-    // width: "100%",
     flex: 1,
     backgroundColor: "black",
     alignItems: "center",
   },
-  // searchbox: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   padding: 15,
-  //   width: "90%",
-  //   backgroundColor: "#FFF",
-  //   borderRadius: 15,
-  //   margin: 5,
-  //   position: "absolute",
-  // },
   loadWrapper: {
     width: "100%",
     height: "80%",
@@ -58,7 +46,6 @@ const styles = StyleSheet.create({
   },
   topWrapper: {
     width: "100%",
-    // backgroundColor: "lightgray",
     zIndex: 100,
     top: 0,
     flexDirection: "row",
@@ -66,6 +53,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
     marginTop: 15,
+  },
+  pairedWith: {
+    height: 40,
+    borderRadius: 20,
+    width: "80%",
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    justifyContent: "center",
+  },
+  title: {
+    textAlign: "center",
+    fontFamily: "VarelaRound_400Regular",
+    fontSize: 20,
   },
 });
 

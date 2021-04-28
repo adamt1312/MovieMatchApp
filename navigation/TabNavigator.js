@@ -53,7 +53,7 @@ const BottomTabNavigator = () => {
             </Text>
           ),
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome5 name="user-friends" size={size} color={color} />
+            <FontAwesome5 name="user-plus" size={size} color={color} />
           ),
         }}
       />

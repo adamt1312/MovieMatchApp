@@ -29,7 +29,7 @@ export default InfoCard = (props) => {
           <Text style={styles.title}>{original_title}</Text>
 
           <Text style={styles.overview}>
-            {overview.substring(0, 180) + "..."}
+            {overview.substring(0, 200) + "..."}
           </Text>
         </View>
       </View>
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   },
   ratingBar: {
     position: "absolute",
-    bottom: 222,
+    bottom: 270,
     justifyContent: "center",
     zIndex: 100,
   },
@@ -73,12 +73,13 @@ const styles = StyleSheet.create({
     height: "23%",
     width: "95%",
     position: "absolute",
-    bottom: 60,
+    bottom: 90,
     borderRadius: 5,
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     alignItems: "center",
+    fontFamily: "VarelaRound_400Regular",
   },
   title: {
     width: "90%",
@@ -87,6 +88,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingLeft: 10,
     color: "white",
+    fontFamily: "VarelaRound_400Regular",
   },
   overview: {
     width: "90%",

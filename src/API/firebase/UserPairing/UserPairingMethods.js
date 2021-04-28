@@ -173,6 +173,7 @@ export async function createNewSession(other_user_uid) {
       .then((docRef) => {
         session_id = docRef.id;
       });
+
     return session_id;
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
@@ -180,18 +181,18 @@ export async function createNewSession(other_user_uid) {
 }
 
 // set isPaired status to both users to created session id
-export async function setIsPairedToSessionID(uid, session_id) {
+export async function setIsPairedToValue(other_user_uid, value) {
   try {
     const db = firebase.firestore();
     const currentUser = firebase.auth().currentUser;
 
     // sets current user
-    db.collection("users")
-      .doc(currentUser.uid)
-      .update({ isPaired: session_id });
+    db.collection("users").doc(currentUser.uid).update({ isPaired: value });
 
     // sets other user
-    db.collection("users").doc(uid.toString()).update({ isPaired: session_id });
+    db.collection("users")
+      .doc(other_user_uid.toString())
+      .update({ isPaired: value });
     return 1;
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);

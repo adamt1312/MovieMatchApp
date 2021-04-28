@@ -34,7 +34,7 @@ const SessionTabNavigator = () => {
             </Text>
           ),
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="local-movies" size={size} color={color} />
+            <FontAwesome5 name="user-friends" size={size} color={color} />
           ),
         }}
       />
@@ -54,7 +54,7 @@ const SessionTabNavigator = () => {
             </Text>
           ),
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome5 name="user-friends" size={size} color={color} />
+            <MaterialIcons name="local-movies" size={size} color={color} />
           ),
         }}
       />

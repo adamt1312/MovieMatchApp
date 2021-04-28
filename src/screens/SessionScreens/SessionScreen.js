@@ -15,11 +15,11 @@ import {
   getCorrectRecommendData,
   sessionMovieLike,
   sessionMovieDislike,
+  endSession,
 } from "../../API/firebase/SessionMethods/SessionMethods";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-// TODO: 1. On swipeLeft remove from current user recommend list in DB
-//       2. On swipeRight remove from current user recommend list in DB and add to liked session list in DB
+import ButtonComponent from "../../components/screen components/ButtonComponent";
+import NoSession from "../../components/NoSession";
 const SessionScreen = ({ navigation }) => {
   const [data, setData] = useState(null);
   const [pairedUserNickname, setPairedUserNickname] = useState(null);
@@ -58,26 +58,13 @@ const SessionScreen = ({ navigation }) => {
         <>
           <View style={styles.topWrapper}>
             <HomeButton navigation={navigation} />
-            <View
-              style={{
-                height: 40,
-                borderRadius: 20,
-                width: "80%",
-                backgroundColor: "rgba(255, 255, 255, 0.7)",
-                justifyContent: "center",
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontFamily: "VarelaRound_400Regular",
-                  fontSize: 20,
-                }}
-              >
+            <View style={styles.pairedWith}>
+              <Text style={styles.title}>
                 Session with {pairedUserNickname}
               </Text>
             </View>
           </View>
+          <ButtonComponent title={"END SESSION"} onPress={endSession} />
           <Swiper
             cards={data}
             renderCard={(card) => {
@@ -115,9 +102,7 @@ const SessionScreen = ({ navigation }) => {
           ></Swiper>
         </>
       ) : (
-        <View>
-          <Text style={{ color: "white" }}>You are not in any session.</Text>
-        </View>
+        <NoSession />
       )}
     </View>
   );

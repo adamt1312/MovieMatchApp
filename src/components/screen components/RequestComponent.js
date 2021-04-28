@@ -5,7 +5,7 @@ import {
   deleteUserRequest,
   setSentRequestFalseOrNull,
   createNewSession,
-  setIsPairedToSessionID,
+  setIsPairedToValue,
   setUserLikedGenresIds,
 } from "../../API/firebase/UserPairing/UserPairingMethods";
 import {
@@ -17,6 +17,7 @@ import {
   generatePreferencesForSession,
 } from "../../API/firebase/UserPairing/RecommendationsLogic";
 import keys from "../../../config/keys";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const RequestComponent = (props) => {
   const { name, uid } = props;
@@ -35,16 +36,17 @@ const RequestComponent = (props) => {
       deleteUserRequest(uid);
       setSentRequestFalseOrNull(uid, null).then(() => {
         createNewSession(uid).then((session_id) => {
-          setIsPairedToSessionID(uid, session_id);
-          generatePreferencesForSession(
-            uid,
-            session_id
-          ).then((sessionPreferences) =>
-            generateRecommendationsForSession(
-              sessionPreferences,
-              session_id,
-              uid
-            )
+          setIsPairedToValue(uid, session_id);
+          generatePreferencesForSession(uid, session_id).then(
+            (sessionPreferences) => {
+              generateRecommendationsForSession(
+                sessionPreferences,
+                session_id,
+                uid,
+                1
+              );
+              AsyncStorage.setItem("pageNum", 1);
+            }
           );
         });
       });
