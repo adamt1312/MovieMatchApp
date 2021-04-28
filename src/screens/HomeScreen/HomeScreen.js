@@ -23,6 +23,7 @@ const homeScreen = ({ navigation }) => {
     isUserPaired(nickname).then((fetchedUid) => {
       if (fetchedUid) {
         fetchUserNickname(fetchedUid).then((fetchedNickname) => {
+          AsyncStorage.setItem("pairedToUser", fetchedNickname);
           setIsPaired(fetchedNickname);
         });
       }

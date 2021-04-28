@@ -95,7 +95,6 @@ const MatchedMoviesScreen = ({ navigation }) => {
             <FlatList
               data={data}
               keyExtractor={(item) => {
-                console.log("item id: ", item.id);
                 return item.id.toString();
               }}
               renderItem={renderItem}

@@ -37,7 +37,6 @@ export async function generatePreferencesForSession(
       session_preferences: sessionPreferences,
     });
 
-    console.log(sessionPreferences);
     return sessionPreferences;
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);

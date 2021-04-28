@@ -23,10 +23,9 @@ const styles = StyleSheet.create({
   rectangle: {
     height: "auto",
     width: "auto",
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
     padding: 5,
     borderRadius: 10,
-    // elevation: 5,
   },
 });
 
