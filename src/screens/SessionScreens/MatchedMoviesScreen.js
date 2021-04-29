@@ -11,11 +11,14 @@ import BackgroundBlurred from "../../components/BackgroundBlurred";
 import styles from "../LibraryScreen/Styles";
 import { fetchUserLikedMovies } from "../../API/firebase/UserMethods/firebaseUserMethods";
 import { Button } from "galio-framework";
-import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { fetchSessionRecommendations } from "../../API/firebase/SessionMethods/SessionMethods";
 
 const MatchedMoviesScreen = ({ navigation }) => {
   const [data, setData] = useState();
+  const [matchedIds, setMatchedIds] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const tapHandler = (movieData) => {
@@ -52,17 +55,22 @@ const MatchedMoviesScreen = ({ navigation }) => {
     </TouchableHighlight>
   );
 
+  // aditional check whether the movie should render in flatlist (is matched)
   const renderItem = ({ item, index }) => {
-    return <Item item={item} index={index} />;
+    if (matchedIds.includes(item.id)) {
+      return <Item item={item} index={index} />;
+    } else {
+      return <></>;
+    }
   };
 
   useEffect(() => {
     try {
-      fetchUserLikedMovies()
-        .then((data) => {
-          setData(data);
-        })
-        .then(setIsLoading(false));
+      fetchSessionRecommendations().then((data) => {
+        setData(data[0]);
+        setMatchedIds(data[1]);
+        setIsLoading(false);
+      });
     } catch (error) {
       console.log(error);
     }
@@ -88,8 +96,8 @@ const MatchedMoviesScreen = ({ navigation }) => {
         ) : (
           <>
             <Text style={styles.title}>
-              You liked these...
-              <AntDesign name="heart" size={40} color="red" />
+              Here are your matches{" "}
+              <FontAwesome5 name="smile-beam" size={24} color="white" />{" "}
             </Text>
 
             <FlatList

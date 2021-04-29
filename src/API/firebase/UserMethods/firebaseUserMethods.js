@@ -192,8 +192,6 @@ export async function updatePreferedGenres(liked_genres_obj) {
         let keyMaxValue = getKeyByValue(liked_genres_obj, maxValue);
         prefered_genres.push(keyMaxValue);
         arr.splice(arr.indexOf(maxValue), 1);
-        console.log("max value of arr: " + maxValue);
-        console.log(liked_genres_obj);
         delete liked_genres_obj[keyMaxValue];
       }
       db.collection("users")

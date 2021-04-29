@@ -100,14 +100,12 @@ const homeScreen = ({ navigation }) => {
             <ButtonComponent
               title={"Explore Movies"}
               onPress={() => {
-                // navigation.replace("ExploreMovies");
                 navigation.replace("BottomTabNavigator");
               }}
             />
             <ButtonComponent
               title={"Session"}
               onPress={() => {
-                // navigation.replace("ExploreMovies");
                 navigation.replace("SessionTabNavigator");
               }}
             />

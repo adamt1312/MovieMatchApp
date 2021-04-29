@@ -7,7 +7,7 @@ import keys from "../../../../config/keys";
 import { setIsPairedToValue } from "../UserPairing/UserPairingMethods";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// fetch user session and returns array with recommendations and session_id
+// fetch user session and returns array with recommendations and session_id (when movie liked/disliked, is removed from this)
 export async function fetchUserSessionRecommendations() {
   try {
     const db = firebase.firestore();
@@ -31,6 +31,65 @@ export async function fetchUserSessionRecommendations() {
   }
 }
 
+// return all session recommendations and matched ids
+export async function fetchSessionRecommendations() {
+  try {
+    const db = firebase.firestore();
+    let session_id = await AsyncStorage.getItem("session_id");
+    let arr = [];
+    if (session_id) {
+      // gets all recommends for a session with removals
+      const allRecommended = await db
+        .collection("sessions")
+        .doc(session_id)
+        .collection("allRecommended")
+        .get();
+      arr.push(allRecommended.docs.map((doc) => doc.data()));
+
+      // gets seesion doc,its liked ids and finds duplicates (matched movies)
+      const sessionDoc = await db.collection("sessions").doc(session_id).get();
+      let session_liked_ids = sessionDoc.data().session_liked_ids;
+      let matchedIds = findDuplicates(session_liked_ids);
+      arr.push(matchedIds);
+    } else {
+      arr = false;
+    }
+    return arr;
+  } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
+// TODO: Finish it
+export const fetchSessionMatchedMovies = async (session_id) => {
+  const db = firebase.firestore();
+  const currentUser = firebase.auth().currentUser;
+  const movies = await db
+    .collection("users")
+    .doc(currentUser.uid)
+    .collection("likedMovies")
+    .get();
+  return movies.docs.map((doc) => doc.data());
+};
+
+export const findingMatchedMovies = async (session_id) => {
+  const db = firebase.firestore();
+
+  const doc = await db.collection("sessions").doc(session_id).get();
+  let likedIds = doc.data().session_liked_ids;
+
+  let matchedIds = findDuplicates(likedIds);
+
+  return movies.docs.map((doc) => doc.data());
+};
+
+// finds duplicates in an array
+const findDuplicates = (arr) => {
+  return Array.from(new Set(arr)).filter(
+    (value) => arr.indexOf(value) !== arr.lastIndexOf(value)
+  );
+};
+
 // returns an object where movieId => data pairs are for the user
 export async function getCorrectRecommendData(data) {
   try {
@@ -46,11 +105,16 @@ export async function sessionMovieLike(movie_id, session_id) {
   try {
     const db = firebase.firestore();
     const currentUser = firebase.auth().currentUser;
-    db.collection("sessions")
-      .doc(session_id)
-      .update({
-        session_liked_ids: firebase.firestore.FieldValue.arrayUnion(movie_id),
-      });
+    // array must be fetched first, then pushed new id, then set to the DB again (dumb API, omfg)
+    const doc = await db.collection("sessions").doc(session_id).get();
+    const likedIds = doc.data().session_liked_ids;
+    console.log(typeof likedIds);
+    console.log(session_id);
+    likedIds.push(movie_id);
+    db.collection("sessions").doc(session_id).update({
+      session_liked_ids: likedIds,
+    });
+
     db.collection("sessions")
       .doc(session_id.toString())
       .collection(currentUser.uid.toString())
@@ -58,7 +122,7 @@ export async function sessionMovieLike(movie_id, session_id) {
       .delete();
     return 1;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("sessionMovieLike error: ", err.message);
   }
 }
 
@@ -74,7 +138,7 @@ export async function sessionMovieDislike(movie_id, session_id) {
       .delete();
     return 1;
   } catch (err) {
-    Alert.alert("sessionMovieDislike error: !", err.message);
+    Alert.alert("sessionMovieDislike error: ", err.message);
   }
 }
 
@@ -91,7 +155,7 @@ export async function fetchMoreMovies() {
       .delete();
     return 1;
   } catch (err) {
-    Alert.alert("sessionMovieDislike error: !", err.message);
+    Alert.alert("fetchMoreMovies error: !", err.message);
   }
 }
 
@@ -119,6 +183,6 @@ export async function endSession() {
     }
     return 1;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("endSession error: ", err.message);
   }
 }

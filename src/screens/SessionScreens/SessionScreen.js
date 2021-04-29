@@ -19,6 +19,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ButtonComponent from "../../components/screen components/ButtonComponent";
 import NoSession from "../../components/NoSession";
+
 const SessionScreen = ({ navigation }) => {
   const [data, setData] = useState(null);
   const [pairedUserNickname, setPairedUserNickname] = useState(null);
@@ -32,6 +33,7 @@ const SessionScreen = ({ navigation }) => {
           const paired = await AsyncStorage.getItem("pairedToUser");
           setPairedUserNickname(paired.toString());
           setData(arr[0]);
+          AsyncStorage.setItem("session_id", arr[1]);
           setSession_id(arr[1]);
         }
         setIsLoading(false);

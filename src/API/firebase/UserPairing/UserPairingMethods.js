@@ -3,6 +3,7 @@ import "firebase/firestore";
 import { Alert } from "react-native";
 import { fetchUserNickname } from "../UserMethods/firebaseUserMethods";
 
+// checks whether user with given nickname exist
 export async function isExistingUser(nickname) {
   try {
     const db = firebase.firestore();

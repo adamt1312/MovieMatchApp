@@ -82,6 +82,11 @@ export async function generateRecommendationsForSession(
       data.data.results.forEach((movie) => {
         db.collection("sessions")
           .doc(session_id)
+          .collection("allRecommended")
+          .doc(movie.id.toString())
+          .set(movie);
+        db.collection("sessions")
+          .doc(session_id)
           .collection(currentUser.uid)
           .doc(movie.id.toString())
           .set(movie);
