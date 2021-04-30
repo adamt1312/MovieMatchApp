@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // TODO: 1. Add cancel request
 //       2. disable user to accept/deny requests when paired (trough async storage get item pairedtouser...)
-const RequestScreen = ({ params }) => {
+const RequestScreen = ({ navigation }) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEmpty, setIsEmpty] = useState(null);
@@ -23,7 +23,8 @@ const RequestScreen = ({ params }) => {
   useEffect(() => {
     try {
       AsyncStorage.getItem("session_id").then((sid) => {
-        if (sid !== "") {
+        console.log("sid", sid);
+        if (sid !== null) {
           setInSession(true);
         }
         //  document listener on PendingRequests collection...when changed, fetch again..
@@ -86,6 +87,7 @@ const RequestScreen = ({ params }) => {
                       name={request.nickname}
                       uid={request.uid}
                       key={request.uid}
+                      navigation={navigation}
                     />
                   );
                 }

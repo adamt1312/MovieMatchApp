@@ -18,6 +18,7 @@ import {
 } from "../../API/firebase/UserPairing/RecommendationsLogic";
 import keys from "../../../config/keys";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Navigation } from "react-feather";
 
 const RequestComponent = (props) => {
   const { name, uid } = props;
@@ -26,10 +27,17 @@ const RequestComponent = (props) => {
     try {
       deleteUserRequest(uid);
       setSentRequestFalseOrNull(uid, null).then(() => {
+        props.navigation.navigate("Home");
         createNewSession(uid).then((session_id) => {
           setIsPairedToValue(uid, session_id);
           generatePreferencesForSession(uid, session_id).then(
             (sessionPreferences) => {
+              console.log(
+                "session preferences",
+                sessionPreferences,
+                "session id",
+                session_id
+              );
               generateRecommendationsForSession(
                 sessionPreferences,
                 session_id,

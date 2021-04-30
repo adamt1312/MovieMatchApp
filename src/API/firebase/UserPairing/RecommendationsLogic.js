@@ -78,19 +78,23 @@ export async function generateRecommendationsForSession(
 
     // fetch recommend movies
     await axios(url).then((data) => {
+      console.log("fetching data from TMdb");
       // insert data into DB as a subcollection for session named "user_uid" containing recommended movie objects as docs for each user
-      data.data.results.forEach((movie) => {
-        db.collection("sessions")
+      data.data.results.forEach(async (movie) => {
+        await db
+          .collection("sessions")
           .doc(session_id)
           .collection("allRecommended")
           .doc(movie.id.toString())
           .set(movie);
-        db.collection("sessions")
+        await db
+          .collection("sessions")
           .doc(session_id)
           .collection(currentUser.uid)
           .doc(movie.id.toString())
           .set(movie);
-        db.collection("sessions")
+        await db
+          .collection("sessions")
           .doc(session_id)
           .collection(other_user_uid)
           .doc(movie.id.toString())

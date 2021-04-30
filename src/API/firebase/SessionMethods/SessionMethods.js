@@ -154,7 +154,7 @@ export async function generateRecommendedNextPageNum() {
     let pageNum = sessionDoc.data().pageNum;
 
     // generate recommendations with next pageNum
-    generateRecommendationsForSession(
+    await generateRecommendationsForSession(
       sessionPreferences,
       session_id.toString(),
       other_user_uid,

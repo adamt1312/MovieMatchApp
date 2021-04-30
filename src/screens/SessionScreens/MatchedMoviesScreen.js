@@ -71,7 +71,7 @@ const MatchedMoviesScreen = ({ navigation }) => {
   useEffect(() => {
     try {
       AsyncStorage.getItem("session_id").then((sid) => {
-        if (sid !== "") {
+        if (sid !== null) {
           fetchSessionRecommendations().then((resp) => {
             if (resp) {
               setData(resp[0]);

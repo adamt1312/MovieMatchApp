@@ -27,6 +27,7 @@ const homeScreen = ({ navigation }) => {
           setIsPaired(fetchedNickname);
         });
       } else {
+        console.log("sid to empty");
         AsyncStorage.setItem("pairedToUser", "");
         AsyncStorage.setItem("session_id", "");
       }

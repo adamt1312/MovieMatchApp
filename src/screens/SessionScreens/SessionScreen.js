@@ -101,24 +101,24 @@ const SessionScreen = ({ navigation }) => {
               tapHandler(cardIndex);
             }}
             onSwipedRight={(cardIndex) => {
-              sessionMovieLike(data[cardIndex].id, session_id);
               dbLibraryToLiked(data[cardIndex]);
+              sessionMovieLike(data[cardIndex].id, session_id);
               console.log(
-                cardIndex,
-                data.length,
-                cardIndex + 2 == data.length - 2
+                cardIndex + 1,
+                data.length - 1,
+                cardIndex + 1 == data.length - 1
               );
-              if (cardIndex + 2 == data.length - 2) {
+              if (cardIndex + 1 == data.length - 1) {
                 swipedAllHandler();
               }
             }}
             onSwipedLeft={(cardIndex) => {
-              sessionMovieDislike(data[cardIndex].id, session_id);
               dbLibraryToDisliked(data[cardIndex]);
+              sessionMovieDislike(data[cardIndex].id, session_id);
               console.log(
-                cardIndex,
-                data.length,
-                cardIndex + 2 == data.length - 2
+                cardIndex + 1,
+                data.length - 1,
+                cardIndex + 1 == data.length - 1
               );
               if (cardIndex + 1 == data.length - 1) {
                 swipedAllHandler();
