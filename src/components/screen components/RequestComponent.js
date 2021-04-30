@@ -22,15 +22,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const RequestComponent = (props) => {
   const { name, uid } = props;
 
-  // TODO: 1. delete pendingRequest ✓
-  //       2. Set sent request null ✓
-  //       3. create new session
-  //          - sessions -> session_id = user1_id (inside a map where movieId - data pairs), user2_id (the same), session_liked_ids, session_matched_movies (movie objects)
-  //          - generate recommendations for the session
-  //            - generate preferences for session
-  //            - generate recommendations
-  //       4. Set isPaired to session uid ✓
-  //       5. hide waiting message in FindMatchScreen...
   const acceptUserHandler = async () => {
     try {
       deleteUserRequest(uid);
@@ -45,7 +36,6 @@ const RequestComponent = (props) => {
                 uid,
                 1
               );
-              AsyncStorage.setItem("pageNum", 1);
             }
           );
         });
@@ -54,10 +44,6 @@ const RequestComponent = (props) => {
       console.log("acceptUserHandler: " + error);
     }
   };
-
-  // TODO: 1. delete pendingRequest ✓
-  //       2. set sentRequest to false ✓
-  //       2. show deny message modal in FindMatchScreen... ✓
 
   const denyUserHandler = () => {
     try {

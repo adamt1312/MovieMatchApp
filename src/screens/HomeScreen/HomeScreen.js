@@ -26,6 +26,9 @@ const homeScreen = ({ navigation }) => {
           AsyncStorage.setItem("pairedToUser", fetchedNickname);
           setIsPaired(fetchedNickname);
         });
+      } else {
+        AsyncStorage.setItem("pairedToUser", "");
+        AsyncStorage.setItem("session_id", "");
       }
       setIsLoading(false);
     });

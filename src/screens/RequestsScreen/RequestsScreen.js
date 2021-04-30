@@ -7,39 +7,46 @@ import RequestComponent from "../../components/screen components/RequestComponen
 import { isLoading } from "expo-font";
 import * as firebase from "firebase";
 import "firebase/firestore";
+import { Swing } from "react-native-animated-spinkit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// TODO: Add cancel request
+// TODO: 1. Add cancel request
+//       2. disable user to accept/deny requests when paired (trough async storage get item pairedtouser...)
 const RequestScreen = ({ params }) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEmpty, setIsEmpty] = useState(null);
+  const [inSession, setInSession] = useState(false);
 
   const db = firebase.firestore();
 
   useEffect(() => {
     try {
-      // fetch pending requests on mount
-      // fetchUserPendingRequests().then((data) => {
-      //   setData(data);
-      //   setIsLoading(false);
-      // });
-
-      //  document listener on PendingRequests collection...when changed, fetch again..
-      db.collection("users")
-        .doc(firebase.auth().currentUser.uid)
-        .collection("pendingRequests")
-        .onSnapshot(() => {
-          setIsLoading(true);
-          fetchUserPendingRequests().then((data) => {
-            setData(data);
-            if (JSON.stringify(data.length) == 1) {
-              setIsEmpty(true);
-            } else {
-              setIsEmpty(false);
-            }
-            setIsLoading(false);
+      AsyncStorage.getItem("session_id").then((sid) => {
+        if (sid !== "") {
+          setInSession(true);
+        }
+        //  document listener on PendingRequests collection...when changed, fetch again..
+        let unsubscribe = db
+          .collection("users")
+          .doc(firebase.auth().currentUser.uid)
+          .collection("pendingRequests")
+          .onSnapshot(() => {
+            setIsLoading(true);
+            fetchUserPendingRequests().then((data) => {
+              setData(data);
+              if (JSON.stringify(data.length) == 1) {
+                setIsEmpty(true);
+              } else {
+                setIsEmpty(false);
+              }
+              setIsLoading(false);
+            });
           });
-        });
+        return function cleanup() {
+          unsubscribe();
+        };
+      });
     } catch (error) {
       console.log(error);
     }
@@ -52,6 +59,13 @@ const RequestScreen = ({ params }) => {
         <View style={styles.loadWrapper}>
           <ActivityIndicator size={100} color="white" />
         </View>
+      ) : inSession ? (
+        <>
+          <Swing size={100} color="#FFF" />
+          <Text style={{ fontSize: 25, color: "white", textAlign: "center" }}>
+            You are currently in session and unable to handle requests.
+          </Text>
+        </>
       ) : (
         <ScrollView style={styles.scroll}>
           <Text style={styles.title}>Pairing requests</Text>

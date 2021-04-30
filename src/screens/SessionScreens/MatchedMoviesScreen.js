@@ -14,12 +14,16 @@ import { Button } from "galio-framework";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { fetchSessionRecommendations } from "../../API/firebase/SessionMethods/SessionMethods";
+import {
+  fetchSessionRecommendations,
+  findingMatchedMovies,
+} from "../../API/firebase/SessionMethods/SessionMethods";
 
 const MatchedMoviesScreen = ({ navigation }) => {
   const [data, setData] = useState();
-  const [matchedIds, setMatchedIds] = useState([]);
+  const [matchedIds, setMatchedIds] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [nothingToShow, setNothingToShow] = useState(true);
 
   const tapHandler = (movieData) => {
     navigation.navigate("MovieDetail", {
@@ -66,10 +70,19 @@ const MatchedMoviesScreen = ({ navigation }) => {
 
   useEffect(() => {
     try {
-      fetchSessionRecommendations().then((data) => {
-        setData(data[0]);
-        setMatchedIds(data[1]);
-        setIsLoading(false);
+      AsyncStorage.getItem("session_id").then((sid) => {
+        if (sid !== "") {
+          fetchSessionRecommendations().then((resp) => {
+            if (resp) {
+              setData(resp[0]);
+              setMatchedIds(resp[1]);
+              setNothingToShow(false);
+              setIsLoading(false);
+            }
+          });
+        } else {
+          setIsLoading(false);
+        }
       });
     } catch (error) {
       console.log(error);
@@ -99,15 +112,29 @@ const MatchedMoviesScreen = ({ navigation }) => {
               Here are your matches{" "}
               <FontAwesome5 name="smile-beam" size={24} color="white" />{" "}
             </Text>
-
-            <FlatList
-              data={data}
-              keyExtractor={(item) => {
-                return item.id.toString();
-              }}
-              renderItem={renderItem}
-              style={{ width: "100%" }}
-            />
+            {nothingToShow ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 25, color: "white" }}>
+                  Nothing to show, sorry.
+                </Text>
+              </View>
+            ) : (
+              <FlatList
+                initialNumToRender={100} // not good solution, can cause performance issues
+                data={data}
+                keyExtractor={(item) => {
+                  return item.id.toString();
+                }}
+                renderItem={renderItem}
+                style={{ width: "100%" }}
+              />
+            )}
           </>
         )}
       </View>

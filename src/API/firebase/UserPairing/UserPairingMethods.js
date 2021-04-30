@@ -22,19 +22,15 @@ export async function isExistingUser(nickname) {
   }
 }
 
-// checks whether is paired, and if yes returns the id of the other user
+// checks whether is user is paired: YES -> returns the id of the other user | NO -> returns null;
 export async function isUserPaired(nickname) {
   try {
     const db = firebase.firestore();
     const currentUser = firebase.auth().currentUser;
-    // TODO: Add check if user is not trying to pair to himself
-    // const currentUserNickname = await db
-    //   .collection("users")
-    //   .doc(firebase.auth().currentUser.uid)
-    //   .get();
-    // console.log(currentUserNickname);
-    // console.log(firebase.auth().currentUser.uid);
-
+    // check if user is not trying to pair to himself
+    // if (currentUser.displayName == nickname) {
+    //   return null;
+    // }
     const user = await db
       .collection("users")
       .where("nickname", "==", nickname)
@@ -170,6 +166,7 @@ export async function createNewSession(other_user_uid) {
         user1: currentUser.uid,
         user2: other_user_uid,
         session_liked_ids: [],
+        pageNum: 1,
       })
       .then((docRef) => {
         session_id = docRef.id;

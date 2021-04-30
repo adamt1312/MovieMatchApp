@@ -50,12 +50,10 @@ const MyProfileScreen = () => {
 
   return (
     <View style={styles.loadWrapper}>
-      <BackgroundBlurred />
+      {/* <BackgroundBlurred /> */}
       <LinearGradient
-        colors={["transparent", "rgba(255,255,255,0.5)"]}
-        locations={[0.1, 0.4]}
-        start={[0.1, 0.2]}
-        end={{ x: 0, y: 1 }}
+        colors={["transparent", "#480048"]}
+        locations={[0.1, 1]}
         style={styles.linearGradient}
       />
       {isLoading ? (
@@ -106,6 +104,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "black",
   },
   info: {
     height: "60%",
@@ -123,10 +122,10 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "VarelaRound_400Regular",
     marginVertical: 5,
+    color: "white",
   },
   linearGradient: {
     position: "absolute",
-    zIndex: 1,
     width: "100%",
     height: "100%",
   },

@@ -15,16 +15,29 @@ import {
   sessionMovieLike,
   sessionMovieDislike,
   endSession,
+  generateRecommendedNextPageNum,
 } from "../../API/firebase/SessionMethods/SessionMethods";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ButtonComponent from "../../components/screen components/ButtonComponent";
 import NoSession from "../../components/NoSession";
 
+// TODO: Finish fetching more movies before last card rendered...
 const SessionScreen = ({ navigation }) => {
   const [data, setData] = useState(null);
   const [pairedUserNickname, setPairedUserNickname] = useState(null);
   const [session_id, setSession_id] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const swipedAllHandler = () => {
+    console.log("swipedhandler");
+    setIsLoading(true);
+    generateRecommendedNextPageNum().then((resp) => {
+      fetchUserSessionRecommendations().then((arr) => {
+        setData(arr[0]);
+        setIsLoading(false);
+      });
+    });
+  };
 
   useEffect(() => {
     try {
@@ -35,6 +48,8 @@ const SessionScreen = ({ navigation }) => {
           setData(arr[0]);
           AsyncStorage.setItem("session_id", arr[1]);
           setSession_id(arr[1]);
+        } else if (!arr) {
+          AsyncStorage.setItem("session_id", "");
         }
         setIsLoading(false);
       });
@@ -88,10 +103,26 @@ const SessionScreen = ({ navigation }) => {
             onSwipedRight={(cardIndex) => {
               sessionMovieLike(data[cardIndex].id, session_id);
               dbLibraryToLiked(data[cardIndex]);
+              console.log(
+                cardIndex,
+                data.length,
+                cardIndex + 2 == data.length - 2
+              );
+              if (cardIndex + 2 == data.length - 2) {
+                swipedAllHandler();
+              }
             }}
             onSwipedLeft={(cardIndex) => {
               sessionMovieDislike(data[cardIndex].id, session_id);
               dbLibraryToDisliked(data[cardIndex]);
+              console.log(
+                cardIndex,
+                data.length,
+                cardIndex + 2 == data.length - 2
+              );
+              if (cardIndex + 1 == data.length - 1) {
+                swipedAllHandler();
+              }
             }}
             horizontalSwipe={true}
             backgroundColor={"transparent"}
