@@ -17,6 +17,7 @@ const NoSession = ({ navigation }) => {
       <ButtonComponent
         title={"Go back"}
         onPress={() => navigation.navigate("Home")}
+        width={"50%"}
       />
     </View>
   );

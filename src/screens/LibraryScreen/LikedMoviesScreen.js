@@ -94,6 +94,7 @@ const LikedMoviesScreen = ({ navigation }) => {
             </Text>
 
             <FlatList
+              initialNumToRender={15}
               data={data}
               keyExtractor={(item) => {
                 item.id.toString() ? item.id.toString() : item.poster_path;

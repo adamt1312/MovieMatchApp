@@ -10,7 +10,7 @@ const HomeButton = ({ navigation }) => {
       <AntDesign
         name="home"
         size={32}
-        color="black"
+        color="white"
         onPress={() => {
           navigation.navigate("Home");
         }}
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   rectangle: {
     height: "auto",
     width: "auto",
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    backgroundColor: "rgba(0, 0,0, 1)",
     padding: 5,
     borderRadius: 10,
   },

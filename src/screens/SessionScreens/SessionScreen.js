@@ -20,6 +20,9 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ButtonComponent from "../../components/screen components/ButtonComponent";
 import NoSession from "../../components/NoSession";
+import { LinearGradient } from "expo-linear-gradient";
+import { Entypo } from "@expo/vector-icons";
+import CrossButton from "../../components/screen components/CrossButton";
 
 // TODO: Finish fetching more movies before last card rendered...
 const SessionScreen = ({ navigation }) => {
@@ -72,6 +75,18 @@ const SessionScreen = ({ navigation }) => {
         </View>
       ) : session_id ? (
         <>
+          <View style={{ top: -8, width: "110%", alignItems: "center" }}>
+            <ButtonComponent
+              title={"END SESSION"}
+              onPress={() => {
+                setIsLoading(true);
+                endSession().then(() => {
+                  navigation.navigate("Home");
+                });
+              }}
+              width={"110%"}
+            />
+          </View>
           <View style={styles.topWrapper}>
             <HomeButton navigation={navigation} />
             <View style={styles.pairedWith}>
@@ -80,7 +95,6 @@ const SessionScreen = ({ navigation }) => {
               </Text>
             </View>
           </View>
-          <ButtonComponent title={"END SESSION"} onPress={endSession} />
           <Swiper
             cards={data}
             renderCard={(card) => {

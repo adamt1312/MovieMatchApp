@@ -2,22 +2,10 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
-    // height: "100%",
-    // width: "100%",
     flex: 1,
     backgroundColor: "black",
     alignItems: "center",
   },
-  // searchbox: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   padding: 15,
-  //   width: "90%",
-  //   backgroundColor: "#FFF",
-  //   borderRadius: 15,
-  //   margin: 5,
-  //   position: "absolute",
-  // },
   loadWrapper: {
     width: "100%",
     height: "80%",
@@ -53,12 +41,11 @@ const styles = StyleSheet.create({
     zIndex: 100,
     elevation: 10,
     width: "120%",
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
+    backgroundColor: "rgba(255, 255, 255, 0.78)",
     marginLeft: 10,
   },
   topWrapper: {
     width: "100%",
-    // backgroundColor: "lightgray",
     zIndex: 100,
     top: 0,
     flexDirection: "row",

@@ -191,10 +191,10 @@ export async function endSession() {
 
     if (currentUser.uid == sessionDoc.data().user1) {
       // sets isPaired to null to both users
-      setIsPairedToValue(sessionDoc.data().user2, null);
+      await setIsPairedToValue(sessionDoc.data().user2, null);
     } else {
       // sets isPaired to null to both users
-      setIsPairedToValue(sessionDoc.data().user1, null);
+      await setIsPairedToValue(sessionDoc.data().user1, null);
     }
     return 1;
   } catch (err) {

@@ -52,13 +52,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     paddingHorizontal: 10,
-    marginTop: 15,
   },
   pairedWith: {
     height: 40,
     borderRadius: 20,
     width: "80%",
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    backgroundColor: "rgba(255, 255, 255, 1)",
     justifyContent: "center",
   },
   title: {

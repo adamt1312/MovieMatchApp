@@ -5,7 +5,10 @@ import { Button } from "galio-framework";
 
 const ButtonComponent = (props) => {
   return (
-    <Button onPress={props.onPress} style={styles.button}>
+    <Button
+      onPress={props.onPress}
+      style={[styles.button, { width: props.width }]}
+    >
       <Text style={styles.btnTitle}>{props.title}</Text>
     </Button>
   );
@@ -13,8 +16,8 @@ const ButtonComponent = (props) => {
 
 const styles = StyleSheet.create({
   button: {
-    width: "50%",
     backgroundColor: "white",
+    borderRadius: 20,
   },
   btnTitle: {
     color: "black",
