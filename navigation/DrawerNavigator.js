@@ -24,6 +24,7 @@ function CustomDrawerContent(props) {
       {...props}
       style={{
         height: "100%",
+        backgroundColor: "#121212",
       }}
     >
       <View
@@ -45,6 +46,7 @@ function CustomDrawerContent(props) {
             backgroundColor: "#e91e63",
             marginHorizontal: 0,
             borderRadius: 0,
+            paddingLeft: 13,
           }}
           onPress={() => {
             loggingOut();
@@ -72,7 +74,7 @@ const DrawerNavigator = () => {
         component={homeScreen}
         options={{
           drawerIcon: (config) => (
-            <AntDesign name="home" size={40} color="black" />
+            <AntDesign name="home" size={40} color="white" />
           ),
           drawerLabel: (config) =>
             config.focused ? (
@@ -85,7 +87,7 @@ const DrawerNavigator = () => {
                 Home
               </Text>
             ) : (
-              <Text style={[styles.screenTitle, { color: "black" }]}>Home</Text>
+              <Text style={[styles.screenTitle, { color: "white" }]}>Home</Text>
             ),
         }}
       />
@@ -94,7 +96,7 @@ const DrawerNavigator = () => {
         component={MyProfileScreen}
         options={{
           drawerIcon: (config) => (
-            <AntDesign name="profile" size={40} color="black" />
+            <AntDesign name="profile" size={40} color="white" />
           ),
           drawerLabel: (config) =>
             config.focused ? (
@@ -107,7 +109,7 @@ const DrawerNavigator = () => {
                 My Profile
               </Text>
             ) : (
-              <Text style={[styles.screenTitle, { color: "black" }]}>
+              <Text style={[styles.screenTitle, { color: "white" }]}>
                 My Profile
               </Text>
             ),
@@ -118,7 +120,7 @@ const DrawerNavigator = () => {
         component={RequestScreen}
         options={{
           drawerIcon: (config) => (
-            <FontAwesome5 name="users" size={31} color="black" />
+            <FontAwesome5 name="users" size={31} color="white" />
           ),
           drawerLabel: (config) =>
             config.focused ? (
@@ -131,7 +133,7 @@ const DrawerNavigator = () => {
                 Requests
               </Text>
             ) : (
-              <Text style={[styles.screenTitle, { color: "black" }]}>
+              <Text style={[styles.screenTitle, { color: "white" }]}>
                 Requests
               </Text>
             ),
@@ -142,7 +144,7 @@ const DrawerNavigator = () => {
         component={BottomTabNavigator2}
         options={{
           drawerIcon: (config) => (
-            <MaterialCommunityIcons name="movie-roll" size={40} color="black" />
+            <MaterialCommunityIcons name="movie-roll" size={40} color="white" />
           ),
           drawerLabel: (config) =>
             config.focused ? (
@@ -155,7 +157,7 @@ const DrawerNavigator = () => {
                 Library
               </Text>
             ) : (
-              <Text style={[styles.screenTitle, { color: "black" }]}>
+              <Text style={[styles.screenTitle, { color: "white" }]}>
                 Library
               </Text>
             ),
@@ -169,7 +171,7 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 25,
     fontFamily: "VarelaRound_400Regular",
-    color: "black",
+    color: "white",
   },
 });
 

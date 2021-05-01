@@ -1,7 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { MaterialIcons } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import LikedMoviesScreen from "../src/screens/LibraryScreen/LikedMoviesScreen";
 import DislikedMoviesScreen from "../src/screens/LibraryScreen/DislikedMoviesScreen";
 import { Text } from "react-native";
@@ -14,6 +13,12 @@ const BottomTabNavigator2 = () => {
     <Tab.Navigator
       tabBarOptions={{
         activeTintColor: activeTintColor,
+        style: {
+          height: 56,
+          backgroundColor: "#121212",
+          borderTopColor: "#121212",
+          borderTopWidth: 1,
+        },
       }}
     >
       <Tab.Screen
@@ -23,15 +28,17 @@ const BottomTabNavigator2 = () => {
           tabBarLabel: ({ focused }) => (
             <Text
               style={{
+                fontFamily: "VarelaRound_400Regular",
                 fontSize: 15,
-                color: focused ? activeTintColor : "black",
+                marginBottom: 3,
+                color: focused ? activeTintColor : "white",
               }}
             >
               Liked Movies
             </Text>
           ),
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="local-movies" size={size} color={color} />
+            <AntDesign name="like2" size={24} color={color} />
           ),
         }}
       />
@@ -42,15 +49,17 @@ const BottomTabNavigator2 = () => {
           tabBarLabel: ({ focused }) => (
             <Text
               style={{
-                fontSize: 14,
-                color: focused ? activeTintColor : "black",
+                fontFamily: "VarelaRound_400Regular",
+                fontSize: 15,
+                marginBottom: 3,
+                color: focused ? activeTintColor : "white",
               }}
             >
-              Matched movies
+              Disliked Movies
             </Text>
           ),
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome5 name="user-friends" size={size} color={color} />
+            <AntDesign name="dislike2" size={24} color={color} />
           ),
         }}
       />

@@ -15,7 +15,12 @@ const SessionTabNavigator = () => {
     <Tab.Navigator
       tabBarOptions={{
         activeTintColor: activeTintColor,
-        style: { height: 55 },
+        style: {
+          height: 55,
+          backgroundColor: "#121212",
+          borderTopColor: "#121212",
+          borderTopWidth: 1,
+        },
       }}
     >
       <Tab.Screen
@@ -25,9 +30,10 @@ const SessionTabNavigator = () => {
           tabBarLabel: ({ focused }) => (
             <Text
               style={{
+                fontFamily: "VarelaRound_400Regular",
                 fontSize: 15,
                 marginBottom: 3,
-                color: focused ? activeTintColor : "black",
+                color: focused ? activeTintColor : "white",
               }}
             >
               Active Session
@@ -45,9 +51,10 @@ const SessionTabNavigator = () => {
           tabBarLabel: ({ focused }) => (
             <Text
               style={{
-                fontSize: 14,
+                fontFamily: "VarelaRound_400Regular",
+                fontSize: 15,
                 marginBottom: 3,
-                color: focused ? activeTintColor : "black",
+                color: focused ? activeTintColor : "white",
               }}
             >
               Matched Movies

@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   rectangle: {
     height: "auto",
     width: "auto",
-    backgroundColor: "rgba(0, 0,0, 1)",
+    backgroundColor: "#121212",
     padding: 5,
     borderRadius: 10,
   },
