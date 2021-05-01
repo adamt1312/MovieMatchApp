@@ -72,13 +72,10 @@ const homeScreen = ({ navigation }) => {
               </Text>
             </View>
           </View>
-
           <View style={styles.buttonContainer}>
             <ButtonComponent
               title={"Explore Movies"}
-              onPress={() => {
-                navigation.replace("BottomTabNavigator");
-              }}
+              onPress={() => navigation.replace("BottomTabNavigator")}
               width={"55%"}
             />
             <ButtonComponent

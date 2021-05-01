@@ -7,12 +7,22 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchUserPreferences } from "../../API/firebase/UserMethods/firebaseUserMethods";
 import { FontAwesome } from "@expo/vector-icons";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
+import styles from "./Styles";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Octicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Fontisto } from "@expo/vector-icons";
+
+const iconColor = "rgba(255,255,255,0.6)";
 
 const MyProfileScreen = () => {
   const [nickname, setNickname] = useState(
     firebase.auth().currentUser.displayName
   );
   const [email, setEmail] = useState(firebase.auth().currentUser.email);
+  const [emailVerified, setEmailVerified] = useState(
+    firebase.auth().currentUser.emailVerified
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [preferedGenres, setPreferedGenres] = useState("none");
   const [preferedReleaseYears, setpreferedReleaseYears] = useState("none");
@@ -64,18 +74,57 @@ const MyProfileScreen = () => {
         <View style={styles.container}>
           <View style={styles.avatar}>
             <FontAwesome name="user-circle" size={100} color="white" />
+            <Text style={styles.nickname}>@{nickname}</Text>
           </View>
           <View style={styles.info}>
-            <Text style={styles.title}>Your profile</Text>
+            {/* <Text style={styles.title}>Your profile</Text> */}
             <View style={styles.userDetails}>
-              <Text style={styles.infoDetail}>{"Nickname: " + nickname}</Text>
-              <Text style={styles.infoDetail}>{"Email: " + email}</Text>
-              <Text style={styles.infoDetail}>
-                {"Prefered Genres: " + preferedGenres.toString()}
+              <View style={styles.row}>
+                <MaterialIcons
+                  name="email"
+                  size={24}
+                  color={iconColor}
+                  style={{ marginRight: 5 }}
+                />
+                <Text style={styles.infoDetail}>{email}</Text>
+              </View>
+              <View style={styles.row}>
+                <Octicons
+                  name="verified"
+                  size={24}
+                  color={iconColor}
+                  style={{ marginRight: 5 }}
+                />
+                <Text style={styles.infoDetail}>
+                  {emailVerified ? "Verified" : "Not verified"}
+                </Text>
+              </View>
+              <Text style={[styles.nickname, { marginVertical: 10 }]}>
+                Your preferences
               </Text>
-              <Text style={styles.infoDetail}>
-                {"Prefered release years: " + preferedReleaseYears.toString()}
-              </Text>
+
+              <View style={styles.row}>
+                <MaterialCommunityIcons
+                  name="movie-open"
+                  size={24}
+                  color={iconColor}
+                  style={{ marginRight: 5 }}
+                />
+                <Text style={styles.infoDetail}>
+                  {preferedGenres.toString()}
+                </Text>
+              </View>
+              <View style={styles.row}>
+                <Fontisto
+                  name="date"
+                  size={24}
+                  color={iconColor}
+                  style={{ marginRight: 6 }}
+                />
+                <Text style={styles.infoDetail}>
+                  {preferedReleaseYears.toString()}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -83,52 +132,5 @@ const MyProfileScreen = () => {
     </View>
   );
 };
-
-export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-    justifyContent: "space-evenly",
-    alignItems: "center",
-  },
-  title: {
-    textAlign: "center",
-    color: "white",
-    fontSize: 35,
-    color: "white",
-    textDecorationLine: "underline",
-    fontFamily: "VarelaRound_400Regular",
-    marginBottom: 10,
-  },
-  loadWrapper: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "black",
-  },
-  info: {
-    height: "60%",
-    width: "100%",
-  },
-  avatar: {
-    height: "40%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  userDetails: {
-    marginHorizontal: 25,
-  },
-  infoDetail: {
-    fontSize: 16,
-    fontFamily: "VarelaRound_400Regular",
-    marginVertical: 5,
-    color: "white",
-  },
-  linearGradient: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-  },
-});
 
 export default MyProfileScreen;
