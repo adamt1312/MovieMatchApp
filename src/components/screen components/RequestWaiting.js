@@ -2,8 +2,10 @@ import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { Pulse } from "react-native-animated-spinkit";
 import { Entypo } from "@expo/vector-icons";
+import ButtonComponent from "./ButtonComponent";
+import { cancelSentRequest } from "../../API/firebase/UserPairing/UserPairingMethods";
 
-const PulseM = ({ params }) => {
+const RequestWaiting = (props) => {
   return (
     <View style={styles.conatiner}>
       <View style={styles.wrapper}>
@@ -24,24 +26,32 @@ const PulseM = ({ params }) => {
           marginBottom: 800,
         }}
       />
+      <View style={styles.btnWrapper}>
+        <ButtonComponent
+          title={"Cancel  request"}
+          width={"50%"}
+          onPress={() => {
+            cancelSentRequest();
+          }}
+        />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   conatiner: {
-    width: "auto",
-    height: "40%",
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "rgba(70,24,87,0.6)",
     borderRadius: 35,
     padding: 25,
   },
   wrapper: {
-    justifyContent: "space-evenly",
+    flex: 2,
+    width: "100%",
+    justifyContent: "flex-end",
     alignItems: "center",
-    // backgroundColor: "blue",
   },
   txt: {
     color: "white",
@@ -49,6 +59,12 @@ const styles = StyleSheet.create({
     fontFamily: "VarelaRound_400Regular",
     fontSize: 25,
   },
+  btnWrapper: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
 });
 
-export default PulseM;
+export default RequestWaiting;

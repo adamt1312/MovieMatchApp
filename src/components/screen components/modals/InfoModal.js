@@ -69,7 +69,7 @@ const InfoModal = (props) => {
                       {" "}
                       {nickname}{" "}
                     </Text>
-                    <Text>is actually, paired with someone else, </Text>
+                    <Text>is actually paired with someone else, </Text>
                     <Entypo name="emoji-sad" size={20} color="black" />
                     <Text> try it later.</Text>
                   </Text>

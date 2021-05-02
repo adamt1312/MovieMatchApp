@@ -41,7 +41,9 @@ function CustomDrawerContent(props) {
       >
         <DrawerItem
           icon={() => <AntDesign name="logout" size={35} color="black" />}
-          label={() => <Text style={styles.screenTitle}>Logout</Text>}
+          label={() => (
+            <Text style={[styles.screenTitle, { color: "black" }]}>Logout</Text>
+          )}
           style={{
             backgroundColor: "#e91e63",
             marginHorizontal: 0,

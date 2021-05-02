@@ -7,7 +7,7 @@ import {
   isExistingUser,
   setSentRequestFalseOrNull,
 } from "../../API/firebase/UserPairing/UserPairingMethods";
-import PulseM from "../../components/screen components/PulseM";
+import RequestWaiting from "../../components/screen components/RequestWaiting";
 import * as firebase from "firebase";
 import "firebase/firestore";
 import styles from "./Styles";
@@ -40,7 +40,6 @@ const FindMatchScreen = (props) => {
         }));
       } else {
         const sentRequest = doc.data().sentRequest;
-        console.log(doc.data());
         // user already sent request, showing waiting screen
         if (sentRequest) {
           setData((prevState) => ({
@@ -82,6 +81,7 @@ const FindMatchScreen = (props) => {
           }));
         } else {
           isUserPaired(nickname).then((isPaired) => {
+            console.log(isPaired);
             // checking isAvailable status => set modal text => show modal
             if (isPaired) {
               // user is already paired
@@ -225,11 +225,8 @@ const FindMatchScreen = (props) => {
                   </Text>
                 </View>
               ) : (
-                <PulseM />
+                <RequestWaiting />
               )}
-              {/* TODO: Add some info, that cant search other user if
-              isPaired...here will be maybe some button to
-              showRecommendations... */}
             </View>
           )}
         </View>

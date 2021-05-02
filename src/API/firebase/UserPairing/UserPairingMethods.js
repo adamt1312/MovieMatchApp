@@ -196,3 +196,34 @@ export async function setIsPairedToValue(other_user_uid, value) {
     Alert.alert("There is something wrong!", err.message);
   }
 }
+
+// cancel sent request (sentRequest to null, delete doc in pendingRequests)
+export async function cancelSentRequest() {
+  try {
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+
+    // fetch current user doc
+    let currentUserDoc = await db
+      .collection("users")
+      .doc(currentUser.uid)
+      .get();
+
+    // delete pendingRequest doc in collection
+    await db
+      .collection("users")
+      .doc(currentUserDoc.data().sentRequest)
+      .collection("pendingRequests")
+      .doc(currentUser.uid)
+      .delete();
+
+    // sets other user
+    await db
+      .collection("users")
+      .doc(currentUser.uid)
+      .update({ sentRequest: null });
+    return 1;
+  } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}

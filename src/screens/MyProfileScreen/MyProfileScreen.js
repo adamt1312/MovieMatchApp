@@ -79,12 +79,15 @@ const MyProfileScreen = () => {
           <View style={styles.info}>
             {/* <Text style={styles.title}>Your profile</Text> */}
             <View style={styles.userDetails}>
+              <Text style={[styles.nickname, { marginVertical: 10 }]}>
+                Basic info
+              </Text>
               <View style={styles.row}>
                 <MaterialIcons
                   name="email"
                   size={24}
                   color={iconColor}
-                  style={{ marginRight: 5 }}
+                  style={styles.icon}
                 />
                 <Text style={styles.infoDetail}>{email}</Text>
               </View>
@@ -93,7 +96,7 @@ const MyProfileScreen = () => {
                   name="verified"
                   size={24}
                   color={iconColor}
-                  style={{ marginRight: 5 }}
+                  style={styles.icon}
                 />
                 <Text style={styles.infoDetail}>
                   {emailVerified ? "Verified" : "Not verified"}
@@ -108,7 +111,7 @@ const MyProfileScreen = () => {
                   name="movie-open"
                   size={24}
                   color={iconColor}
-                  style={{ marginRight: 5 }}
+                  style={styles.icon}
                 />
                 <Text style={styles.infoDetail}>
                   {preferedGenres.toString()}
@@ -119,7 +122,7 @@ const MyProfileScreen = () => {
                   name="date"
                   size={24}
                   color={iconColor}
-                  style={{ marginRight: 6 }}
+                  style={styles.icon}
                 />
                 <Text style={styles.infoDetail}>
                   {preferedReleaseYears.toString()}

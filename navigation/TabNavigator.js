@@ -60,7 +60,7 @@ const BottomTabNavigator = () => {
                 color: focused ? activeTintColor : "white",
               }}
             >
-              Find a Match
+              Pair with a friend
             </Text>
           ),
           tabBarIcon: ({ color, size }) => (

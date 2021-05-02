@@ -67,6 +67,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 5,
   },
+  icon: { marginRight: 7 },
 });
 
 export default styles;
