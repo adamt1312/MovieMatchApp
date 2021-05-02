@@ -11,50 +11,61 @@ import {
   dbLibraryToLiked,
 } from "../../API/firebase/UserMethods/firebaseUserMethods";
 import keys from "../../../config/keys";
+import ButtonComponent from "../../components/screen components/ButtonComponent";
 
 const exploreMoviesScreen = ({ navigation }) => {
-  const apiurlSearch =
-    "https://api.themoviedb.org/3/search/multi?api_key=" +
-    keys.tmdbConfig.apiKey +
-    "&language=en-US&query=";
-  const apiurlPopular =
-    "https://api.themoviedb.org/3/trending/all/week?api_key=" +
-    keys.tmdbConfig.apiKey +
-    "&language=en-US";
-
   const [data, setData] = useState({
     search: "Search your own...",
     results: [],
   });
+  const [pageNum, setPageNum] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
 
-  let currentMovieInfo;
-  // TODO: - error handling
+  const apiurlSearch =
+    "https://api.themoviedb.org/3/search/multi?api_key=" +
+    keys.tmdbConfig.apiKey +
+    "&language=en-US&page=" +
+    pageNum +
+    "&query=";
+  const apiurlPopular =
+    "https://api.themoviedb.org/3/trending/all/day?api_key=" +
+    keys.tmdbConfig.apiKey +
+    "&language=en-US&page=" +
+    pageNum;
 
-  useEffect(() => {
-    try {
-      axios(apiurlPopular).then(({ data }) => {
+  // initial fetch for daily popular movies
+  const fetchPopularMovies = () => {
+    setIsLoading(true);
+    axios(apiurlPopular).then(({ data }) => {
+      if (data) {
         setData({
           ...data,
           results: data.results,
         });
         setIsLoading(false);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+      }
+    });
+  };
 
-  const search = () => {
+  // fetch searched query (only first page)
+  const fetchSearch = () => {
     setIsLoading(true);
+    setPageNum(1);
     axios(apiurlSearch + data.search).then(({ data }) => {
       if (data) {
-        const results = data.results;
-        setData({ search: "", results: results });
+        setData({ search: "", results: data.results });
         setIsLoading(false);
       }
     });
   };
+
+  useEffect(() => {
+    try {
+      fetchPopularMovies();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [pageNum]);
 
   const tapHandler = (cardIndex) => {
     navigation.navigate("MovieDetail", {
@@ -77,16 +88,15 @@ const exploreMoviesScreen = ({ navigation }) => {
           color="black"
           placeholder="Search your own.."
           onChangeText={(text) =>
-            setData((prevdata) => {
-              return { ...prevdata, search: text };
+            setData((data) => {
+              return { ...data, search: text };
             })
           }
-          onSubmitEditing={search}
+          onSubmitEditing={fetchSearch}
           value={data.search}
           style={styles.inputLine}
         />
       </View>
-
       {isLoading ? (
         <View style={styles.loadWrapper}>
           <ActivityIndicator size={100} color="white" />
@@ -120,6 +130,9 @@ const exploreMoviesScreen = ({ navigation }) => {
           stackSize={5}
           verticalSwipe={false}
           cardIndex={0}
+          onSwipedAll={() => {
+            setPageNum(pageNum + 1);
+          }}
         ></Swiper>
       )}
     </View>
