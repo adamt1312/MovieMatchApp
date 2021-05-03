@@ -5,6 +5,8 @@ import {
   StatusBar,
   View,
   StyleSheet,
+  Text,
+  Image,
 } from "react-native";
 LogBox.ignoreLogs(["Setting a timer"]);
 import { NavigationContainer } from "@react-navigation/native";
@@ -19,6 +21,8 @@ import apiKeys from "./config/keys";
 import { MainStackNavigator } from "./navigation/StackNavigator";
 import LoadingScreen from "./src/screens/LoadingScreen/LoadingScreen";
 import SessionScreen from "./src/screens/SessionScreens/SessionScreen";
+import AppIntroSlider from "react-native-app-intro-slider";
+import AppIntro from "./src/screens/AppIntro";
 
 export default function App() {
   if (!firebase.apps.length) {
@@ -44,6 +48,7 @@ export default function App() {
         <MainStackNavigator />
         <StatusBar hidden={true} translucent={true} currentHeight={200} />
       </NavigationContainer>
+      // <AppIntro />
     );
   }
 }

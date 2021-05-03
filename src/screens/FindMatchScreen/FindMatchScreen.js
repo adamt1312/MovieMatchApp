@@ -11,7 +11,6 @@ import RequestWaiting from "../../components/screen components/RequestWaiting";
 import * as firebase from "firebase";
 import "firebase/firestore";
 import styles from "./Styles";
-import DenyRequestModal from "../../components/screen components/modals/DenyRequestModal";
 import InfoModal from "../../components/screen components/modals/InfoModal";
 import { Button } from "galio-framework";
 
@@ -71,10 +70,14 @@ const FindMatchScreen = (props) => {
 
   const checkAvailability = (nickname) => {
     try {
+      if (nickname == firebase.auth().currentUser.displayName) {
+        Alert.alert("Error", "You are trying to pair to yourself.");
+        return -1;
+      }
       isExistingUser(nickname).then((response) => {
         // user doesn`t exist
         if (!response) {
-          Alert.alert("User with this nickname doesn't exist.");
+          Alert.alert("Error", "User with this nickname doesn't exist.");
           setData((prevState) => ({
             ...prevState,
             searchUser: "",
@@ -186,16 +189,6 @@ const FindMatchScreen = (props) => {
           ) : (
             <View style={{ justifyContent: "center" }}>
               {data.denyRequest ? (
-                // <DenyRequestModal
-                //   nickname={"your friend"}
-                //   showSearch={() => {
-                //     setData((prevState) => ({
-                //       ...prevState,
-                //       showSearch: true,
-                //       denyRequest: false,
-                //     }));
-                //   }}
-                // />
                 <View style={styles.searchWrapper}>
                   <Text style={styles.deniedMsg}>
                     Sorry, your friend denied your request. Try again later.
