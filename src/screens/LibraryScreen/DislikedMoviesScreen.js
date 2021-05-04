@@ -23,12 +23,6 @@ const DislikedMoviesScreen = ({ navigation }) => {
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
-  const tapHandler = (movieData) => {
-    navigation.navigate("MovieDetail", {
-      data: movieData,
-    });
-  };
-
   const Item = ({ item, index }) => (
     <MovieBigButton itemData={item} navigation={navigation} />
   );
