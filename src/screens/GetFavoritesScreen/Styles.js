@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   },
   movieButton: {
     height: 100,
-    width: "95%",
+    width: "100%",
     borderRadius: 20,
     justifyContent: "center",
     marginVertical: 10,
@@ -25,9 +25,9 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     fontSize: 20,
     fontFamily: "VarelaRound_400Regular",
-    textShadowColor: "rgba(0, 0, 0, 0.75)",
-    textShadowOffset: { width: 3, height: 1 },
-    textShadowRadius: 20,
+    // textShadowColor: "rgba(0, 0, 0, 0.75)",
+    // textShadowOffset: { width: 3, height: 1 },
+    // textShadowRadius: 20,
   },
   backgroundImage: {
     flex: 1,

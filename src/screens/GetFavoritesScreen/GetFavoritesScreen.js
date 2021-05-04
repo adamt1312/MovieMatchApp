@@ -17,72 +17,49 @@ import { Button } from "galio-framework";
 import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+import { EvilIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+
 import { FontAwesome } from "@expo/vector-icons";
 import SelectableMovieButton from "../../components/screen components/SelectableMovieButton";
 
 const GetFavoritesScreen = ({ navigation }) => {
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [counter, setCounter] = useState(0);
 
-  const tapHandler = (movieData) => {
-    console.log("tapped");
+  let likedMoviesIds = new Set();
+
+  const tapHandler = (movieData, isLiked) => {
+    if (isLiked) {
+      setCounter(counter + 1);
+      likedMoviesIds.add(movieData.id);
+    } else {
+      if (counter > 0) {
+        setCounter(counter - 1);
+        likedMoviesIds.delete(movieData.id);
+      }
+    }
+    if (counter >= 3) {
+      return (
+        <MaterialCommunityIcons
+          name="arrow-right-circle"
+          size={100}
+          color="rgba(255,255,255,0.8)"
+          style={{ position: "absolute", bottom: 80 }}
+        />
+      );
+    }
   };
 
   const Item = ({ item, index }) => (
-    <SelectableMovieButton navigation={navigation} itemData={item} />
-    // <TouchableHighlight
-    //   key={item.id.toString()}
-    //   onPress={() => tapHandler(data[index])}
-    //   style={{ width: "100%", alignItems: "center" }}
-    // >
-    //   <View style={styles.movieButton}>
-    //     <ImageBackground
-    //       imageStyle={{ borderRadius: 20 }}
-    //       source={{
-    //         uri: "https://image.tmdb.org/t/p/w500" + item.poster_path,
-    //       }}
-    //       style={styles.backgroundImage}
-    //     >
-    //       <LinearGradient
-    //         colors={["black", "transparent"]}
-    //         locations={[0, 0.5]}
-    //         start={{ x: 0, y: 0 }}
-    //         end={{ x: 2, y: 0 }}
-    //         style={styles.linearGradient}
-    //       />
-    //       <View
-    //         style={{
-    //           width: "100%",
-    //           height: "100%",
-    //           justifyContent: "center",
-    //           position: "absolute",
-    //         }}
-    //       >
-    //         <View
-    //           style={{
-    //             width: "75%",
-    //             backgroundColor: "red",
-    //             position: "absolute",
-    //             zIndex: 98,
-    //           }}
-    //         >
-    //           <Text style={styles.movieTitle}>
-    //             {item.title ? item.title : item.original_name}
-    //           </Text>
-    //         </View>
-    //         <View
-    //           style={{
-    //             width: "95%",
-    //             zIndex: 98,
-    //             alignItems: "flex-end",
-    //           }}
-    //         >
-    //           <AntDesign name="checkcircle" size={40} color="#00e600" />
-    //         </View>
-    //       </View>
-    //     </ImageBackground>
-    //   </View>
-    // </TouchableHighlight>
+    <SelectableMovieButton
+      navigation={navigation}
+      itemData={item}
+      test={tapHandler}
+    />
   );
 
   const renderItem = ({ item, index }) => <Item item={item} index={index} />;
@@ -107,6 +84,8 @@ const GetFavoritesScreen = ({ navigation }) => {
           backgroundColor: "rgba(0,0,0,0.6)",
           position: "relative",
           width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         {isLoading ? (
@@ -127,6 +106,7 @@ const GetFavoritesScreen = ({ navigation }) => {
                 },
               ]}
             >
+              <MaterialIcons name="stars" size={24} color="red" />
               Best of the best
               <MaterialIcons name="stars" size={24} color="red" />
             </Text>
@@ -141,8 +121,18 @@ const GetFavoritesScreen = ({ navigation }) => {
                   : item.poster_path;
               }}
               renderItem={renderItem}
-              style={{ width: "100%" }}
+              style={{
+                width: "100%",
+              }}
             />
+            {counter >= 10 ? (
+              <MaterialCommunityIcons
+                name="arrow-right-circle"
+                size={100}
+                color="rgba(255,255,255,0.8)"
+                style={{ position: "absolute", bottom: 80 }}
+              />
+            ) : null}
           </>
         )}
       </View>

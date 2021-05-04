@@ -1,22 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, TouchableHighlight, ImageBackground } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import styles from "../../screens/GetFavoritesScreen/Styles";
 import { AntDesign } from "@expo/vector-icons";
 
-const SelectableMovieButton = ({ navigation, itemData }) => {
+const SelectableMovieButton = ({ navigation, itemData, test }) => {
   const [isLiked, setIsLiked] = useState(false);
 
-  const tapHandler = (movieData) => {
-    setIsLiked(!isLiked);
-  };
+  // handle tap in parent component
+  useEffect(() => {
+    test(itemData, isLiked);
+  }, [isLiked]);
 
   return (
     <TouchableHighlight
-      key={Math.random().toString(36).substr(2, 9)}
-      onPress={() => tapHandler(itemData)}
-      style={{ width: "100%", alignItems: "center" }}
+      key={itemData.id.toString()}
+      onPress={() => {
+        setIsLiked(!isLiked);
+      }}
+      style={{ width: "95%", alignItems: "center" }}
     >
       <View style={[styles.movieButton]}>
         <ImageBackground
@@ -41,7 +44,7 @@ const SelectableMovieButton = ({ navigation, itemData }) => {
                 justifyContent: "center",
                 position: "absolute",
                 backgroundColor: isLiked
-                  ? "rgba(255,255,255,0.3)"
+                  ? "rgba(255,255,255,0.1)"
                   : "rgba(255,255,255,0.0)",
                 borderRadius: 20,
                 zIndex: 97,
