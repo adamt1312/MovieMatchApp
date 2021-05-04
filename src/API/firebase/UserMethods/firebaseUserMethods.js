@@ -1,6 +1,8 @@
+import axios from "axios";
 import * as firebase from "firebase";
 import "firebase/firestore";
 import { Alert } from "react-native";
+import keys from "../../../../config/keys";
 
 export async function fetchUserNickname(uid) {
   try {
@@ -293,6 +295,29 @@ export async function updatePreferedReleaseYears() {
       .update({ prefered_release_years: favoriteYears });
 
     return 1;
+  } catch (err) {
+    Alert.alert("There is something wrong!", err.message);
+  }
+}
+
+// fetch popular movies for questionaree when register, return as array of objects
+export async function fetchPopularForQuest() {
+  try {
+    let popularMovies = [];
+
+    for (let index = 1; index < 7; index++) {
+      let response = await axios(
+        "https://api.themoviedb.org/3/discover/movie?api_key=" +
+          keys.tmdbConfig.apiKey +
+          "&sort_by=popularity.desc&include_adult=false&include_video=false&page=" +
+          index +
+          "&vote_average.gte=7.5&vote_count.gte=10000"
+      );
+      response.data.results.forEach((movieObject) => {
+        popularMovies.push(movieObject);
+      });
+    }
+    return popularMovies;
   } catch (err) {
     Alert.alert("There is something wrong!", err.message);
   }

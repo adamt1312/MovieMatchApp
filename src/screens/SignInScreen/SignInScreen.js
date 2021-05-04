@@ -9,6 +9,7 @@ import {
   StatusBar,
   Alert,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
@@ -55,12 +56,16 @@ const signInScreen = ({ navigation }) => {
     <ImageBackground
       source={require("../../assets/images/login_bg2.png")}
       style={styles.backgroundImage}
-      blurRadius={2}
+      blurRadius={1}
     >
       <View style={styles.screenView}>
         <StatusBar backgroundColor="#1d0014" barStyle="light-content" />
         <View style={styles.logoInputContainer}>
-          <Text style={styles.appName}>MOVIE TINDER</Text>
+          <Image
+            source={require("../../assets/images/logo_glow.png")}
+            style={{ height: "100%", resizeMode: "center" }}
+          />
+          {/* <Text style={styles.appName}>MOVIE TINDER</Text> */}
         </View>
         <View style={styles.loginInputs}>
           <View style={styles.inputLine}>

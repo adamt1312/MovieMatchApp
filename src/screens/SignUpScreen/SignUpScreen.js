@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   StatusBar,
   Alert,
+  Image,
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
@@ -82,7 +83,10 @@ const signUpScreen = ({ navigation }) => {
       <View style={styles.screenView}>
         <StatusBar backgroundColor="#1d0014" barStyle="light-content" />
         <View style={styles.logoInputContainer}>
-          <Text style={styles.appName}>MOVIE TINDER</Text>
+          <Image
+            source={require("../../assets/images/logo_glow.png")}
+            style={{ height: "100%", resizeMode: "center" }}
+          />
         </View>
         <View style={styles.loginInputs}>
           <View style={styles.inputLine}>
@@ -137,7 +141,7 @@ const signUpScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.inputLine}>
+          <View style={[styles.inputLine, { marginBottom: 15 }]}>
             <FontAwesomeIcon icon={faLock} />
             <TextInput
               style={styles.textInputs}

@@ -10,27 +10,25 @@ import {
 import BackgroundBlurred from "../../components/BackgroundBlurred";
 import styles from "./Styles";
 import {
-  fetchUserDislikedMovies,
+  fetchPopularForQuest,
   fetchUserLikedMovies,
 } from "../../API/firebase/UserMethods/firebaseUserMethods";
 import { Button } from "galio-framework";
 import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 
-const DislikedMoviesScreen = ({ navigation }) => {
+const GetFavoritesScreen = ({ navigation }) => {
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
   const tapHandler = (movieData) => {
-    navigation.navigate("MovieDetail", {
-      data: movieData,
-    });
+    console.log("tapped");
   };
 
   const Item = ({ item, index }) => (
     <TouchableHighlight
-      key={Math.random().toString(36).substr(2, 9)}
+      key={item.id.toString()}
       onPress={() => tapHandler(data[index])}
       style={{ width: "100%", alignItems: "center" }}
     >
@@ -61,7 +59,7 @@ const DislikedMoviesScreen = ({ navigation }) => {
 
   useEffect(() => {
     try {
-      fetchUserDislikedMovies().then((data) => {
+      fetchPopularForQuest().then((data) => {
         setData(data);
         setIsLoading(false);
       });
@@ -89,12 +87,23 @@ const DislikedMoviesScreen = ({ navigation }) => {
           </View>
         ) : (
           <>
-            <Text style={styles.title}>
-              These not so much...
-              <FontAwesome5 name="heart-broken" size={40} color="red" />{" "}
+            <Text
+              style={[
+                styles.title,
+                {
+                  marginBottom: 0,
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+              ]}
+            >
+              Best of the best
+              <MaterialIcons name="stars" size={24} color="red" />
             </Text>
+            <Text style={styles.title}>Choose 10 movies you like</Text>
 
             <FlatList
+              initialNumToRender={15}
               data={data}
               keyExtractor={(item) => {
                 return item.id.toString()
@@ -110,4 +119,4 @@ const DislikedMoviesScreen = ({ navigation }) => {
     </View>
   );
 };
-export default DislikedMoviesScreen;
+export default GetFavoritesScreen;

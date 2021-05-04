@@ -14,7 +14,10 @@ import styles from "./Styles";
 import { Entypo } from "@expo/vector-icons";
 import ButtonComponent from "../../components/screen components/ButtonComponent";
 import { isUserPaired } from "../../API/firebase/UserPairing/UserPairingMethods";
-import { fetchUserNickname } from "../../API/firebase/UserMethods/firebaseUserMethods";
+import {
+  fetchPopularForQuest,
+  fetchUserNickname,
+} from "../../API/firebase/UserMethods/firebaseUserMethods";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const homeScreen = ({ navigation }) => {
@@ -75,7 +78,8 @@ const homeScreen = ({ navigation }) => {
           <View style={styles.buttonContainer}>
             <ButtonComponent
               title={"Explore Movies"}
-              onPress={() => navigation.replace("BottomTabNavigator")}
+              // onPress={() => navigation.replace("BottomTabNavigator")}
+              onPress={() => navigation.replace("GetFavoritesScreen")}
               width={"55%"}
             />
             <ButtonComponent

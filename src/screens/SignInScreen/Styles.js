@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   logoInputContainer: {
-    flex: 1,
+    flex: 2,
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
@@ -30,8 +30,7 @@ const styles = StyleSheet.create({
   },
   loginInputs: {
     flex: 3,
-    marginTop: 15,
-    top: 100,
+    top: 30,
   },
   inputLine: {
     flexDirection: "row",

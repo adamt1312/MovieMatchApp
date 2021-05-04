@@ -16,6 +16,7 @@ import BottomTabNavigator2 from "./TabNavigator2";
 import RequestsScreen from "../src/screens/RequestsScreen/RequestsScreen";
 import SessionScreen from "../src/screens/SessionScreens/SessionScreen";
 import SessionTabNavigator from "./SessionTabNavigator";
+import GetFavoritesScreen from "../src/screens/GetFavoritesScreen/GetFavoritesScreen";
 
 const Stack = createStackNavigator();
 const config2 = {
@@ -94,6 +95,11 @@ const MainStackNavigator = () => {
       <Stack.Screen
         name={"SessionScreen"}
         component={SessionScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"GetFavoritesScreen"}
+        component={GetFavoritesScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
