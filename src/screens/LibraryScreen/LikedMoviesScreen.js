@@ -13,6 +13,7 @@ import { fetchUserLikedMovies } from "../../API/firebase/UserMethods/firebaseUse
 import { Button } from "galio-framework";
 import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import MovieBigButton from "../../components/screen components/MovieBigButton";
 
 const LikedMoviesScreen = ({ navigation }) => {
   const [data, setData] = useState();
@@ -25,32 +26,7 @@ const LikedMoviesScreen = ({ navigation }) => {
   };
 
   const Item = ({ item, index }) => (
-    <TouchableHighlight
-      key={Math.random().toString(36).substr(2, 9)}
-      onPress={() => tapHandler(data[index])}
-      style={{ width: "100%", alignItems: "center" }}
-    >
-      <View style={styles.movieButton}>
-        <ImageBackground
-          imageStyle={{ borderRadius: 20 }}
-          source={{
-            uri: "https://image.tmdb.org/t/p/w500" + item.poster_path,
-          }}
-          style={styles.backgroundImage}
-        >
-          <LinearGradient
-            colors={["black", "transparent"]}
-            locations={[0, 0.5]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 2, y: 0 }}
-            style={styles.linearGradient}
-          />
-          <Text style={styles.movieTitle}>
-            {item.title ? item.title : item.original_name}
-          </Text>
-        </ImageBackground>
-      </View>
-    </TouchableHighlight>
+    <MovieBigButton itemData={item} navigation={navigation} />
   );
 
   const renderItem = ({ item, index }) => <Item item={item} index={index} />;
