@@ -48,7 +48,6 @@ export default function App() {
         <MainStackNavigator />
         <StatusBar hidden={true} translucent={true} currentHeight={200} />
       </NavigationContainer>
-      // <AppIntro />
     );
   }
 }

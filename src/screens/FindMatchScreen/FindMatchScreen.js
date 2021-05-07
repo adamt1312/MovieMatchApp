@@ -84,7 +84,6 @@ const FindMatchScreen = (props) => {
           }));
         } else {
           isUserPaired(nickname).then((isPaired) => {
-            console.log(isPaired);
             // checking isAvailable status => set modal text => show modal
             if (isPaired) {
               // user is already paired

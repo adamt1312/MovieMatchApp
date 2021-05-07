@@ -18,7 +18,7 @@ export async function isExistingUser(nickname) {
       return user;
     }
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in isExistingUser: ", err.message);
   }
 }
 
@@ -27,10 +27,6 @@ export async function isUserPaired(nickname) {
   try {
     const db = firebase.firestore();
     const currentUser = firebase.auth().currentUser;
-    // check if user is not trying to pair to himself
-    // if (currentUser.displayName == nickname) {
-    //   return null;
-    // }
     const user = await db
       .collection("users")
       .where("nickname", "==", nickname)
@@ -54,7 +50,7 @@ export async function isUserPaired(nickname) {
       return isPaired;
     }
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in isUserPaired: ", err.message);
   }
 }
 
@@ -84,7 +80,7 @@ export async function setSentRequest(nickname) {
       .update({ sentRequest: targetUserUid[0] });
     return 1;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in setSentRequest: ", err.message);
   }
 }
 
@@ -96,7 +92,7 @@ export async function getSentRequest() {
     const data = query.data();
     return data.sentRequest;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in getSentRequest: ", err.message);
   }
 }
 
@@ -115,16 +111,14 @@ export async function fetchUserPendingRequests() {
           result.push(doc.data());
         });
       });
-    // console.log(result);
     return result;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in fetchUserPendingRequests: ", err.message);
   }
 }
 
 export async function deleteUserRequest(delUserUid) {
   try {
-    console.log("deleting pending request of user " + delUserUid);
     const db = firebase.firestore();
     const currentUser = firebase.auth().currentUser;
     const query = await db
@@ -135,7 +129,7 @@ export async function deleteUserRequest(delUserUid) {
       .delete();
     return true;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in deleteUserRequest: ", err.message);
   }
 }
 
@@ -148,7 +142,7 @@ export async function setSentRequestFalseOrNull(uid, value) {
       .update({ sentRequest: value });
     return true;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in setSentRequestFalseOrNull: ", err.message);
   }
 }
 
@@ -174,7 +168,7 @@ export async function createNewSession(other_user_uid) {
 
     return session_id;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in createNewSession: ", err.message);
   }
 }
 
@@ -193,7 +187,7 @@ export async function setIsPairedToValue(other_user_uid, value) {
       .update({ isPaired: value });
     return 1;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in setIsPairedToValue: ", err.message);
   }
 }
 
@@ -224,6 +218,6 @@ export async function cancelSentRequest() {
       .update({ sentRequest: null });
     return 1;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in setIsPairedToValue: ", err.message);
   }
 }

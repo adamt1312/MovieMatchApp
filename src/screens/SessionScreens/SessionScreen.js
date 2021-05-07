@@ -24,7 +24,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Entypo } from "@expo/vector-icons";
 import CrossButton from "../../components/screen components/CrossButton";
 
-// TODO: Finish fetching more movies before last card rendered...
 const SessionScreen = ({ navigation }) => {
   const [data, setData] = useState(null);
   const [pairedUserNickname, setPairedUserNickname] = useState(null);
@@ -32,7 +31,6 @@ const SessionScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const swipedAllHandler = () => {
-    console.log("swipedhandler");
     setIsLoading(true);
     generateRecommendedNextPageNum().then((resp) => {
       fetchUserSessionRecommendations().then((arr) => {
@@ -117,11 +115,6 @@ const SessionScreen = ({ navigation }) => {
             onSwipedRight={(cardIndex) => {
               dbLibraryToLiked(data[cardIndex]);
               sessionMovieLike(data[cardIndex].id, session_id);
-              console.log(
-                cardIndex + 1,
-                data.length - 1,
-                cardIndex + 1 == data.length - 1
-              );
               if (cardIndex + 1 == data.length - 1) {
                 swipedAllHandler();
               }
@@ -129,11 +122,6 @@ const SessionScreen = ({ navigation }) => {
             onSwipedLeft={(cardIndex) => {
               dbLibraryToDisliked(data[cardIndex]);
               sessionMovieDislike(data[cardIndex].id, session_id);
-              console.log(
-                cardIndex + 1,
-                data.length - 1,
-                cardIndex + 1 == data.length - 1
-              );
               if (cardIndex + 1 == data.length - 1) {
                 swipedAllHandler();
               }

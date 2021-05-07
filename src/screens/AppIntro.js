@@ -7,7 +7,6 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
-import * as firebase from "firebase";
 import "firebase/firestore";
 import Icon from "react-native-vector-icons/Ionicons";
 import AppIntroSlider from "react-native-app-intro-slider";
@@ -67,9 +66,16 @@ const slides = [
     image: require("../assets/images/session_screenshot.png"),
     backgroundColor: "#121212",
   },
+  {
+    key: "8",
+    title: "We need to know you first",
+    text:
+      "Tell us what you like by swiping the movies on the next screen. Like at least 15 movies.",
+    image: require("../assets/images/movies_bg.jpg"),
+    backgroundColor: "#121212",
+  },
 ];
 
-// TODO: Create intro slides after registration (react-native-app-intro-slider)
 const AppIntro = ({ navigation }) => {
   const renderNextButton = () => {
     return (
@@ -134,8 +140,7 @@ const AppIntro = ({ navigation }) => {
   };
 
   const onDone = () => {
-    // User finished the introduction. Show real app through
-    console.log("finished");
+    navigation.navigate("GetFavoritesScreen");
   };
 
   return (
@@ -188,16 +193,12 @@ const styles = StyleSheet.create({
     width: "140%",
     resizeMode: "contain",
     height: 450,
-    // borderColor: "yellow",
-    // borderWidth: 5,
     zIndex: -1,
   },
   imgRest: {
     width: "140%",
     resizeMode: "contain",
     height: 450,
-    // borderColor: "yellow",
-    // borderWidth: 5,
     zIndex: -1,
   },
   introTitle1: {

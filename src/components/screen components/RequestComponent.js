@@ -32,12 +32,6 @@ const RequestComponent = (props) => {
           setIsPairedToValue(uid, session_id);
           generatePreferencesForSession(uid, session_id).then(
             (sessionPreferences) => {
-              console.log(
-                "session preferences",
-                sessionPreferences,
-                "session id",
-                session_id
-              );
               generateRecommendationsForSession(
                 sessionPreferences,
                 session_id,

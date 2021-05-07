@@ -9,13 +9,16 @@ import {
 import "react-native-gesture-handler";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
 import * as firebase from "firebase";
-import { loggingOut } from "../../API/firebase/Authentication/firestoreAuthentication";
+import {
+  isUniqueNickname,
+  loggingOut,
+} from "../../API/firebase/Authentication/firestoreAuthentication";
 import styles from "./Styles";
 import { Entypo } from "@expo/vector-icons";
 import ButtonComponent from "../../components/screen components/ButtonComponent";
 import { isUserPaired } from "../../API/firebase/UserPairing/UserPairingMethods";
 import {
-  fetchPopularForQuest,
+  fetchUserLikedMovies,
   fetchUserNickname,
 } from "../../API/firebase/UserMethods/firebaseUserMethods";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -27,20 +30,28 @@ const homeScreen = ({ navigation }) => {
   const [isPaired, setIsPaired] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const db = firebase.firestore();
+  const doc = db.collection("users").doc(firebase.auth().currentUser.uid);
+
   // handle current status on mount
   useEffect(() => {
-    isUserPaired(nickname).then((fetchedUid) => {
-      if (fetchedUid) {
-        fetchUserNickname(fetchedUid).then((fetchedNickname) => {
-          AsyncStorage.setItem("pairedToUser", fetchedNickname);
-          setIsPaired(fetchedNickname);
-        });
-      } else {
-        AsyncStorage.setItem("pairedToUser", "");
-        AsyncStorage.setItem("session_id", "");
-      }
-      setIsLoading(false);
+    let unsubscribe = doc.onSnapshot((doc) => {
+      isUserPaired(nickname).then((fetchedUid) => {
+        if (fetchedUid && fetchedUid != -1) {
+          fetchUserNickname(fetchedUid).then((fetchedNickname) => {
+            AsyncStorage.setItem("pairedToUser", fetchedNickname);
+            setIsPaired(fetchedNickname);
+          });
+        } else {
+          AsyncStorage.setItem("pairedToUser", "");
+          AsyncStorage.setItem("session_id", "");
+        }
+        setIsLoading(false);
+      });
     });
+    return function cleanup() {
+      unsubscribe();
+    };
   }, []);
 
   return (
@@ -78,8 +89,7 @@ const homeScreen = ({ navigation }) => {
           <View style={styles.buttonContainer}>
             <ButtonComponent
               title={"Explore Movies"}
-              // onPress={() => navigation.replace("BottomTabNavigator")}
-              onPress={() => navigation.replace("GetFavoritesScreen")}
+              onPress={() => navigation.replace("BottomTabNavigator")}
               width={"55%"}
             />
             <ButtonComponent

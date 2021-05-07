@@ -18,7 +18,7 @@ export async function generatePreferencesForSession(
     );
     const preferencesProfile2 = await fetchUserPreferences(second_user_uid);
 
-    // TODO: For now just merging preferences of both users togehter, result is new preferences object
+    // Merging preferences of both users togehter, result is a new preferences object
     let sessionPreferences = {
       prefered_genres: merge2arrays_RemoveDuplicates(
         preferencesProfile1.prefered_genres.concat(
@@ -39,7 +39,7 @@ export async function generatePreferencesForSession(
 
     return sessionPreferences;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in generatePreferencesForSession: ", err.message);
   }
 }
 
@@ -64,10 +64,10 @@ export async function generateRecommendationsForSession(
     const currentUser = firebase.auth().currentUser;
     let prefered_genres = "";
     sessionPreferences.prefered_genres.forEach((genre_id) => {
-      prefered_genres += genre_id + ",";
+      prefered_genres += genre_id + "|";
     });
 
-    // TODO: Add other query filters e.g. release years
+    // TODO: Future improvements cann add more query filters e.g. directors, actors etc...
     let query = "&with_genres=" + prefered_genres + "&";
     const url =
       "https://api.themoviedb.org/3/discover/movie?api_key=" +
@@ -78,7 +78,6 @@ export async function generateRecommendationsForSession(
 
     // fetch recommend movies
     await axios(url).then((data) => {
-      console.log("fetching data from TMdb");
       // insert data into DB as a subcollection for session named "user_uid" containing recommended movie objects as docs for each user
       data.data.results.forEach(async (movie) => {
         await db

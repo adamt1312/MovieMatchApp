@@ -10,12 +10,10 @@ import "firebase/firestore";
 import { Swing } from "react-native-animated-spinkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// TODO: 1. Add cancel request
-//       2. disable user to accept/deny requests when paired (trough async storage get item pairedtouser...)
 const RequestScreen = ({ navigation }) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isEmpty, setIsEmpty] = useState(null);
+  const [isEmpty, setIsEmpty] = useState(true);
   const [inSession, setInSession] = useState(false);
 
   const db = firebase.firestore();
@@ -23,7 +21,6 @@ const RequestScreen = ({ navigation }) => {
   useEffect(() => {
     try {
       AsyncStorage.getItem("session_id").then((sid) => {
-        console.log("sid", sid);
         if (sid !== null) {
           setInSession(true);
         }
@@ -63,7 +60,14 @@ const RequestScreen = ({ navigation }) => {
       ) : inSession ? (
         <>
           <Swing size={100} color="#FFF" />
-          <Text style={{ fontSize: 25, color: "white", textAlign: "center" }}>
+          <Text
+            style={{
+              fontSize: 25,
+              color: "white",
+              textAlign: "center",
+              fontFamily: "VarelaRound_400Regular",
+            }}
+          >
             You are currently in session and unable to handle requests.
           </Text>
         </>

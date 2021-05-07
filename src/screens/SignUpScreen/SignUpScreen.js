@@ -19,7 +19,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import "react-native-gesture-handler";
-import { registration } from "../../API/firebase/Authentication/firestoreAuthentication";
+import {
+  isUniqueNickname,
+  registration,
+} from "../../API/firebase/Authentication/firestoreAuthentication";
 import Checkmark from "../../components/screen components/Checkmark";
 import styles from "./Styles";
 
@@ -53,19 +56,17 @@ const signUpScreen = ({ navigation }) => {
     } else if (password !== confirmPassword) {
       Alert.alert("Password does not match!");
     } else {
-      // TODO: Validate unique nickname, create function in firebaseMethods
-      // if (validateNickname()) {
-      //   registration(email, password, nickname);
-      //   navigation.navigate("Loading");
-      //   emptyState();
-      // } else {
-      //   Alert.alert("Choose another nickname,this is already taken.");
-      //   setNickname("");
-      // }
-
-      registration(email, password, nickname);
-      navigation.navigate("Loading");
-      emptyState();
+      // validate given nickname
+      isUniqueNickname(nickname).then((isUnique) => {
+        if (isUnique) {
+          registration(email, password, nickname);
+          navigation.navigate("Loading");
+          emptyState();
+        } else {
+          Alert.alert("Choose another nickname, this is already taken.");
+          setNickname("");
+        }
+      });
     }
   };
 

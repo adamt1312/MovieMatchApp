@@ -100,8 +100,6 @@ export async function sessionMovieLike(movie_id, session_id) {
     // array must be fetched first, then pushed new id, then set to the DB again (dumb API, omfg)
     const doc = await db.collection("sessions").doc(session_id).get();
     const likedIds = doc.data().session_liked_ids;
-    console.log(typeof likedIds);
-    console.log(session_id);
     likedIds.push(movie_id);
     db.collection("sessions").doc(session_id).update({
       session_liked_ids: likedIds,

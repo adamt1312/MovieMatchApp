@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   movieTitle: {
-    color: "white",
+    color: "black",
     position: "absolute",
     zIndex: 100,
     marginLeft: 20,

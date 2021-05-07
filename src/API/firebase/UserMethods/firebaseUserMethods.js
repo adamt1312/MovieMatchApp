@@ -10,7 +10,7 @@ export async function fetchUserNickname(uid) {
     const user = await db.collection("users").doc(uid).get();
     return user.data().nickname;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in fetchUserNickname: ", err.message);
   }
 }
 
@@ -20,7 +20,7 @@ export async function fetchUser(uid) {
     const user = await db.collection("users").doc(uid).get();
     return user.data();
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in fetchUser: ", err.message);
   }
 }
 
@@ -35,7 +35,7 @@ export async function fetchUserLikedMovies() {
       .get();
     return movies.docs.map((doc) => doc.data());
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in fetchUserLikedMovies: ", err.message);
   }
 }
 
@@ -51,7 +51,7 @@ export async function fetchUserPreferences(uid) {
       .get();
     return preferencesProfile.data();
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in fetchUserPreferences: ", err.message);
   }
 }
 
@@ -66,7 +66,7 @@ export async function fetchUserDislikedMovies() {
       .get();
     return movies.docs.map((doc) => doc.data());
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in fetchUserDislikedMovies: ", err.message);
   }
 }
 
@@ -122,7 +122,7 @@ export async function dbLibraryToDisliked(movieObject) {
       .doc(movieObject.id.toString())
       .set(movieObject);
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in dbLibraryToDisliked: ", err.message);
   }
 }
 
@@ -153,11 +153,11 @@ export async function updateLikedGenresCounter(movieObject) {
 
     return doc.data().liked_genres;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in updateLikedGenresCounter: ", err.message);
   }
 }
 
-// TODO: Deciding if to use dislike logic when creating recommendations...
+// TODO: Can be used in the future, when negative logic will be implemented too..
 export async function updateUserDislikedGenres(movieObject) {
   try {
     const db = firebase.firestore();
@@ -176,7 +176,7 @@ export async function updateUserDislikedGenres(movieObject) {
 
     return 1;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in updateUserDislikedGenres: ", err.message);
   }
 }
 
@@ -189,12 +189,22 @@ export async function updatePreferedGenres(liked_genres_obj) {
     if (liked_genres_obj != {}) {
       let arr = Object.values(liked_genres_obj);
       let prefered_genres = [];
-      for (let i = 0; i < 3; i++) {
-        let maxValue = Math.max(...arr);
-        let keyMaxValue = getKeyByValue(liked_genres_obj, maxValue);
-        prefered_genres.push(keyMaxValue);
-        arr.splice(arr.indexOf(maxValue), 1);
-        delete liked_genres_obj[keyMaxValue];
+      if (Object.keys(liked_genres_obj).length > 6) {
+        for (let i = 0; i < 3; i++) {
+          let maxValue = Math.max(...arr);
+          let keyMaxValue = getKeyByValue(liked_genres_obj, maxValue);
+          prefered_genres.push(keyMaxValue);
+          arr.splice(arr.indexOf(maxValue), 1);
+          delete liked_genres_obj[keyMaxValue];
+        }
+      } else if (Object.keys(liked_genres_obj).length < 6) {
+        for (let i = 0; i < 2; i++) {
+          let maxValue = Math.max(...arr);
+          let keyMaxValue = getKeyByValue(liked_genres_obj, maxValue);
+          prefered_genres.push(keyMaxValue);
+          arr.splice(arr.indexOf(maxValue), 1);
+          delete liked_genres_obj[keyMaxValue];
+        }
       }
       db.collection("users")
         .doc(currentUser.uid)
@@ -207,10 +217,7 @@ export async function updatePreferedGenres(liked_genres_obj) {
 
     return 1;
   } catch (err) {
-    Alert.alert(
-      "There is something wrong in updatePreferedGenres!",
-      err.message
-    );
+    Alert.alert("Error in updatePreferedGenres: ", err.message);
   }
 }
 
@@ -254,10 +261,7 @@ export async function updateLikedReleaseYearsCounter(movieObject) {
       return 0;
     }
   } catch (err) {
-    Alert.alert(
-      "There is something wrong in updateLikedReleaseYearsCounter!",
-      err.message
-    );
+    Alert.alert("Error in updateLikedReleaseYearsCounter: ", err.message);
   }
 }
 
@@ -296,7 +300,7 @@ export async function updatePreferedReleaseYears() {
 
     return 1;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in updatePreferedReleaseYears: ", err.message);
   }
 }
 
@@ -337,6 +341,25 @@ export async function fetchPopularForQuest() {
     }
     return popularMovies;
   } catch (err) {
-    Alert.alert("There is something wrong!", err.message);
+    Alert.alert("Error in fetchPopularForQuest: ", err.message);
+  }
+}
+
+export async function isNewUser() {
+  try {
+    const db = firebase.firestore();
+    const currentUser = firebase.auth().currentUser;
+
+    const querySnapshot = await db
+      .collection("users")
+      .doc(currentUser.uid)
+      .collection("likedMovies")
+      .limit(1)
+      .get();
+    if (querySnapshot.empty) {
+      return true;
+    } else return false;
+  } catch (err) {
+    Alert.alert("Error in isNewUser: ", err.message);
   }
 }
