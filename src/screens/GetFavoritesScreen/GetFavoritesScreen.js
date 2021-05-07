@@ -1,68 +1,26 @@
 import React, { useState, useEffect } from "react";
-import {
-  Text,
-  View,
-  FlatList,
-  TouchableHighlight,
-  ImageBackground,
-  ActivityIndicator,
-} from "react-native";
+import { Text, View, ActivityIndicator } from "react-native";
 import BackgroundBlurred from "../../components/BackgroundBlurred";
 import styles from "./Styles";
+import { fetchPopularForQuest } from "../../API/firebase/UserMethods/firebaseUserMethods";
+import Swiper from "react-native-deck-swiper";
 import {
-  fetchPopularForQuest,
-  fetchUserLikedMovies,
+  dbLibraryToDisliked,
+  dbLibraryToLiked,
 } from "../../API/firebase/UserMethods/firebaseUserMethods";
-import { Button } from "galio-framework";
 import { AntDesign } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
-import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-import { EvilIcons } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-
-import { FontAwesome } from "@expo/vector-icons";
-import SelectableMovieButton from "../../components/screen components/SelectableMovieButton";
 
 const GetFavoritesScreen = ({ navigation }) => {
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [counter, setCounter] = useState(0);
 
-  let likedMoviesIds = new Set();
-
-  const tapHandler = (movieData, isLiked) => {
-    if (isLiked) {
-      setCounter(counter + 1);
-      likedMoviesIds.add(movieData.id);
-    } else {
-      if (counter > 0) {
-        setCounter(counter - 1);
-        likedMoviesIds.delete(movieData.id);
-      }
-    }
-    if (counter >= 3) {
-      return (
-        <MaterialCommunityIcons
-          name="arrow-right-circle"
-          size={100}
-          color="rgba(255,255,255,0.8)"
-          style={{ position: "absolute", bottom: 80 }}
-        />
-      );
-    }
+  const tapHandler = (cardIndex) => {
+    navigation.navigate("MovieDetail", {
+      data: data[cardIndex],
+    });
   };
-
-  const Item = ({ item, index }) => (
-    <SelectableMovieButton
-      navigation={navigation}
-      itemData={item}
-      test={tapHandler}
-    />
-  );
-
-  const renderItem = ({ item, index }) => <Item item={item} index={index} />;
 
   useEffect(() => {
     try {
@@ -78,64 +36,75 @@ const GetFavoritesScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <BackgroundBlurred />
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "rgba(0,0,0,0.6)",
-          position: "relative",
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {isLoading ? (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <ActivityIndicator size={100} color="white" />
+      {isLoading ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size={100} color="white" />
+        </View>
+      ) : (
+        <>
+          <View style={[styles.topWrapper, { flexDirection: "column" }]}>
+            {counter >= 15 ? (
+              <>
+                <Text style={styles.title}>Great, you are good to go.</Text>
+                <Text style={styles.title}>Enjoy the app!</Text>
+              </>
+            ) : (
+              <>
+                <Text style={styles.title}>Choose 15 movies you like</Text>
+                <Text style={styles.title}>
+                  <AntDesign name="like2" size={24} color="black" /> {counter} /
+                  15 <AntDesign name="like2" size={24} color="black" />
+                </Text>
+              </>
+            )}
           </View>
-        ) : (
-          <>
-            <Text
-              style={[
-                styles.title,
-                {
-                  marginBottom: 0,
-                  justifyContent: "center",
-                  alignItems: "center",
-                },
-              ]}
-            >
-              <MaterialIcons name="stars" size={24} color="red" />
-              Best of the best
-              <MaterialIcons name="stars" size={24} color="red" />
-            </Text>
-            <Text style={styles.title}>Choose 10 movies you like</Text>
 
-            <FlatList
-              initialNumToRender={15}
-              data={data}
-              keyExtractor={(item) => {
-                return item.id.toString()
-                  ? item.id.toString()
-                  : item.poster_path;
-              }}
-              renderItem={renderItem}
-              style={{
-                width: "100%",
+          {counter >= 15 ? (
+            <MaterialCommunityIcons
+              name="arrow-right-circle"
+              size={120}
+              color="rgba(255,255,255,0.99)"
+              style={{ position: "absolute", bottom: 50, zIndex: 150 }}
+              onPress={() => {
+                navigation.navigate("Home");
               }}
             />
-            {counter >= 10 ? (
-              <MaterialCommunityIcons
-                name="arrow-right-circle"
-                size={100}
-                color="rgba(255,255,255,0.8)"
-                style={{ position: "absolute", bottom: 80 }}
-              />
-            ) : null}
-          </>
-        )}
-      </View>
+          ) : null}
+
+          <Swiper
+            cards={data}
+            renderCard={(card) => {
+              return (
+                <InfoCard
+                  imgUrl={"https://image.tmdb.org/t/p/w780" + card.poster_path}
+                  vote_average={card.vote_average}
+                  original_title={card.title ? card.title : card.original_name}
+                  overview={card.overview}
+                />
+              );
+            }}
+            onTapCard={(cardIndex) => {
+              tapHandler(cardIndex);
+            }}
+            onSwipedRight={(cardIndex) => {
+              dbLibraryToLiked(data[cardIndex]);
+              setCounter(counter + 1);
+            }}
+            onSwipedLeft={(cardIndex) => {
+              dbLibraryToDisliked(data[cardIndex]);
+            }}
+            horizontalSwipe={true}
+            backgroundColor={"transparent"}
+            cardVerticalMargin={0}
+            cardHorizontalMargin={0}
+            stackSize={5}
+            verticalSwipe={false}
+            cardIndex={0}
+          ></Swiper>
+        </>
+      )}
     </View>
   );
 };

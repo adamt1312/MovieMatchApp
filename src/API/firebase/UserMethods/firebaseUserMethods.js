@@ -304,12 +304,30 @@ export async function updatePreferedReleaseYears() {
 export async function fetchPopularForQuest() {
   try {
     let popularMovies = [];
+    let sortBy = [
+      "popularity.asc",
+      "popularity.desc",
+      "release_date.asc",
+      "release_date.desc",
+      "revenue.asc",
+      "revenue.desc",
+      "primary_release_date.asc",
+      "primary_release_date.desc",
+      "original_title.asc",
+      "original_title.desc",
+      "vote_average.asc",
+      "vote_average.desc",
+      "vote_count.asc",
+      "vote_count.desc",
+    ];
 
     for (let index = 1; index < 7; index++) {
       let response = await axios(
         "https://api.themoviedb.org/3/discover/movie?api_key=" +
           keys.tmdbConfig.apiKey +
-          "&sort_by=popularity.desc&include_adult=false&include_video=false&page=" +
+          "&sort_by=" +
+          sortBy[Math.floor(Math.random() * sortBy.length)] +
+          "&include_adult=false&include_video=false&page=" +
           index +
           "&vote_average.gte=7.5&vote_count.gte=10000"
       );
