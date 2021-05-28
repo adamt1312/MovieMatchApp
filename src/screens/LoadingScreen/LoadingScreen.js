@@ -12,11 +12,9 @@ export default function LoadingScreen({ navigation }) {
         if (newUser) {
           navigation.replace("AppIntroScreen");
         } else {
-          console.log("Going to HomeScreen");
           navigation.replace("Home");
         }
       } else {
-        console.log("Going to SignInScreen");
         navigation.replace("SignIn");
       }
     });

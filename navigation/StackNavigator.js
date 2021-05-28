@@ -73,21 +73,21 @@ const MainStackNavigator = () => {
         component={MovieDetailScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name={"Library"}
         component={LikedMoviesScreen}
         options={{ headerShown: false }}
-      />
+      /> */}
       <Stack.Screen
         name={"BottomTabNavigator2"}
         component={BottomTabNavigator2}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name={"RequestsScreen"}
         component={RequestsScreen}
         options={{ headerShown: false }}
-      />
+      /> */}
       <Stack.Screen
         name={"SessionTabNavigator"}
         component={SessionTabNavigator}
